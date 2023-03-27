@@ -1,15 +1,30 @@
+const { colors } = require("tailwindcss/colors")
+const { fontFamily } = require("tailwindcss/defaultTheme")
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    "./app/**/*.{js,ts,jsx,tsx}",
-    "./pages/**/*.{js,ts,jsx,tsx}",
-    "./components/**/*.{js,ts,jsx,tsx}",
- 
-    // Or if using `src` directory:
+    "./app/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./ui/**/*.{ts,tsx}",
+    "./content/**/*.{md,mdx}",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
+  darkMode: ["class"],
   theme: {
-    extend: {},
+    container: {
+      center: true,
+      padding: "1.5rem",
+      screens: {
+        "2xl": "1440px",
+      },
+    },
+    extend: {
+
+    },
   },
-  plugins: [],
+  plugins: [
+    require("@tailwindcss/typography"),
+    require("@tailwindcss/line-clamp"),
+  ],
 }

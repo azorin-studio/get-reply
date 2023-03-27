@@ -25,7 +25,16 @@ export default function Footer() {
               className="font-medium underline underline-offset-4"
             >
               Taxonomy
-            </a>.
+            </a> with assistance from Chat GPT. 
+            Illustrations by {" "}
+            <a
+              href="https://popsy.co/illustrations"
+              target="_blank"
+              rel="noreferrer"
+              className="font-medium underline underline-offset-4"
+            >
+              Popsy
+            </a>. 
           </p>
         </div>
         <p className="text-center text-sm md:text-left">

@@ -6,9 +6,9 @@ export default function Header() {
     <header className="container sticky top-0 z-40 bg-white mx-auto px-2">
       <div className="flex h-16 items-center justify-between border-b border-b-slate-200 py-4">
         <div className="flex gap-6 md:gap-10">
-          <Link href="/" className="hidden items-center space-x-2 md:flex">
+          <Link href="/" className="items-center space-x-2 flex">
             <MailPlus />
-            <span className="hidden font-bold sm:inline-block">
+            <span className="font-bold sm:inline-block">
               Get Reply
             </span>
           </Link>

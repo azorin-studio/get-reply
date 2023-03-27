@@ -3,7 +3,8 @@ import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import Header from '~/components/Header'
 import Footer from '~/components/Footer'
-
+import hero from "../../public/hero.svg"
+import Image from 'next/image'
 
 export default function Home() {
   return (
@@ -17,8 +18,9 @@ export default function Home() {
       <div className="min-h-screen bg-white font-sans text-slate-800 antialiased">
         <div className="flex min-h-screen flex-col">
           <Header />
-          <main className="flex-1">
+          <main className="flex-1 px-4 lg:px=2">
             <section className="container grid items-center justify-center gap-6 pt-6 pb-8 md:pt-10 md:pb-12 lg:pt-16 lg:pb-24">
+              <Image src={hero} width={250} alt="Hero image" priority />
               <div className="mx-auto flex flex-col items-start gap-4 lg:w-[52rem]">
                 <h1 className="text-3xl font-bold leading-[1.1] tracking-tighter sm:text-5xl md:text-6xl">
                   Streamline your email follow-ups with GetReply
@@ -30,13 +32,17 @@ export default function Home() {
               <div className="flex gap-4">
                 <Link 
                   href="https://github.com/azorin-studio/get-reply/issues/1" 
-                  className="inline-flex items-center align-items rounded-md bg-slate-800 py-3.5 px-5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                  className="inline-flex items-center align-items rounded-md bg-slate-800 py-3 px-5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                 >
                   Join the beta
                   <span className="-mr-0.5 ml-2 h-5 w-5"><ArrowRight  /></span>
-
                 </Link>
-
+                <Link 
+                  href="https://github.com/azorin-studio" 
+                  className="inline-flex items-center align-items rounded-md py-3 px-8 text-sm font-semibold border hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                >
+                  Github
+                </Link>
             </div>
             </section>
             
@@ -52,37 +58,41 @@ export default function Home() {
                 </p>
               </div>
 
-              <div className="mx-auto flex flex-row gap-24 md:max-w-[52rem]">
-                <div className="basis-1/2">
+              <div className="mx-auto flex flex-col lg:flex-row gap-8 lg:gap-24 md:max-w-[52rem]">
+                <div className="basis-1/2 font-bold">
                   You send an email applying for a job.
                 </div>
-                <div className="basis-1/2">                  
-                  <p className="font-bold text-slate-700 sm:text-sm">
-                    Subject: Application for Software Engineer Position
-                  </p>
-                  <p className="mt-4 text-slate-700 sm:text-sm">
-                    Dear [Hiring Manager&apos;s Name],
-                  </p>
-                  <p className="mt-4 leading-normal text-slate-700 sm:text-sm">
-                    I&apos;m interested in the Software Engineer position at your company. As a software developer with [Number of years] years of experience, I believe I&apos;d be a great fit for the role.
-                  </p>
-                  <p className="mt-2 text-slate-700 sm:text-sm">
-                    Attached is my resume and cover letter for your review. Please let me know if you have any questions.
-                  </p>
-                  <p className="mt-4 leading-normal text-slate-700 sm:text-sm">
-                    Best regards,
-                  </p>
-                  <p className="leading-normal text-slate-700 sm:text-sm">
-                    [Your Name]
-                  </p>
+                <div className="basis-1/2 border rounded">                  
+                  <div className="p-2 border-b">
+                    <p className="font-bold text-slate-500 text-sm">
+                      Subject: Application for Software Engineer Position
+                    </p>
+                  </div>
+                  <div className="p-2">
+                    <p className="mt-4 text-slate-700 text-sm">
+                      Dear [Hiring Manager&apos;s Name],
+                    </p>
+                    <p className="mt-4 leading-normal text-slate-700 text-sm">
+                      I&apos;m interested in the Software Engineer position at your company. As a software developer with [Number of years] years of experience, I believe I&apos;d be a great fit for the role.
+                    </p>
+                    <p className="mt-2 text-slate-700 text-sm">
+                      Attached is my resume and cover letter for your review. Please let me know if you have any questions.
+                    </p>
+                    <p className="mt-4 leading-normal text-slate-700 text-sm">
+                      Best regards,
+                    </p>
+                    <p className="leading-normal text-slate-700 text-sm">
+                      [Your Name]
+                    </p>
+                  </div>
                 </div>
               </div>
 
-              <div className="mx-auto mt-8 flex flex-row gap-24 md:max-w-[52rem]">
-                <div className="basis-1/2">
-                  2 days later: GetReply will send an automatic email tailored to your previous exchange.
+              <div className="mx-auto mt-8 flex flex-col lg:flex-row gap-8 lg:gap-24 md:max-w-[52rem]">
+              <div className="basis-1/2 font-bold">
+                  [2 days later] GetReply will send an automatic email tailored to your previous exchange.
                 </div>
-                <div className="basis-1/2">                  
+                <div className="basis-1/2 border rounded p-2">                     
                   {/* <p className="font-bold text-slate-700 sm:text-sm">
                     Subject: Application for Software Engineer Position
                   </p> */}
@@ -101,11 +111,11 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="mx-auto mt-8 flex flex-row gap-24 md:max-w-[52rem]">
-                <div className="basis-1/2">
-                  3 days later: GetReply will send one last email to optimise your chances of a response.
+              <div className="mx-auto mt-8 flex flex-col lg:flex-row gap-8 lg:gap-24 md:max-w-[52rem]">
+                <div className="basis-1/2 font-bold">
+                  [3 days later] GetReply will send one last email to optimise your chances of a response.
                 </div>
-                <div className="basis-1/2">                  
+                <div className="basis-1/2 border rounded p-2">           
                   {/* <p className="font-bold text-slate-700 sm:text-sm">
                     Subject: Application for Software Engineer Position
                   </p> */}
@@ -217,8 +227,8 @@ export default function Home() {
                   Proudly Open Source
                 </h2>
                 <p className="max-w-[85%] leading-normal text-slate-700 sm:text-lg sm:leading-7">
-                  GetReply is open source and powered by open source software. The
-                  code will be available on{" "}
+                  GetReply is open source and powered by open source software. The code will be available on{" "}
+                  
                   <Link
                     href='https://github.com/azorin-studio/get-reply'
                     target="_blank"
@@ -231,6 +241,7 @@ export default function Home() {
                 </p>
               </div>
             </section>
+
           </main>
           <Footer/>
         </div>
