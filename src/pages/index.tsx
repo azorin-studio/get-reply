@@ -113,7 +113,7 @@ export default function Home() {
                     Dear [Hiring Manager&apos;s Name],
                   </p>
                   <p className="mt-4 leading-normal text-slate-700 sm:text-sm">
-                  I'm still interested in the Software Engineer position and wanted to follow up on my application. Let me know if you have any questions or if there is anything else I can provide.
+                  I&apos;m still interested in the Software Engineer position and wanted to follow up on my application. Let me know if you have any questions or if there is anything else I can provide.
                   </p>
                   <p className="mt-4 leading-normal text-slate-700 sm:text-sm">
                     Best regards,
