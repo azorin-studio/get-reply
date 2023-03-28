@@ -94,7 +94,7 @@ export default function Home() {
               </div>
 
               <Examples 
-                {...EXAMPLES[activeExample]}
+                {...EXAMPLES[activeExample as keyof typeof EXAMPLES]}
               />
 
             </section>
