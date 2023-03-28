@@ -1,10 +1,10 @@
 import Link from 'next/link'
-import { MailPlus } from 'lucide-react'
+import { MailPlus, Github } from 'lucide-react'
 
 export default function Header() {
   return (
     <header className="container sticky top-0 z-40 bg-white mx-auto px-2">
-      <div className="flex h-16 items-center justify-between border-b border-b-slate-200 py-4">
+      <div className="flex h-16 items-center justify-between border-b border-b-slate-200 py-4 px-4">
         <div className="flex gap-6 md:gap-10">
           <Link href="/" className="items-center space-x-2 flex">
             <MailPlus />
@@ -23,12 +23,15 @@ export default function Header() {
           </nav>
         </div>
         <nav>
-          {/* <Link
-            href="/login"
-            // className={cn(buttonVariants({ size: "sm" }), "px-4")}
+          <Link
+            href="https://github.com/azorin-studio/get-reply"
+            className="items-center space-x-2 flex"
           >
-            Login
-          </Link> */}
+            <Github />
+            <span className="font-bold sm:inline-block">
+            Github
+            </span>
+          </Link>
         </nav>
       </div>
     </header>

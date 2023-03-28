@@ -9,6 +9,7 @@ import Examples from '~/components/Examples'
 
 import EXAMPLES from '~/data/examples'
 import { useState } from 'react'
+import NewsletterForm from '~/components/NewsletterForm'
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
@@ -41,19 +42,20 @@ export default function Home() {
                 </p>
               </div>
               <div className="flex gap-4">
-                <Link 
+                {/* <Link 
                   href="https://github.com/azorin-studio/get-reply/issues/1" 
                   className="inline-flex items-center align-items rounded-md bg-slate-800 py-3 px-5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                 >
                   Join the beta
                   <span className="-mr-0.5 ml-2 h-5 w-5"><ArrowRight  /></span>
-                </Link>
-                <Link 
+                </Link> */}
+                <NewsletterForm />
+                {/* <Link 
                   href="https://github.com/azorin-studio" 
                   className="inline-flex items-center align-items rounded-md py-3 px-8 text-sm font-semibold border hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                 >
                   Github
-                </Link>
+                </Link> */}
             </div>
             </section>
             
