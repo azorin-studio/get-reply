@@ -134,7 +134,7 @@ export default function Home() {
                   Whose behind GetReply?
                 </h3>
                 <p className="max-w-[85%] leading-normal text-slate-700 sm:text-lg sm:leading-7">
-                  <a className="underline" href="https://azorin.studios">Azorin Studios</a>, we are a small product studio based in Valencia, Spain.
+                  <a className="underline" href="https://azorin.studio">Azorin Studios</a>, we are a small product studio based in Valencia, Spain.
                 </p>
               </div>
             </section>
