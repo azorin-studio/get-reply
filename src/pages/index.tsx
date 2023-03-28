@@ -5,8 +5,19 @@ import Header from '~/components/Header'
 import Footer from '~/components/Footer'
 import hero from "../../public/hero.svg"
 import Image from 'next/image'
+import Examples from '~/components/Examples'
+
+import EXAMPLES from '~/data/examples'
+import { useState } from 'react'
+
+function classNames(...classes: string[]) {
+  return classes.filter(Boolean).join(' ')
+}
 
 export default function Home() {
+
+  const [activeExample, setActiveExample] = useState<string>('sales')
+
   return (
     <>
       <Head>
@@ -54,135 +65,38 @@ export default function Home() {
                   How it works
                 </h2>
                 <p className="max-w-[85%] leading-normal text-slate-700 sm:text-lg sm:leading-7">
-                  GetReply is a plugin for Gmail using Chat GPT. GetReply writes short, polite follow-up emails that are automatically sent after 2 and 3 days to ensure you get a response to your outbound emails.
+                  GetReply is a plugin for Gmail using Chat GPT. GetReply writes short, polite follow-up emails that are automatically sent after 3 and 6 days to ensure you get a response to your outbound emails.
                 </p>
               </div>
 
-              <div className="mx-auto flex flex-col lg:flex-row gap-8 lg:gap-24 md:max-w-[52rem]">
-                <div className="basis-1/2 font-bold">
-                  You send an email applying for a job.
-                </div>
-                <div className="basis-1/2 border rounded">                  
-                  <div className="p-2 border-b">
-                    <p className="font-bold text-slate-500 text-sm">
-                      Subject: Application for Software Engineer Position
-                    </p>
-                  </div>
-                  <div className="p-2">
-                    <p className="mt-4 text-slate-700 text-sm">
-                      Dear [Hiring Manager&apos;s Name],
-                    </p>
-                    <p className="mt-4 leading-normal text-slate-700 text-sm">
-                      I&apos;m interested in the Software Engineer position at your company. As a software developer with [Number of years] years of experience, I believe I&apos;d be a great fit for the role.
-                    </p>
-                    <p className="mt-2 text-slate-700 text-sm">
-                      Attached is my resume and cover letter for your review. Please let me know if you have any questions.
-                    </p>
-                    <p className="mt-4 leading-normal text-slate-700 text-sm">
-                      Best regards,
-                    </p>
-                    <p className="leading-normal text-slate-700 text-sm">
-                      [Your Name]
-                    </p>
-                  </div>
-                </div>
+              <div className="sm:block">
+                <nav className="lg:-mb-px flex flex-col lg:flex-row lg:space-x-8">
+                  {Object.entries(EXAMPLES).map(([key, tab]) => (
+                    <a
+                      key={key}
+                      href="#"
+                      onClick={(e: any) => {
+                        e.preventDefault()
+                        setActiveExample(key)
+                      }}
+                      className={classNames(
+                        key === activeExample
+                          ? 'border-indigo-500 text-indigo-600'
+                          : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700',
+                        'whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium'
+                      )}
+                      aria-current={key === activeExample ? 'page' : undefined}
+                    >
+                      {tab.label}
+                    </a>
+                  ))}
+                </nav>
               </div>
 
-              <div className="mx-auto mt-8 flex flex-col lg:flex-row gap-8 lg:gap-24 md:max-w-[52rem]">
-              <div className="basis-1/2 font-bold">
-                  [2 days later] GetReply will send an automatic email tailored to your previous exchange.
-                </div>
-                <div className="basis-1/2 border rounded p-2">                     
-                  {/* <p className="font-bold text-slate-700 sm:text-sm">
-                    Subject: Application for Software Engineer Position
-                  </p> */}
-                  <p className=" text-slate-700 sm:text-sm">
-                    Dear [Hiring Manager&apos;s Name],
-                  </p>
-                  <p className="mt-4 leading-normal text-slate-700 sm:text-sm">
-                  Just wanted to check in on my application for the Software Engineer position. Let me know if you need anything else from me.
-                  </p>
-                  <p className="mt-4 leading-normal text-slate-700 sm:text-sm">
-                    Best regards,
-                  </p>
-                  <p className="leading-normal text-slate-700 sm:text-sm">
-                    [Your Name]
-                  </p>
-                </div>
-              </div>
+              <Examples 
+                {...EXAMPLES[activeExample]}
+              />
 
-              <div className="mx-auto mt-8 flex flex-col lg:flex-row gap-8 lg:gap-24 md:max-w-[52rem]">
-                <div className="basis-1/2 font-bold">
-                  [3 days later] GetReply will send one last email to optimise your chances of a response.
-                </div>
-                <div className="basis-1/2 border rounded p-2">           
-                  {/* <p className="font-bold text-slate-700 sm:text-sm">
-                    Subject: Application for Software Engineer Position
-                  </p> */}
-                  <p className=" text-slate-700 sm:text-sm">
-                    Dear [Hiring Manager&apos;s Name],
-                  </p>
-                  <p className="mt-4 leading-normal text-slate-700 sm:text-sm">
-                  I&apos;m still interested in the Software Engineer position and wanted to follow up on my application. Let me know if you have any questions or if there is anything else I can provide.
-                  </p>
-                  <p className="mt-4 leading-normal text-slate-700 sm:text-sm">
-                    Best regards,
-                  </p>
-                  <p className="leading-normal text-slate-700 sm:text-sm">
-                    [Your Name]
-                  </p>
-                </div>
-              </div>
-
-              <div className="mx-auto flex flex-col mt-12 gap-4 md:max-w-[52rem]">
-                <h2 className="text-xl font-bold leading-[1.1] tracking-tighter sm:text-xl md:text-2xl">
-                  Say goodbye to generic follow ups.
-                </h2>
-                <p className="max-w-[85%] leading-normal text-slate-700 sm:text-lg sm:leading-7">
-                  Using Chat GPT, GetReply writes follow ups tailored to your exchange, so the text is context aware, meaning more responses.
-                </p>
-              </div>
-
-            </section>
-
-            <hr className="border-slate-200" />
-
-            <section className="container grid justify-center gap-6 py-8 md:py-12 lg:py-24">
-              <div className="mx-auto flex flex-col gap-4 md:max-w-[52rem]">
-                <h2 className="text-3xl font-bold leading-[1.1] tracking-tighter sm:text-3xl md:text-6xl">
-                  Who is it for?
-                </h2>
-                <h3 className="text-xl font-bold leading-[1.1] tracking-tighter sm:text-xl md:text-xl">
-                  Sales follow-ups
-                </h3>
-                <p className="max-w-[85%] leading-normal text-slate-700 sm:text-lg sm:leading-7">
-                  You&apos;ve sent out a proposal to a potential client and haven&apos;t heard back. Rather than spend time crafting a follow-up email, simply click the GetReply button and let the plugin do the work for you. The polite and professional follow-up emails are automatically sent after 2 and 3 days, increasing the chances of getting a response.
-                </p>
-                <h3 className="text-xl font-bold leading-[1.1] tracking-tighter sm:text-xl md:text-xl">
-                  Networking
-                </h3>
-                <p className="max-w-[85%] leading-normal text-slate-700 sm:text-lg sm:leading-7">
-                  After attending a conference or event, you&apos;ve collected a stack of business cards and want to follow up with each person. Instead of manually sending out individual follow-up emails, use GetReply to schedule and send polite follow-ups with just one click.
-                </p>
-                <h3 className="text-xl font-bold leading-[1.1] tracking-tighter sm:text-xl md:text-xl">
-                  Job hunting
-                </h3>
-                <p className="max-w-[85%] leading-normal text-slate-700 sm:text-lg sm:leading-7">
-                  You&apos;ve sent out multiple job applications but haven&apos;t received any responses. Use GetReply to send polite follow-ups and increase your chances of getting a response from potential employers.
-                </p>
-                <h3 className="text-xl font-bold leading-[1.1] tracking-tighter sm:text-xl md:text-xl">
-                  Customer service
-                </h3>
-                <p className="max-w-[85%] leading-normal text-slate-700 sm:text-lg sm:leading-7">
-                  As a customer service representative, you&apos;ve received a high volume of emails that need follow-up. Use GetReply to quickly and easily schedule polite follow-ups for each email, ensuring that each customer receives a timely response.
-                </p>
-                <h3 className="text-xl font-bold leading-[1.1] tracking-tighter sm:text-xl md:text-xl">
-                  Fundraising
-                </h3>
-                <p className="max-w-[85%] leading-normal text-slate-700 sm:text-lg sm:leading-7">
-                  As a founder you send out a bunch of emails to prospective investors, it can be stressful to keep track of follow ups. Use GetReply to automatically schedule tailored follow ups to make sure you get as many meetings as possible.
-                </p>
-              </div>
             </section>
 
             <hr className="border-slate-200" />
@@ -193,6 +107,12 @@ export default function Home() {
                   Frequently asked questions
                 </h2>
                 <h3 className="mt-8 text-xl font-bold leading-[1.1] tracking-tighter sm:text-xl md:text-xl">
+                  How does GetReply differ from other offerings?
+                </h3>
+                <p className="max-w-[85%] leading-normal text-slate-700 sm:text-lg sm:leading-7">
+                  What sets GetReply apart is its simplicity. GetReply is a one-button solution that leverages the power of Chat GPT to write short and polite follow-up emails, making it a hassle-free option for busy professionals who need to follow up on a high volume of emails.
+                </p>
+                <h3 className="mt-4 text-xl font-bold leading-[1.1] tracking-tighter sm:text-xl md:text-xl">
                   Whats the stage of the product?
                 </h3>
                 <p className="max-w-[85%] leading-normal text-slate-700 sm:text-lg sm:leading-7">
@@ -214,7 +134,7 @@ export default function Home() {
                   Whose behind GetReply?
                 </h3>
                 <p className="max-w-[85%] leading-normal text-slate-700 sm:text-lg sm:leading-7">
-                  <a href="https://azorin.studios">Azorin Studios</a>, we are a small product studio based in Valencia, Spain.
+                  <a className="underline" href="https://azorin.studios">Azorin Studios</a>, we are a small product studio based in Valencia, Spain.
                 </p>
               </div>
             </section>
