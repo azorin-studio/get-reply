@@ -4,11 +4,11 @@ const NewsletterForm = () => {
 
   return (
     <form
-      action="https://buttondown.email/api/emails/embed-subscribe/amonecho"
+      action="https://buttondown.email/api/emails/embed-subscribe/get-reply"
       method="post"
       target="popupwindow"
       className="flex flex-col sm:flex-row gap-4"
-      onSubmit={() => window.open('https://buttondown.email/amonecho', 'popupwindow')}
+      onSubmit={() => window.open('https://buttondown.email/get-reply', 'popupwindow')}
     >
       <label className="hidden" htmlFor="bd-email">Enter your email</label>
       <input 
