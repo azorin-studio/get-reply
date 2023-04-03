@@ -64,7 +64,7 @@ export default function Home() {
             <section className="container grid justify-center gap-6 py-8 md:py-12 lg:py-24">
               <div className="mx-auto flex flex-col gap-4 md:max-w-[52rem]">
                 <h2 className="text-3xl font-bold leading-[1.1] tracking-tighter sm:text-3xl md:text-6xl">
-                  How it works
+                  No more generic follow ups!
                 </h2>
                 <p className="max-w-[85%] leading-normal text-slate-700 sm:text-lg sm:leading-7">
                   GetReply is a plugin for Gmail using Chat GPT. GetReply writes short, polite follow-up emails that are automatically sent after 3 and 6 days to ensure you get a response to your outbound emails.
