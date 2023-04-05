@@ -42,7 +42,8 @@ const generate = async function (req, res) {
     const response = completion.data.choices[0].text
     console.log(`RESPONSE:\n\n${response}\n\n`)
     try {
-      res.status(200).json(JSON.parse(response))
+      const [e1, e2] = response.split('====SEP====')
+      res.status(200).json([e1.trim(), e2.trim()])
     } catch (err) {
       throw new Error('Badly formatted response, this happens sometimes, please try again.')
     }
@@ -74,12 +75,8 @@ function generatePrompt(payload) {
 - Add two newlines before the closing.
 - The follow ups should not be identical.
 - The second follow up should mention its the last time you will follow up.
-- Do not include any explanations, only provide a RFC8259 compliant JSON response, escape newlines with \\n.
-- Follow this format without deviation:
-  {
-    "followup1": "text of the first follow up",
-    "followup2": "text of the second follow up",
-  }
+- Do not include any explanations
+- Only provide the two follow ups, separated by the string "====SEP===="
 
 input: 
 
