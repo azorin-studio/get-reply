@@ -16,24 +16,36 @@ const generate = async function (req, res) {
     return
   }
 
-  const input = req.body.input || ''
-  if (input.trim().length === 0) {
+  const payload = req.body.payload || ''
+  if (payload.trim().length === 0) {
     res.status(400).json({
       error: {
-        message: "Please enter a valid input",
+        message: "Please enter a valid payload",
       }
     })
     return
   }
 
   try {
+    const prompt = generatePrompt(payload)
+    console.log(`PROMPT:\n\n${prompt}\n\n`)
     const completion = await openai.createCompletion({
       model: "text-davinci-003",
-      prompt: generatePrompt(input),
-      temperature: 0.6,
+      prompt,
+      temperature: 0.7,
+      top_p: 1,
+      frequency_penalty: 0,
+      presence_penalty: 0,
+      max_tokens: 1024,
+      n: 1,
     })
-    console.log(completion.data)
-    res.status(200).json({ result: completion.data.choices[0].text })
+    const response = completion.data.choices[0].text
+    console.log(`RESPONSE:\n\n${response}\n\n`)
+    try {
+      res.status(200).json(JSON.parse(response))
+    } catch (err) {
+      throw new Error('Badly formatted response, this happens sometimes, please try again.')
+    }
   } catch(error) {
     // Consider adjusting the error handling logic for your use case
     if (error.response) {
@@ -43,18 +55,35 @@ const generate = async function (req, res) {
       console.error(`Error with OpenAI API request: ${error.message}`)
       res.status(500).json({
         error: {
-          message: 'An error occurred during your request.',
+          message: error.message || 'An error occurred during your request.',
         }
       })
     }
   }
 }
 
-function generatePrompt(input) {
+function generatePrompt(payload) {
+  return `
+- Take the input email below
+- Write a follow up that would be sent three days after the original email if there is no response.
+- Then write a follow up that will be sent three days after the first follow up. 
+- The tone should be casual, friendly and polite.
+- The follow ups should refer to the context of the first email 
+- The follow ups should be short. 
+- Add two newlines after the greeting.
+- Add two newlines before the closing.
+- The follow ups should not be identical.
+- The second follow up should mention its the last time you will follow up.
+- Do not include any explanations, only provide a RFC8259 compliant JSON response, escape newlines with \\n.
+- Follow this format without deviation:
+  {
+    "followup1": "text of the first follow up",
+    "followup2": "text of the second follow up",
+  }
 
-  return `Write a short follow up for the following input email
+input: 
 
-  input: ${input}
+${payload}
 `
 }
 

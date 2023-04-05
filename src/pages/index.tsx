@@ -1,6 +1,5 @@
 import Head from 'next/head'
 import Link from 'next/link'
-import { ArrowRight } from 'lucide-react'
 import Header from '~/components/Header'
 import Footer from '~/components/Footer'
 import hero from "../../public/hero.svg"
@@ -10,6 +9,7 @@ import Examples from '~/components/Examples'
 import EXAMPLES from '~/data/examples'
 import { useState } from 'react'
 import NewsletterForm from '~/components/NewsletterForm'
+import { ArrowUpRight } from 'lucide-react'
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
@@ -64,10 +64,10 @@ export default function Home() {
             <section className="container grid justify-center gap-6 py-8 md:py-12 lg:py-24">
               <div className="mx-auto flex flex-col gap-4 md:max-w-[52rem]">
                 <h2 className="text-3xl font-bold leading-[1.1] tracking-tighter sm:text-3xl md:text-6xl">
-                  No more generic follow ups!
+                  How it works.
                 </h2>
                 <p className="max-w-[85%] leading-normal text-slate-700 sm:text-lg sm:leading-7">
-                  GetReply is a plugin for Gmail using Chat GPT. GetReply writes short, polite follow-up emails that are automatically sent after 3 and 6 days to ensure you get a response to your outbound emails.
+                  GetReply is a plugin for Gmail using Chat GPT. It drafts short, polite follow-up emails after 3 and 6 days to ensure you get a response to your outbound emails.
                 </p>
               </div>
 
@@ -99,6 +99,23 @@ export default function Home() {
                 {...EXAMPLES[activeExample as keyof typeof EXAMPLES]}
               />
 
+              <div className="mx-auto mt-8 flex flex-col gap-8 md:max-w-[52rem]">
+                <h2 className="text-3xl font-bold leading-[1.1] tracking-tighter sm:text-3xl md:text-6xl">
+                  Ready to try?
+                </h2>
+                <p className="max-w-[85%] leading-normal text-slate-700 sm:text-2xl sm:leading-7">
+                  <Link
+                    href="/demo"
+                    className="items-center justify-center space-x-2 flex ml-2"
+                  > 
+                    <span className="font-bold sm:inline-block underline">
+                    Try out the demo
+                    </span>
+                    <ArrowUpRight />
+                  </Link>
+                </p>
+              </div>
+
             </section>
 
             <hr className="border-slate-200" />
@@ -109,28 +126,46 @@ export default function Home() {
                   Frequently asked questions
                 </h2>
                 <h3 className="mt-8 text-xl font-bold leading-[1.1] tracking-tighter sm:text-xl md:text-xl">
+                  Does GetReply actually send emails?
+                </h3>
+                <p className="max-w-[85%] leading-normal text-slate-700 sm:text-lg sm:leading-7">
+                  No. GetReply generates a draft email for you to review and customize before sending, giving you full control over the email&apos;s content and timing.
+                </p>
+                <p className="max-w-[85%] leading-normal text-slate-700 sm:text-lg sm:leading-7">
+                  It marks the thread as unread, to remind you of the draft email, so you can follow up with minimal effort.
+                </p>
+                <p className="max-w-[85%] leading-normal text-slate-700 sm:text-lg sm:leading-7">
+                  This approach offers you control and flexibility over your follow-ups.
+                </p>
+                <h3 className="mt-8 text-xl font-bold leading-[1.1] tracking-tighter sm:text-xl md:text-xl">
                   How does GetReply differ from other offerings?
                 </h3>
                 <p className="max-w-[85%] leading-normal text-slate-700 sm:text-lg sm:leading-7">
-                  What sets GetReply apart is its simplicity. GetReply is a one-button solution that leverages the power of Chat GPT to write short and polite follow-up emails, making it a hassle-free option for busy professionals who need to follow up on a high volume of emails.
+                  GetReply integrates directly with Gmail, eliminating the need for complex mail merge processes or custom coding. You can quickly install the plugin and start using it without the hassle of learning complicated software or hiring developers.
+                </p>
+                <p className="max-w-[85%] leading-normal text-slate-700 sm:text-lg sm:leading-7">
+                  By leveraging Chat GPT, GetReply creates personalized follow-up emails that are more likely to elicit a response from recipients. This eliminates the need for you to craft your own follow ups.
+                </p>
+                <p className="max-w-[85%] leading-normal text-slate-700 sm:text-lg sm:leading-7">
+                  GetReply is highly customizable and flexible, allowing you to tailor their follow-up emails. Users can customize the tone and language of their emails, and schedule emails to be crafted at different intervals. This level of customization ensures that users can create a tailored follow-up strategy.
                 </p>
                 <h3 className="mt-4 text-xl font-bold leading-[1.1] tracking-tighter sm:text-xl md:text-xl">
                   Whats the stage of the product?
                 </h3>
                 <p className="max-w-[85%] leading-normal text-slate-700 sm:text-lg sm:leading-7">
-                  It&apos;s just an idea for now, but we intend to start building after we gather a few motivated beta testers.
+                  GetReply is in the ideation and feedback stage, gathering feedback to shape its development.
                 </p>
                 <h3 className="text-xl font-bold leading-[1.1] tracking-tighter sm:text-xl md:text-xl">
                   How much will you charge?
                 </h3>
                 <p className="max-w-[85%] leading-normal text-slate-700 sm:text-lg sm:leading-7">
-                  We are thinking $5 per month per user.
+                  GetReply is priced at $5 per month per user. This low subscription fee makes it accessible to individuals and small businesses with limited budgets, while still providing a high-quality solution that can help drive business results. Additionally, GetReply offers a 14-day free trial, giving you the opportunity to try the product before committing to a subscription.
                 </p>
                 <h3 className="text-xl font-bold leading-[1.1] tracking-tighter sm:text-xl md:text-xl">
                   Can I self host?
                 </h3>
                 <p className="max-w-[85%] leading-normal text-slate-700 sm:text-lg sm:leading-7">
-                  Yes we will release everything open source, so you can self host for free, or pay $5 per month to use our hosted service.
+                  We will make GetReply open source and free for self-hosting. This approach offers more customization options and accessibility for those without the budget for a subscription. While this may impact revenue streams, we believe it&apos;s worth providing users with more control. We&apos;sll explore other monetization strategies such as premium features or support.
                 </p>
                 <h3 className="text-xl font-bold leading-[1.1] tracking-tighter sm:text-xl md:text-xl">
                   Whose behind GetReply?

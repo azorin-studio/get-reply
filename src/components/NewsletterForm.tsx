@@ -1,4 +1,6 @@
 import React from 'react'
+import { ArrowUpRight } from 'lucide-react'
+import Link from 'next/link'
 
 const NewsletterForm = () => {
 
@@ -23,6 +25,21 @@ const NewsletterForm = () => {
         value="Subscribe to beta" 
         className="inline-flex items-center align-items rounded-md bg-slate-800 py-3 px-5 text-sm font-semibold text-white shadow-sm hover:bg-slate-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
       />
+
+      <div
+        className='inline-flex items-center align-items'
+      >
+        Or,
+        <Link
+          href="/demo"
+          className="items-center space-x-2 flex ml-2"
+        > 
+          <span className="underline font-bold sm:inline-block">
+          Try out the demo
+          </span>
+          <ArrowUpRight />
+        </Link>
+        </div>
     </form>
   )
 }
