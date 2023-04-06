@@ -37,8 +37,23 @@ export default function Footer() {
             </a>. 
           </p>
         </div>
-        <p className="text-center md:text-left">
-          The source code is available on{" "}
+        <div className="inline-flex gap-4 text-center md:text-left">
+          <a
+            href='/terms'
+            target="_blank"
+            rel="noreferrer"
+            className="font-medium underline underline-offset-4"
+          >
+            Terms
+          </a>
+          <a
+            href='/privacy'
+            target="_blank"
+            rel="noreferrer"
+            className="font-medium underline underline-offset-4"
+          >
+            Privacy policy
+          </a>
           <a
             href={'https://github.com/azorin-studio/get-reply'}
             target="_blank"
@@ -47,8 +62,7 @@ export default function Footer() {
           >
             GitHub
           </a>
-          .
-        </p>
+        </div>
       </div>
     </footer>
   )
