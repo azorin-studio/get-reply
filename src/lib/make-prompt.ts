@@ -1,6 +1,6 @@
 
 
-function makePrompt(payload: string) {
+function makePrompt(payload: string, userPrompt: string) {
   return `
 - Take the input email below
 - Write a follow up that would be sent three days after the original email if there is no response.
@@ -10,6 +10,7 @@ function makePrompt(payload: string) {
 - The follow ups should be short. 
 - Add two newlines after the greeting.
 - Add two newlines before the closing.
+${userPrompt}
 - The follow ups should not be identical.
 - The second follow up should mention its the last time you will follow up.
 - Do not include any explanations

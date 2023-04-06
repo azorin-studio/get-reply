@@ -3,8 +3,8 @@ import { MailPlus, Github, ArrowUpRight } from 'lucide-react'
 
 export default function Header() {
   return (
-    <header className="w-full sticky top-0 z-40 bg-white mx-auto px-2">
-      <div className="flex h-16 items-center justify-between border-b border-b-slate-200 py-4 px-4">
+    <header className="w-full sticky top-0 z-40 bg-white mx-auto">
+      <div className="flex h-16 items-center justify-between border-b border-b-slate-200 p-4">
         <div className="flex gap-6 md:gap-10">
           <Link href="/" className="items-center space-x-2 flex">
             <MailPlus />

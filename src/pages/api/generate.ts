@@ -8,9 +8,30 @@ const handler = async function (req: NextApiRequest, res: NextApiResponse<Data>)
     return
   }
 
+  const userPrompt = req.body.userPrompt || ''
+
   try {
-    const data = await generate(payload)
-    res.status(200).json(data)
+    const { data, prompt } = await generate(payload, userPrompt)
+    res.status(200).json({ data })
+
+    if (process.env.GRAPHJSON_API_KEY) {
+      await fetch("https://api.graphjson.com/api/log", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          api_key: process.env.GRAPHJSON_API_KEY,
+          collection: "generations",
+          json: JSON.stringify({
+            followups: data,
+            prompt
+          }),
+          timestamp: Math.floor(new Date().getTime() / 1000),
+        })
+      })
+
+    }
+  
+
   } catch(error: any) {
     if (error.response) {
       res.status(error.response.status).json(error.response.data)

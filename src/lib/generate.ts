@@ -6,6 +6,7 @@ export type Data = {
     message: string
   },
   data?: string[]
+  prompt?: string
 }
 
 const configuration = new Configuration({
@@ -14,13 +15,13 @@ const configuration = new Configuration({
 
 const openai = new OpenAIApi(configuration)
 
-const generate = async function<Data> (payload: string) {
+const generate = async function<Data> (payload: string, userPrompt: string) {
   if (!configuration.apiKey) {
     throw new Error("OpenAI API key not configured, please follow instructions in README.md")
   }
 
   try {
-    const prompt = makePrompt(payload)
+    const prompt = makePrompt(payload, userPrompt)
     console.log(`PROMPT:\n\n${prompt}\n\n`)
 
     const completion = await openai.createCompletion({
@@ -38,11 +39,10 @@ const generate = async function<Data> (payload: string) {
     
     try {
       const [e1, e2] = response!.split('====SEP====')
-      return { data: [e1.trim(), e2.trim()] }
+      return { data: [e1.trim(), e2.trim()], prompt }
     } catch (err) {
       throw new Error('Badly formatted response, this happens sometimes, please try again.')
     }
-
   } catch(error: any) {
     if (error.response) {
       throw new Error(error.response.data)
