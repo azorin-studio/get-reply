@@ -38,7 +38,7 @@ export default function Home() {
         body: JSON.stringify({ payload: content }),
       })
 
-      const data = await response.json()
+      const { data } = await response.json()
       if (response.status !== 200) {
         throw data.error || new Error(`Request failed with status ${response.status}`)
       }
