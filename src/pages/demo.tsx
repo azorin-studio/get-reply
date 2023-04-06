@@ -71,6 +71,9 @@ export default function Home() {
                 onSubmit={onSubmit}
               >
                 <h1 className="text-2xl font-bold leading-[1.1] tracking-tighter sm:text-2xl md:text-2xl">Enter your outbound email:</h1>
+                <p className="text-slate-700">
+                  We are still building GetReply, but here you can enter a test email to see how GetReply would generate follow ups.
+                </p>
                 <textarea
                   name="email"
                   rows={10}
