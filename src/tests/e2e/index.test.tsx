@@ -1,9 +1,18 @@
 
 
 import { test, expect } from '@playwright/test'
+import { type Data } from "../../lib/generate"
+
 
 test('should run a demo from the demo page', async ({ page }) => {
-  // Start from the index page (the baseURL is set via the webServer in the playwright.config.ts)
+  await page.route('http://localhost:3000/api/*', async route => {
+    const json: Data = {
+      data: ["Dear Hiring Manager,", "Dear Hiring Manager,"],
+      prompt: ""
+    };
+    await route.fulfill({ json });
+  });
+
   await page.goto('/')
   await page.getByRole('link', { name: 'Try the demo' }).click();
   await expect(page).toHaveURL('/demo')
