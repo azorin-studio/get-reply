@@ -1,6 +1,7 @@
 import { Loader, ThumbsDown, ThumbsUp } from "lucide-react"
 import Head from "next/head"
 import { useEffect, useState } from "react"
+import fetch from 'isomorphic-fetch'
 import Footer from "~/components/Footer"
 import Header from "~/components/Header"
 import EXAMPLES from '~/data/examples'
@@ -8,7 +9,7 @@ import ms from "ms"
 import RatingButtons from "~/components/RatingButtons"
 
 function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(' ')
+return classes.filter(Boolean).join(' ')
 }
 
 const DEFAULT_EMAIL = `Dear Hiring Manager, 
@@ -24,147 +25,147 @@ const DEFAULT_RESULT = null
 // const DEFAULT_RESULT = ['a', 'b']
 
 export default function Home() {
-  const [busy, setBusy] = useState<boolean>(false)
-  const [result, setResult] = useState<null | string[]>(DEFAULT_RESULT)
-  const [timer, setTimer] = useState<null | string>(null)
-  const [error, setError] = useState<null | string>(null)
-  const [content, setContent] = useState<string | null>(DEFAULT_EMAIL)
-  const [userPrompt, setUserPrompt] = useState<string>('')
+const [busy, setBusy] = useState<boolean>(false)
+const [result, setResult] = useState<null | string[]>(DEFAULT_RESULT)
+const [timer, setTimer] = useState<null | string>(null)
+const [error, setError] = useState<null | string>(null)
+const [content, setContent] = useState<string | null>(DEFAULT_EMAIL)
+const [userPrompt, setUserPrompt] = useState<string>('')
 
-  async function onSubmit(event: any) {
-    setBusy(false)
-    setError(null)
-    setTimer(null)
-    event.preventDefault()
-    try {
-      setBusy(true)
-      const t1 = new Date()
-      const response = await fetch("/api/generate", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ payload: content, userPrompt }),
-      })
-      const t2 = new Date()
-      setTimer(ms(t2.getTime()-t1.getTime()))
+async function onSubmit(event: any) {
+  setBusy(false)
+  setError(null)
+  setTimer(null)
+  event.preventDefault()
+  try {
+    setBusy(true)
+    const t1 = new Date()
+    const response = await fetch("/api/generate", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ payload: content, userPrompt }),
+    })
+    const t2 = new Date()
+    setTimer(ms(t2.getTime()-t1.getTime()))
 
-      const { data, error } = await response.json()
-      console.log(response)
-      if (response.status !== 200) {
-        throw error || new Error(`Request failed with status ${response.status}`)
-      }
-
-      setResult(data)
-      // setContent("")
-      setBusy(false)
-    } catch(error: any) {
-      // Consider implementing your own error handling logic here
-      setBusy(false)
-      console.error(error)
-      setError(error.message)
+    const { data, error } = await response.json()
+    console.log(response)
+    if (response.status !== 200) {
+      throw error || new Error(`Request failed with status ${response.status}`)
     }
+
+    setResult(data)
+    // setContent("")
+    setBusy(false)
+  } catch(error: any) {
+    // Consider implementing your own error handling logic here
+    setBusy(false)
+    console.error(error)
+    setError(error.message)
   }
+}
 
-  return (
-    <div>
-      <Head>
-        <title>OpenAI Quickstart</title>
-        <link rel="icon" href="/dog.png" />
-      </Head>
+return (
+  <div>
+    <Head>
+      <title>OpenAI Quickstart</title>
+      <link rel="icon" href="/dog.png" />
+    </Head>
 
-      <div className="min-h-screen bg-white font-sans text-slate-800 antialiased">
-        <div className="flex min-h-screen flex-col">
-          <Header />
-          <main className="container flex-1 p-4">
-            <div className="flex flex-col lg:flex-row gap-8 p-8">
-              <form className="basis-1/2 flex flex-col gap-4"
-                onSubmit={onSubmit}
+    <div className="min-h-screen bg-white font-sans text-slate-800 antialiased">
+      <div className="flex min-h-screen flex-col">
+        <Header />
+        <main className="container flex-1 p-4">
+          <div className="flex flex-col lg:flex-row gap-8 p-8">
+            <form className="basis-1/2 flex flex-col gap-4"
+              onSubmit={onSubmit}
+            >
+              <h1 className="text-2xl font-bold leading-[1.1] tracking-tighter sm:text-2xl md:text-2xl">Enter your outbound email</h1>
+              <p className="text-slate-700 text-sm">
+                We are still building GetReply, but here you can enter a test email to see how GetReply would generate follow ups.
+                We are still fine tuning the model, so expect some badly formed responses for now. If this happens just try again.
+              </p>
+              <textarea
+                name="email"
+                rows={10}
+                placeholder="Enter the email you want follow ups for"
+                className="p-2 w-full prose prose-sm max-w-full min-h-fit whitespace-pre-wrap block border rounded-md bg-transparent text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                value={content || ""}
+                onChange={(e) => setContent(e.target.value)}
+              />
+              <textarea
+                name="userPrompt"
+                rows={5}
+                placeholder={`Enter custom prompts rules for the ai in a list separated by '-', example:\n\n- use the word "wow" a few times`}
+                className="p-2 w-full prose prose-sm max-w-full min-h-fit whitespace-pre-wrap block border rounded-md bg-transparent text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                value={userPrompt || ""}
+                onChange={(e) => setUserPrompt(e.target.value)}
+              />
+              <button
+                type="submit" 
+                value="Generate"
+                className="inline-flex gap-2 items-center h-12 justify-center align-items rounded-md bg-slate-800 py-2 px-2 text-sm font-semibold text-white shadow-sm hover:bg-slate-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
-                <h1 className="text-2xl font-bold leading-[1.1] tracking-tighter sm:text-2xl md:text-2xl">Enter your outbound email</h1>
-                <p className="text-slate-700 text-sm">
-                  We are still building GetReply, but here you can enter a test email to see how GetReply would generate follow ups.
-                  We are still fine tuning the model, so expect some badly formed responses for now. If this happens just try again.
-                </p>
-                <textarea
-                  name="email"
-                  rows={10}
-                  placeholder="Enter the email you want follow ups for"
-                  className="p-2 w-full prose prose-sm max-w-full min-h-fit whitespace-pre-wrap block border rounded-md bg-transparent text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                  value={content || ""}
-                  onChange={(e) => setContent(e.target.value)}
+                {/* {busy && <Loader className="animate-spin" />} */}
+                {busy ? 'Generating' : 'Generate'}
+              </button>
+            </form>
+            <div className="basis-1/2 flex flex-col gap-4">
+              <div className="flex flex-row justify-between items-center">
+                <h1 className="text-2xl font-bold leading-[1.1] tracking-tighter sm:text-2xl md:text-2xl">The follow ups that GetReply will generate</h1>
+                <RatingButtons 
+                  disabled={!(!busy && !error && result?.length)}
+                  result={result}
                 />
-                <textarea
-                  name="userPrompt"
-                  rows={5}
-                  placeholder={`Enter custom prompts rules for the ai in a list separated by '-', example:\n\n- use the word "wow" a few times`}
-                  className="p-2 w-full prose prose-sm max-w-full min-h-fit whitespace-pre-wrap block border rounded-md bg-transparent text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                  value={userPrompt || ""}
-                  onChange={(e) => setUserPrompt(e.target.value)}
-                />
-                <button
-                  type="submit" 
-                  value="Generate"
-                  className="inline-flex gap-2 items-center h-12 justify-center align-items rounded-md bg-slate-800 py-2 px-2 text-sm font-semibold text-white shadow-sm hover:bg-slate-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                >
-                  {/* {busy && <Loader className="animate-spin" />} */}
-                  {busy ? 'Generating' : 'Generate'}
-                </button>
-              </form>
-              <div className="basis-1/2 flex flex-col gap-4">
-                <div className="flex flex-row justify-between items-center">
-                  <h1 className="text-2xl font-bold leading-[1.1] tracking-tighter sm:text-2xl md:text-2xl">The follow ups that GetReply will generate</h1>
-                  <RatingButtons 
-                    disabled={!(!busy && !error && result?.length)}
-                    result={result}
-                  />
-                </div>
-                {!busy && !error && result?.length && (
+              </div>
+              {!busy && !error && result?.length && (
+                <div className="flex flex-col gap-4">
                   <div className="flex flex-col gap-4">
-                    <div className="flex flex-col gap-4">
-                      <p className="text-slate-700 text-sm">
-                        GetReply will generate a draft in your email account after 3 days, it will mark the thread as unread to bring it to your attention,
-                        you can then edit and send as you please. This is the first draft it will make: 
-                      </p>
-                      <div className="border bg-slate-100 rounded prose-sm whitespace-pre-wrap">
-                        <div className="border-b p-1 text-xs px-2 text-slate-500 align-items justify-end">
-                          Generation took {timer}
-                        </div>
-                        <div className="p-2">
-                        {result[0]} 
-                        </div>
+                    <p className="text-slate-700 text-sm">
+                      GetReply will generate a draft in your email account after 3 days, it will mark the thread as unread to bring it to your attention,
+                      you can then edit and send as you please. This is the first draft it will make: 
+                    </p>
+                    <div className="border bg-slate-100 rounded prose-sm whitespace-pre-wrap">
+                      <div className="border-b p-1 text-xs px-2 text-slate-500 align-items justify-end">
+                        Generation took {timer}
                       </div>
-                    </div>
-                    
-                    <div className="flex flex-col gap-4">
-                      <p className="text-slate-700 text-sm">
-                        GetReply will repeat the process if there is not a response after another 3 days, generating a second draft email:
-                      </p>
-                      <div className="border bg-slate-100 rounded p-2 prose-sm whitespace-pre-wrap">
-                        {result[1]}
+                      <div className="p-2" data-testid="followup1">
+                        {result[0]} 
                       </div>
                     </div>
                   </div>
-                )}
-
-                {!busy && !error && !result && (
-                  <div>Click the generate button on the left!</div>
-                )}
-                <div className="text-red-600">{!busy && error}</div>
-                <div>
-                  {busy && (
-                    <div className="inline-flex flex-row gap-2">
-                      <Loader className="animate-spin" />
-                      Generating follow ups. This can take up to 10 seconds.
+                  
+                  <div className="flex flex-col gap-4">
+                    <p className="text-slate-700 text-sm">
+                      GetReply will repeat the process if there is not a response after another 3 days, generating a second draft email:
+                    </p>
+                    <div className="border bg-slate-100 rounded p-2 prose-sm whitespace-pre-wrap" data-testid="followup2">
+                      {result[1]}
                     </div>
-                  )}
+                  </div>
                 </div>
+              )}
+
+              {!busy && !error && !result && (
+                <div>Click the generate button on the left!</div>
+              )}
+              <div className="text-red-600">{!busy && error}</div>
+              <div>
+                {busy && (
+                  <div className="inline-flex flex-row gap-2">
+                    <Loader className="animate-spin" />
+                    Generating follow ups. This can take up to 10 seconds.
+                  </div>
+                )}
               </div>
             </div>
-          </main>
-          <Footer/>
-        </div>
+          </div>
+        </main>
+        <Footer/>
       </div>
     </div>
-  )
+  </div>
+)
 }
