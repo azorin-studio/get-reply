@@ -67,7 +67,7 @@ export default function Home() {
                   How it works.
                 </h2>
                 <p className="max-w-[85%] leading-normal text-slate-700 sm:text-lg sm:leading-7">
-                  GetReply is a plugin for Gmail using Chat GPT. It drafts short, polite follow-up emails after 3 and 6 days to ensure you get a response to your outbound emails.
+                  GetReply drafts short, polite follow-ups using ChatGPT, to ensure you get a response to your outbound emails.
                 </p>
               </div>
 
@@ -141,7 +141,7 @@ export default function Home() {
                   How does GetReply differ from other offerings?
                 </h3>
                 <p className="max-w-[85%] leading-normal text-slate-700 sm:text-lg sm:leading-7">
-                  GetReply integrates directly with Gmail, eliminating the need for complex mail merge processes or custom coding. You can quickly install the plugin and start using it without the hassle of learning complicated software or hiring developers.
+                  You just bcc GetReply in your emails, eliminating the need for complex mail merge processes or custom coding. You can quickly install GetReply and start using it without the hassle of learning complicated software or hiring developers.
                 </p>
                 <p className="max-w-[85%] leading-normal text-slate-700 sm:text-lg sm:leading-7">
                   By leveraging Chat GPT, GetReply creates personalized follow-up emails that are more likely to elicit a response from recipients. This eliminates the need for you to craft your own follow ups.

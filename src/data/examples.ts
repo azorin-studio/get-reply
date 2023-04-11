@@ -2,7 +2,7 @@
 const EXAMPLES = {
   sales: {
     label: 'Sales follow-ups',
-    description: `You've sent out a proposal to a potential client and haven't heard back. Rather than spend time crafting a follow-up email, simply click the GetReply button and let the plugin do the work for you. The polite and professional follow-up emails are automatically sent after 2 and 3 days, increasing the chances of getting a response.`,
+    description: `You've sent out a proposal to a potential client and haven't heard back. Rather than spend time crafting a follow-up email, let the GetReply do the work for you. The polite and professional follow-up emails are automatically sent after a few days, increasing the chances of getting a response.`,
     subject: 'Introducing GymX for mobile',
     emails: [
 `Dear Mr. Strong, 

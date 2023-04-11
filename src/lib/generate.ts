@@ -22,7 +22,7 @@ const generate = async function<Data> (payload: string, userPrompt: string) {
 
   try {
     const prompt = makePrompt(payload, userPrompt)
-    console.log(`PROMPT:\n\n${prompt}\n\n`)
+    // console.log(`PROMPT:\n\n${prompt}\n\n`)
 
     const completion = await openai.createCompletion({
       model: "text-davinci-003",
@@ -35,13 +35,14 @@ const generate = async function<Data> (payload: string, userPrompt: string) {
       n: 1,
     })
     const response = completion.data.choices[0].text
-    console.log(`RESPONSE:\n\n${response}\n\n`)
+    // console.log(`RESPONSE:\n\n${response}\n\n`)
     
     try {
+      console.log(response)
       const [e1, e2] = response!.split('====SEP====')
       return { data: [e1.trim(), e2.trim()], prompt }
-    } catch (err) {
-      throw new Error('Badly formatted response, this happens sometimes, please try again.')
+    } catch (err: any) {
+      throw new Error(err.message || 'Badly formatted response, this happens sometimes, please try again.')
     }
   } catch(error: any) {
     if (error.response) {

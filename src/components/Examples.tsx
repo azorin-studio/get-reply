@@ -5,17 +5,17 @@ export default function Examples(props: { subject: string, emails: string[], lab
   return (
     <div className="mx-auto md:max-w-[52rem]">
       <div className="">
-      <h3 className="text-xl font-bold leading-[1.1] tracking-tighter sm:text-xl md:text-xl">
+      <h3 className="text-xl font-bold leading-[1.1] tracking-tighter sm:text-xl md:text-xl text-slate-700">
         {label}
       </h3>
-      <p className="leading-normal text-slate-700 sm:leading-7">
+      <p className="leading-normal text-slate-500 sm:leading-7">
         {description}
       </p>
       </div>
       <div className="flex flex-col lg:flex-row gap-8 lg:gap-24 mt-8">
         <div className="basis-1/2">
           <p className="text-6xl font-bold">1.</p>
-          <p className="font-bold"><span className="underline">You</span> send a first outbound email.</p> 
+          <p className="font-bold"><span className="underline">You</span> send a first outbound email and bcc GetReply.</p> 
         </div>
         <div className="basis-1/2 border rounded">                  
           <div className="p-2 border-b">
