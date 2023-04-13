@@ -3,7 +3,6 @@
 import { test, expect } from '@playwright/test'
 import { type Data } from "../../lib/generate"
 
-
 test('should run a demo from the demo page', async ({ page }) => {
   await page.route('http://localhost:3000/api/*', async route => {
     const json: Data = {
