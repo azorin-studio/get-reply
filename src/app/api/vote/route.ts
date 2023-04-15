@@ -1,11 +1,12 @@
 import fetch from 'node-fetch'
-import type { NextApiRequest, NextApiResponse } from 'next'
+import { NextResponse } from "next/server"
 
-const handler = async function (req: NextApiRequest, res: NextApiResponse) {
-  const { vote, followups } = req.body
+export async function POST (request: Request) {
+  const data = await request.json()
+  const { vote, followups } = data
 
   if (!process.env.GRAPHJSON_API_KEY) {
-    return res.status(500).json({ error: { message: 'GRAPHJSON_API_KEY not set.' } })
+    return NextResponse.json({ error: { message: 'GRAPHJSON_API_KEY not set.' } })
   }
   
   console.log(`Sending ratings packet to GRAPHJSON`)
@@ -27,7 +28,5 @@ const handler = async function (req: NextApiRequest, res: NextApiResponse) {
     console.error(err.message)
   }
 
-  return res.status(201).json({ success:true })
+  return NextResponse.json({ success:true })
 }
-
-export default handler

@@ -1,16 +1,13 @@
-import { Loader, ThumbsDown, ThumbsUp } from "lucide-react"
+"use client"
+
+import { Loader } from "lucide-react"
 import Head from "next/head"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import fetch from 'isomorphic-fetch'
 import Footer from "~/components/Footer"
 import Header from "~/components/Header"
-import EXAMPLES from '~/data/examples'
 import ms from "ms"
 import RatingButtons from "~/components/RatingButtons"
-
-function classNames(...classes: string[]) {
-return classes.filter(Boolean).join(' ')
-}
 
 const DEFAULT_EMAIL = `Dear Hiring Manager, 
 
@@ -82,7 +79,7 @@ return (
             <div className="flex">
               <div className="flex-shrink-0">
                 <svg className="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                  <path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+                  <path fillRule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
                 </svg>
               </div>
               <div className="ml-3">
@@ -111,7 +108,7 @@ return (
                 <div
                   className="p-2 w-full max-w-full min-h-fit whitespace-pre-wrap block border-x border-t rounded-t-md text-xs bg-slate-50"
                 >
-                  to: to@example.com, bcc: <span className="italic font-semibold">followup@getreply.app</span>
+                  to: {'to@example.com'}, bcc: <span className="italic font-semibold">{'followup@getreply.app'}</span>
                 </div>
                 <div
                   className="p-2 w-full max-w-full min-h-fit whitespace-pre-wrap block border-x border-t  text-xs bg-slate-50"

@@ -1,18 +1,18 @@
-import type { NextApiRequest, NextApiResponse } from 'next'
-import generate, { type Data } from "~/lib/generate"
+import { NextResponse } from "next/server"
+import generate from "~/lib/generate"
 
-const handler = async function (req: NextApiRequest, res: NextApiResponse<Data>) {
-  const payload = req.body.payload || ''
+export async function POST (request: Request) {
+  const body = await request.json()
+
+  const payload = body.payload || ''
   if (payload.trim().length === 0) {
-    res.status(400).json({ error: { message: "Please enter a valid payload" } })
-    return
+    return NextResponse.json({ error: { message: "Please enter a valid payload" } })
   }
 
-  const userPrompt = req.body.userPrompt || ''
+  const userPrompt = body.userPrompt || ''
 
   try {
     const { data, prompt } = await generate(payload, userPrompt)
-    res.status(200).json({ data })
 
     if (process.env.GRAPHJSON_API_KEY) {
       console.log(`Sending generations packet to GRAPHJSON`)
@@ -33,17 +33,15 @@ const handler = async function (req: NextApiRequest, res: NextApiResponse<Data>)
       } catch (err: any) {
         console.error(err.message)
       }
-
     }
-  
+    return NextResponse.json({ data })
 
   } catch(error: any) {
+    console.error(error.message)
     if (error.response) {
-      res.status(error.response.status).json(error.response.data)
+      return NextResponse.json(error.response.data)
     } else {
-      res.status(500).json({ error: { message: error.message || 'An error occurred during your request.' } })
+      return NextResponse.json({ error: { message: error.message || 'An error occurred during your request.' } })
     }
   }
 }
-
-export default handler
