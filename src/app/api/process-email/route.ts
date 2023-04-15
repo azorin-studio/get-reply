@@ -12,11 +12,19 @@ export async function POST (request: Request) {
     cookies,
   })
   
-  const data = await request.json()
-  
-  const from = data.from.address
-  const subject = data.subject
-  const text = data.text
+  const { email } = await request.json()
 
-  return NextResponse.json(data)
+  const from = email.from.address
+  const subject = email.subject
+  const text = email.text
+
+  console.log(headers().get('Authorization'))
+
+  if (headers().get('Authorization') === `Bearer ${process.env.GETREPLY_BOT_AUTH_TOKEN}`) {
+    console.log('Auth passed')
+  }
+
+  // console.log(JSON.stringify(email, null, 2))
+
+  return NextResponse.json(email)
 }
