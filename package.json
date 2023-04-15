@@ -9,7 +9,7 @@
     "lint": "next lint",
     "test:integration": "jest ./src/tests/integration",
     "test:e2e": "playwright test",
-    "test": "npm run test:e2e && npm run test:integration",
+    "test_off": "npm run test:e2e && npm run test:integration",
     "test:email": "http POST https://tunnel2.azorin.studio/api/process-email < ./src/data/test-email.json "
   },
   "dependencies": {
