@@ -1,8 +1,8 @@
 import Link from 'next/link'
 import { MailPlus, Github, ArrowUpRight } from 'lucide-react'
 
-export default function Header(props: { user: object | null }) {
-  const { user } = props
+export default function Header(props: { user?: object | null }) {
+  const { user = null } = props
   return (
     <header className="w-full sticky top-0 z-40 bg-white mx-auto">
       <div className="flex h-16 items-center justify-between border-b border-b-slate-200 p-4">
