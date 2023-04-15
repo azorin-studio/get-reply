@@ -1,7 +1,8 @@
 import Link from 'next/link'
 import { MailPlus, Github, ArrowUpRight } from 'lucide-react'
 
-export default function Header() {
+export default function Header(props: { user: object | null }) {
+  const { user } = props
   return (
     <header className="w-full sticky top-0 z-40 bg-white mx-auto">
       <div className="flex h-16 items-center justify-between border-b border-b-slate-200 p-4">
@@ -25,7 +26,7 @@ export default function Header() {
         <nav className="flex flex-row gap-4">
           <Link
             href="/demo"
-            className="items-center space-x-2 flex"
+            className="items-center space-x-2 flex hover:underline"
           >
             <ArrowUpRight />
             <span className="font-bold sm:inline-block">
@@ -34,13 +35,29 @@ export default function Header() {
           </Link>
           <Link
             href="https://github.com/azorin-studio/get-reply"
-            className="items-center space-x-2 flex"
+            className="items-center space-x-2 flex hover:underline"
           >
             <Github />
             <span className="font-bold sm:inline-block">
             Github
             </span>
           </Link>
+          {user && (
+            <Link
+              href="/logout"
+              className="items-center space-x-2 flex font-bold sm:inline-block hover:underline"
+            >
+              Logout
+            </Link>
+          )}
+          {!user && (
+            <Link
+              href="/login"
+              className="items-center space-x-2 flex font-bold sm:inline-block hover:underline"
+            >
+              Login
+            </Link>
+          )}
         </nav>
       </div>
     </header>

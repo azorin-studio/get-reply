@@ -2,7 +2,7 @@ import { createServerComponentSupabaseClient } from '@supabase/auth-helpers-next
 import { headers, cookies } from "next/headers"
 import { Database } from '~/lib/database.types'
 
-import LoginPage from './login-page'
+import LogoutPage from './logout-page'
 import { redirect } from 'next/navigation'
 
 export default async function Page() {
@@ -11,16 +11,16 @@ export default async function Page() {
     cookies,
   })
   
-  const {
-    data: { session },
-  } = await supabase.auth.getSession()
+  // const {
+  //   data: { session },
+  // } = await supabase.auth.getSession()
 
-  if (session) {
-    console.log('LOGIN: session exists, redirecting to /protected')
-    return redirect('/protected')
-  }
+  // if (!session) {
+  //   console.log('LOGOUT: session does not exist, redirecting to /login')
+  //   return redirect('/login')
+  // }
 
   return (
-    <LoginPage />
+    <LogoutPage />
   )
 }

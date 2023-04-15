@@ -21,7 +21,7 @@ Mike Smith`
 const DEFAULT_RESULT = null
 // const DEFAULT_RESULT = ['a', 'b']
 
-export default function Home() {
+export default function DemoPage() {
 const [busy, setBusy] = useState<boolean>(false)
 const [result, setResult] = useState<null | string[]>(DEFAULT_RESULT)
 const [timer, setTimer] = useState<null | string>(null)

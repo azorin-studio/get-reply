@@ -3,8 +3,7 @@ import Header from '~/components/Header'
 import Footer from '~/components/Footer'
 import terms from '~/data/terms'
 
-export default function Home() {
-
+export default function TermsPage() {
   return (
     <>
       <Head>

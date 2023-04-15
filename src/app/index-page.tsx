@@ -17,7 +17,7 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function Home() {
+export default function IndexPage() {
 
   const [activeExample, setActiveExample] = useState<string>('sales')
 
@@ -29,182 +29,177 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className="min-h-screen bg-white font-sans text-slate-800 antialiased">
-        <div className="flex min-h-screen flex-col">
-          <Header />
-          <main className="flex-1 px-4 lg:px=2">
-            <section className="container grid items-center justify-center gap-6 pt-6 pb-8 md:pt-10 md:pb-12 lg:pt-16 lg:pb-24">
-              <Image src={hero} width={250} alt="Hero image" priority />
-              <div className="mx-auto flex flex-col items-start gap-4 lg:w-[52rem]">
-                <h1 className="text-3xl font-bold leading-[1.1] tracking-tighter sm:text-5xl md:text-6xl">
-                  Streamline your email follow-ups with GetReply
-                </h1>
-                <p className="max-w-[42rem] leading-normal text-slate-700 sm:text-xl sm:leading-8">
-                  Say goodbye to the hassle of scheduling and writing follow-up emails. GetReply simplifies the process with one-click scheduling and tailored ultra-polite emails written by Chat GPT.
-                </p>
-              </div>
-              <div className="flex gap-4">
-                {/* <Link 
-                  href="https://github.com/azorin-studio/get-reply/issues/1" 
-                  className="inline-flex items-center align-items rounded-md bg-slate-800 py-3 px-5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                >
-                  Join the beta
-                  <span className="-mr-0.5 ml-2 h-5 w-5"><ArrowRight  /></span>
-                </Link> */}
-                <NewsletterForm />
-                {/* <Link 
-                  href="https://github.com/azorin-studio" 
-                  className="inline-flex items-center align-items rounded-md py-3 px-8 text-sm font-semibold border hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                >
-                  Github
-                </Link> */}
-            </div>
-            </section>
-            
-            <hr className="border-slate-200" />
-            
-            <section className="container grid justify-center gap-6 py-8 md:py-12 lg:py-24">
-              <div className="mx-auto flex flex-col gap-4 md:max-w-[52rem]">
-                <h2 className="text-3xl font-bold leading-[1.1] tracking-tighter sm:text-3xl md:text-6xl">
-                  How it works.
-                </h2>
-                <p className="max-w-[85%] leading-normal text-slate-700 sm:text-lg sm:leading-7">
-                  GetReply drafts short, polite follow-ups using ChatGPT, to ensure you get a response to your outbound emails.
-                </p>
-              </div>
 
-              <div className="sm:block">
-                <nav className="lg:-mb-px flex flex-col lg:flex-row lg:space-x-8">
-                  {Object.entries(EXAMPLES).map(([key, tab]) => (
-                    <a
-                      key={key}
-                      href="#"
-                      onClick={(e: any) => {
-                        e.preventDefault()
-                        setActiveExample(key)
-                      }}
-                      className={classNames(
-                        key === activeExample
-                          ? 'border-indigo-500 text-indigo-600'
-                          : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700',
-                        'whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium'
-                      )}
-                      aria-current={key === activeExample ? 'page' : undefined}
-                    >
-                      {tab.label}
-                    </a>
-                  ))}
-                </nav>
-              </div>
-
-              <Examples 
-                {...EXAMPLES[activeExample as keyof typeof EXAMPLES]}
-              />
-
-              <div className="mx-auto mt-8 flex flex-col gap-8 md:max-w-[52rem]">
-                <h2 className="text-3xl font-bold leading-[1.1] tracking-tighter sm:text-3xl md:text-6xl">
-                  Ready to try?
-                </h2>
-                <p className="max-w-[85%] leading-normal text-slate-700 sm:text-2xl sm:leading-7">
-                  <Link
-                    href="/demo"
-                    className="items-center justify-center space-x-2 flex ml-2"
-                  > 
-                    <span className="font-bold sm:inline-block underline">
-                    Try out the demo
-                    </span>
-                    <ArrowUpRight />
-                  </Link>
-                </p>
-              </div>
-
-            </section>
-
-            <hr className="border-slate-200" />
-
-            <section className="container grid justify-center gap-6 py-8 md:py-12 lg:py-24">
-              <div className="mx-auto flex flex-col gap-4 md:max-w-[52rem]">
-                <h2 className="text-3xl font-bold leading-[1.1] tracking-tighter sm:text-3xl md:text-6xl">
-                  Frequently asked questions
-                </h2>
-                <h3 className="mt-8 text-xl font-bold leading-[1.1] tracking-tighter sm:text-xl md:text-xl">
-                  Does GetReply actually send emails?
-                </h3>
-                <p className="max-w-[85%] leading-normal text-slate-700 sm:text-lg sm:leading-7">
-                  No. GetReply generates a draft email for you to review and customize before sending, giving you full control over the email&apos;s content and timing.
-                </p>
-                <p className="max-w-[85%] leading-normal text-slate-700 sm:text-lg sm:leading-7">
-                  It marks the thread as unread, to remind you of the draft email, so you can follow up with minimal effort.
-                </p>
-                <p className="max-w-[85%] leading-normal text-slate-700 sm:text-lg sm:leading-7">
-                  This approach offers you control and flexibility over your follow-ups.
-                </p>
-                <h3 className="mt-8 text-xl font-bold leading-[1.1] tracking-tighter sm:text-xl md:text-xl">
-                  How does GetReply differ from other offerings?
-                </h3>
-                <p className="max-w-[85%] leading-normal text-slate-700 sm:text-lg sm:leading-7">
-                  You just bcc GetReply in your emails, eliminating the need for complex mail merge processes or custom coding. You can quickly install GetReply and start using it without the hassle of learning complicated software or hiring developers.
-                </p>
-                <p className="max-w-[85%] leading-normal text-slate-700 sm:text-lg sm:leading-7">
-                  By leveraging Chat GPT, GetReply creates personalized follow-up emails that are more likely to elicit a response from recipients. This eliminates the need for you to craft your own follow ups.
-                </p>
-                <p className="max-w-[85%] leading-normal text-slate-700 sm:text-lg sm:leading-7">
-                  GetReply is highly customizable and flexible, allowing you to tailor their follow-up emails. Users can customize the tone and language of their emails, and schedule emails to be crafted at different intervals. This level of customization ensures that users can create a tailored follow-up strategy.
-                </p>
-                <h3 className="mt-4 text-xl font-bold leading-[1.1] tracking-tighter sm:text-xl md:text-xl">
-                  Whats the stage of the product?
-                </h3>
-                <p className="max-w-[85%] leading-normal text-slate-700 sm:text-lg sm:leading-7">
-                  GetReply is in the ideation and feedback stage, gathering feedback to shape its development.
-                </p>
-                <h3 className="text-xl font-bold leading-[1.1] tracking-tighter sm:text-xl md:text-xl">
-                  How much will you charge?
-                </h3>
-                <p className="max-w-[85%] leading-normal text-slate-700 sm:text-lg sm:leading-7">
-                  GetReply is priced at $5 per month per user. This low subscription fee makes it accessible to individuals and small businesses with limited budgets, while still providing a high-quality solution that can help drive business results. Additionally, GetReply offers a 14-day free trial, giving you the opportunity to try the product before committing to a subscription.
-                </p>
-                <h3 className="text-xl font-bold leading-[1.1] tracking-tighter sm:text-xl md:text-xl">
-                  Can I self host?
-                </h3>
-                <p className="max-w-[85%] leading-normal text-slate-700 sm:text-lg sm:leading-7">
-                  We will make GetReply open source and free for self-hosting. This approach offers more customization options and accessibility for those without the budget for a subscription. While this may impact revenue streams, we believe it&apos;s worth providing users with more control. We&apos;sll explore other monetization strategies such as premium features or support.
-                </p>
-                <h3 className="text-xl font-bold leading-[1.1] tracking-tighter sm:text-xl md:text-xl">
-                  Whose behind GetReply?
-                </h3>
-                <p className="max-w-[85%] leading-normal text-slate-700 sm:text-lg sm:leading-7">
-                  <a className="underline" href="https://azorin.studio">Azorin Studios</a>, we are a small product studio based in Valencia, Spain.
-                </p>
-              </div>
-            </section>
-
-            <hr className="border-slate-200" />
-
-            <section className="container grid justify-center gap-6 py-8 md:py-12 lg:py-24">
-              <div className="mx-auto flex flex-col gap-4 md:max-w-[52rem]">
-                <h2 className="text-3xl font-bold leading-[1.1] tracking-tighter sm:text-3xl md:text-6xl">
-                  Proudly Open Source
-                </h2>
-                <p className="max-w-[85%] leading-normal text-slate-700 sm:text-lg sm:leading-7">
-                  GetReply is open source and powered by open source software. The code will be available on{" "}
-                  
-                  <Link
-                    href='https://github.com/azorin-studio/get-reply'
-                    target="_blank"
-                    rel="noreferrer"
-                    className="underline underline-offset-4"
-                  >
-                    GitHub
-                  </Link>
-                  .
-                </p>
-              </div>
-            </section>
-
-          </main>
-          <Footer/>
+      <main className="flex-1 px-4 lg:px=2">
+        <section className="container grid items-center justify-center gap-6 pt-6 pb-8 md:pt-10 md:pb-12 lg:pt-16 lg:pb-24">
+          <Image src={hero} width={250} alt="Hero image" priority />
+          <div className="mx-auto flex flex-col items-start gap-4 lg:w-[52rem]">
+            <h1 className="text-3xl font-bold leading-[1.1] tracking-tighter sm:text-5xl md:text-6xl">
+              Streamline your email follow-ups with GetReply
+            </h1>
+            <p className="max-w-[42rem] leading-normal text-slate-700 sm:text-xl sm:leading-8">
+              Say goodbye to the hassle of scheduling and writing follow-up emails. GetReply simplifies the process with one-click scheduling and tailored ultra-polite emails written by Chat GPT.
+            </p>
+          </div>
+          <div className="flex gap-4">
+            {/* <Link 
+              href="https://github.com/azorin-studio/get-reply/issues/1" 
+              className="inline-flex items-center align-items rounded-md bg-slate-800 py-3 px-5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            >
+              Join the beta
+              <span className="-mr-0.5 ml-2 h-5 w-5"><ArrowRight  /></span>
+            </Link> */}
+            <NewsletterForm />
+            {/* <Link 
+              href="https://github.com/azorin-studio" 
+              className="inline-flex items-center align-items rounded-md py-3 px-8 text-sm font-semibold border hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            >
+              Github
+            </Link> */}
         </div>
-      </div>
+        </section>
+        
+        <hr className="border-slate-200" />
+        
+        <section className="container grid justify-center gap-6 py-8 md:py-12 lg:py-24">
+          <div className="mx-auto flex flex-col gap-4 md:max-w-[52rem]">
+            <h2 className="text-3xl font-bold leading-[1.1] tracking-tighter sm:text-3xl md:text-6xl">
+              How it works.
+            </h2>
+            <p className="max-w-[85%] leading-normal text-slate-700 sm:text-lg sm:leading-7">
+              GetReply drafts short, polite follow-ups using ChatGPT, to ensure you get a response to your outbound emails.
+            </p>
+          </div>
+
+          <div className="sm:block">
+            <nav className="lg:-mb-px flex flex-col lg:flex-row lg:space-x-8">
+              {Object.entries(EXAMPLES).map(([key, tab]) => (
+                <a
+                  key={key}
+                  href="#"
+                  onClick={(e: any) => {
+                    e.preventDefault()
+                    setActiveExample(key)
+                  }}
+                  className={classNames(
+                    key === activeExample
+                      ? 'border-indigo-500 text-indigo-600'
+                      : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700',
+                    'whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium'
+                  )}
+                  aria-current={key === activeExample ? 'page' : undefined}
+                >
+                  {tab.label}
+                </a>
+              ))}
+            </nav>
+          </div>
+
+          <Examples 
+            {...EXAMPLES[activeExample as keyof typeof EXAMPLES]}
+          />
+
+          <div className="mx-auto mt-8 flex flex-col gap-8 md:max-w-[52rem]">
+            <h2 className="text-3xl font-bold leading-[1.1] tracking-tighter sm:text-3xl md:text-6xl">
+              Ready to try?
+            </h2>
+            <p className="max-w-[85%] leading-normal text-slate-700 sm:text-2xl sm:leading-7">
+              <Link
+                href="/demo"
+                className="items-center justify-center space-x-2 flex ml-2"
+              > 
+                <span className="font-bold sm:inline-block underline">
+                Try out the demo
+                </span>
+                <ArrowUpRight />
+              </Link>
+            </p>
+          </div>
+
+        </section>
+
+        <hr className="border-slate-200" />
+
+        <section className="container grid justify-center gap-6 py-8 md:py-12 lg:py-24">
+          <div className="mx-auto flex flex-col gap-4 md:max-w-[52rem]">
+            <h2 className="text-3xl font-bold leading-[1.1] tracking-tighter sm:text-3xl md:text-6xl">
+              Frequently asked questions
+            </h2>
+            <h3 className="mt-8 text-xl font-bold leading-[1.1] tracking-tighter sm:text-xl md:text-xl">
+              Does GetReply actually send emails?
+            </h3>
+            <p className="max-w-[85%] leading-normal text-slate-700 sm:text-lg sm:leading-7">
+              No. GetReply generates a draft email for you to review and customize before sending, giving you full control over the email&apos;s content and timing.
+            </p>
+            <p className="max-w-[85%] leading-normal text-slate-700 sm:text-lg sm:leading-7">
+              It marks the thread as unread, to remind you of the draft email, so you can follow up with minimal effort.
+            </p>
+            <p className="max-w-[85%] leading-normal text-slate-700 sm:text-lg sm:leading-7">
+              This approach offers you control and flexibility over your follow-ups.
+            </p>
+            <h3 className="mt-8 text-xl font-bold leading-[1.1] tracking-tighter sm:text-xl md:text-xl">
+              How does GetReply differ from other offerings?
+            </h3>
+            <p className="max-w-[85%] leading-normal text-slate-700 sm:text-lg sm:leading-7">
+              You just bcc GetReply in your emails, eliminating the need for complex mail merge processes or custom coding. You can quickly install GetReply and start using it without the hassle of learning complicated software or hiring developers.
+            </p>
+            <p className="max-w-[85%] leading-normal text-slate-700 sm:text-lg sm:leading-7">
+              By leveraging Chat GPT, GetReply creates personalized follow-up emails that are more likely to elicit a response from recipients. This eliminates the need for you to craft your own follow ups.
+            </p>
+            <p className="max-w-[85%] leading-normal text-slate-700 sm:text-lg sm:leading-7">
+              GetReply is highly customizable and flexible, allowing you to tailor their follow-up emails. Users can customize the tone and language of their emails, and schedule emails to be crafted at different intervals. This level of customization ensures that users can create a tailored follow-up strategy.
+            </p>
+            <h3 className="mt-4 text-xl font-bold leading-[1.1] tracking-tighter sm:text-xl md:text-xl">
+              Whats the stage of the product?
+            </h3>
+            <p className="max-w-[85%] leading-normal text-slate-700 sm:text-lg sm:leading-7">
+              GetReply is in the ideation and feedback stage, gathering feedback to shape its development.
+            </p>
+            <h3 className="text-xl font-bold leading-[1.1] tracking-tighter sm:text-xl md:text-xl">
+              How much will you charge?
+            </h3>
+            <p className="max-w-[85%] leading-normal text-slate-700 sm:text-lg sm:leading-7">
+              GetReply is priced at $5 per month per user. This low subscription fee makes it accessible to individuals and small businesses with limited budgets, while still providing a high-quality solution that can help drive business results. Additionally, GetReply offers a 14-day free trial, giving you the opportunity to try the product before committing to a subscription.
+            </p>
+            <h3 className="text-xl font-bold leading-[1.1] tracking-tighter sm:text-xl md:text-xl">
+              Can I self host?
+            </h3>
+            <p className="max-w-[85%] leading-normal text-slate-700 sm:text-lg sm:leading-7">
+              We will make GetReply open source and free for self-hosting. This approach offers more customization options and accessibility for those without the budget for a subscription. While this may impact revenue streams, we believe it&apos;s worth providing users with more control. We&apos;sll explore other monetization strategies such as premium features or support.
+            </p>
+            <h3 className="text-xl font-bold leading-[1.1] tracking-tighter sm:text-xl md:text-xl">
+              Whose behind GetReply?
+            </h3>
+            <p className="max-w-[85%] leading-normal text-slate-700 sm:text-lg sm:leading-7">
+              <a className="underline" href="https://azorin.studio">Azorin Studios</a>, we are a small product studio based in Valencia, Spain.
+            </p>
+          </div>
+        </section>
+
+        <hr className="border-slate-200" />
+
+        <section className="container grid justify-center gap-6 py-8 md:py-12 lg:py-24">
+          <div className="mx-auto flex flex-col gap-4 md:max-w-[52rem]">
+            <h2 className="text-3xl font-bold leading-[1.1] tracking-tighter sm:text-3xl md:text-6xl">
+              Proudly Open Source
+            </h2>
+            <p className="max-w-[85%] leading-normal text-slate-700 sm:text-lg sm:leading-7">
+              GetReply is open source and powered by open source software. The code will be available on{" "}
+              
+              <Link
+                href='https://github.com/azorin-studio/get-reply'
+                target="_blank"
+                rel="noreferrer"
+                className="underline underline-offset-4"
+              >
+                GitHub
+              </Link>
+              .
+            </p>
+          </div>
+        </section>
+
+      </main>
     </>
   )
 }

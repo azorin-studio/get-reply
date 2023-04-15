@@ -3,8 +3,7 @@ import Header from '~/components/Header'
 import Footer from '~/components/Footer'
 import policy from '~/data/privacy-policy'
 
-export default function Home() {
-
+export default function PrivacyPage() {
   return (
     <>
       <Head>
