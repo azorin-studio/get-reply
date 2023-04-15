@@ -1,5 +1,4 @@
 "use client"
-
 import { redirect } from 'next/navigation'
 import { useState } from 'react'
 import { useSupabase } from "~/app/supabase-provider"
@@ -9,10 +8,17 @@ export default function LoginPage() {
   const [redirectURL, setRedirectURL] = useState('')
 
   const handleLogin = async () => {
-    await supabase.auth.signInWithPassword({
-      email: "jon@supabase.com",
-      password: "sup3rs3cur3",
+    await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}/protected`,
+        queryParams: {
+          access_type: 'offline',
+          prompt: 'consent',
+        },
+      },
     })
+
     setRedirectURL('/protected')
   }
 
@@ -45,7 +51,7 @@ export default function LoginPage() {
                   onClick={handleLogin}                
                   className="inline-flex w-full justify-center rounded-md bg-white px-4 py-2 text-gray-500 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-offset-0"
                 >
-                  Login
+                  Login with Google
                 </button>
               </div>
 

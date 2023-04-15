@@ -33,7 +33,7 @@ export default function Header(props: { user: object | null }) {
             Try the demo
             </span>
           </Link>
-          <Link
+          {/* <Link
             href="https://github.com/azorin-studio/get-reply"
             className="items-center space-x-2 flex hover:underline"
           >
@@ -41,7 +41,7 @@ export default function Header(props: { user: object | null }) {
             <span className="font-bold sm:inline-block">
             Github
             </span>
-          </Link>
+          </Link> */}
           {user && (
             <Link
               href="/logout"

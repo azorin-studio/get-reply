@@ -73,7 +73,6 @@ return (
 
     <div className="min-h-screen bg-white font-sans text-slate-800 antialiased">
       <div className="flex min-h-screen flex-col">
-        <Header />
         <main className="container flex-1 p-4">
           <div className="border-l-4 border-yellow-400 bg-yellow-50 p-4 mx-8">
             <div className="flex">
@@ -193,7 +192,7 @@ return (
             </div>
           </div>
         </main>
-        <Footer/>
+
       </div>
     </div>
   </div>

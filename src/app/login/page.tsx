@@ -2,7 +2,7 @@ import { createServerComponentSupabaseClient } from '@supabase/auth-helpers-next
 import { headers, cookies } from "next/headers"
 import { Database } from '~/lib/database.types'
 
-import LoginPage from './login-page'
+import LoginPage from './login-client'
 import { redirect } from 'next/navigation'
 
 export default async function Page() {

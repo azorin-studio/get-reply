@@ -54,14 +54,14 @@ export default function Footer() {
           >
             Privacy policy
           </a>
-          <a
+          {/* <a
             href={'https://github.com/azorin-studio/get-reply'}
             target="_blank"
             rel="noreferrer"
             className="font-medium underline underline-offset-4"
           >
             GitHub
-          </a>
+          </a> */}
         </div>
       </div>
     </footer>

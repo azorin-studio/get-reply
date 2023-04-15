@@ -2,8 +2,6 @@
 
 import Head from 'next/head'
 import Link from 'next/link'
-import Header from '~/components/Header'
-import Footer from '~/components/Footer'
 import hero from "../../public/hero.svg"
 import Image from 'next/image'
 import Examples from '~/components/Examples'
@@ -59,7 +57,7 @@ export default function IndexPage() {
         </div>
         </section>
         
-        <hr className="border-slate-200" />
+        {/* <hr className="border-slate-200" /> */}
         
         <section className="container grid justify-center gap-6 py-8 md:py-12 lg:py-24">
           <div className="mx-auto flex flex-col gap-4 md:max-w-[52rem]">
@@ -118,7 +116,7 @@ export default function IndexPage() {
 
         </section>
 
-        <hr className="border-slate-200" />
+        {/* <hr className="border-slate-200" /> */}
 
         <section className="container grid justify-center gap-6 py-8 md:py-12 lg:py-24">
           <div className="mx-auto flex flex-col gap-4 md:max-w-[52rem]">
@@ -161,12 +159,12 @@ export default function IndexPage() {
             <p className="max-w-[85%] leading-normal text-slate-700 sm:text-lg sm:leading-7">
               GetReply is priced at $5 per month per user. This low subscription fee makes it accessible to individuals and small businesses with limited budgets, while still providing a high-quality solution that can help drive business results. Additionally, GetReply offers a 14-day free trial, giving you the opportunity to try the product before committing to a subscription.
             </p>
-            <h3 className="text-xl font-bold leading-[1.1] tracking-tighter sm:text-xl md:text-xl">
+            {/* <h3 className="text-xl font-bold leading-[1.1] tracking-tighter sm:text-xl md:text-xl">
               Can I self host?
             </h3>
             <p className="max-w-[85%] leading-normal text-slate-700 sm:text-lg sm:leading-7">
-              We will make GetReply open source and free for self-hosting. This approach offers more customization options and accessibility for those without the budget for a subscription. While this may impact revenue streams, we believe it&apos;s worth providing users with more control. We&apos;sll explore other monetization strategies such as premium features or support.
-            </p>
+              Yes GetReply will support self hosting.
+            </p> */}
             <h3 className="text-xl font-bold leading-[1.1] tracking-tighter sm:text-xl md:text-xl">
               Whose behind GetReply?
             </h3>
@@ -176,9 +174,9 @@ export default function IndexPage() {
           </div>
         </section>
 
-        <hr className="border-slate-200" />
+        {/* <hr className="border-slate-200" /> */}
 
-        <section className="container grid justify-center gap-6 py-8 md:py-12 lg:py-24">
+        {/* <section className="container grid justify-center gap-6 py-8 md:py-12 lg:py-24">
           <div className="mx-auto flex flex-col gap-4 md:max-w-[52rem]">
             <h2 className="text-3xl font-bold leading-[1.1] tracking-tighter sm:text-3xl md:text-6xl">
               Proudly Open Source
@@ -197,7 +195,7 @@ export default function IndexPage() {
               .
             </p>
           </div>
-        </section>
+        </section> */}
 
       </main>
     </>
