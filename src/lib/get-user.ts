@@ -20,7 +20,7 @@ const getUser = async () => {
     .eq('email', TEST_EMAIL.from.address)
     .limit(1)
 
-  return { profile: profiles[0] }
+  return { profile: profiles![0] }
 }
 
 export default getUser
