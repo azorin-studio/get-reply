@@ -28,6 +28,7 @@
   "devDependencies": {
     "@playwright/test": "^1.32.2",
     "@supabase/auth-helpers-nextjs": "0.5.8",
+    "@supabase/supabase-js": "^2.20.0",
     "@tailwindcss/line-clamp": "^0.4.2",
     "@tailwindcss/typography": "^0.5.9",
     "@testing-library/dom": "^9.2.0",

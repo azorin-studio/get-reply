@@ -1,5 +1,4 @@
 import generate from '~/lib/generate'
-import EXAMPLE from '~/data/examples'
 import '@testing-library/jest-dom'
 
 const EXAMPLE_EMAIL = `
@@ -32,5 +31,4 @@ describe('Generate', () => {
     console.log(data[0])
     console.log(data[1])
   }, 15000)
-  
 })

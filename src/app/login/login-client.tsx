@@ -11,15 +11,15 @@ export default function LoginPage() {
     await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/protected`,
+        redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/callback/google`,
         queryParams: {
           access_type: 'offline',
           prompt: 'consent',
         },
       },
     })
-
-    setRedirectURL('/protected')
+    
+    setRedirectURL('/callback/google')
   }
 
   if (redirectURL) {

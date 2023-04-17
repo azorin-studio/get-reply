@@ -18,13 +18,10 @@ export async function POST (request: Request) {
   const subject = email.subject
   const text = email.text
 
-  console.log(headers().get('Authorization'))
-
   if (headers().get('Authorization') === `Bearer ${process.env.GETREPLY_BOT_AUTH_TOKEN}`) {
     console.log('Auth passed')
+    console.log(JSON.stringify(email, null, 2))
   }
-
-  // console.log(JSON.stringify(email, null, 2))
 
   return NextResponse.json(email)
 }
