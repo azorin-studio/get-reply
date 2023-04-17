@@ -7,16 +7,6 @@ export default function Footer() {
         <div className="flex flex-col items-center gap-4 px-8 md:flex-row md:gap-2 md:px-0">
           <MailPlus />
           <p className="text-center leading-loose md:text-left">
-            Built by{" "}
-            <a
-              href={'https://azorin.studio'}
-              target="_blank"
-              rel="noreferrer"
-              className="font-medium underline underline-offset-4"
-            >
-              Azorin Studios
-            </a>
-            .{" "}
             Website based on {" "}
             <a
               href="https://github.com/shadcn/taxonomy"
@@ -54,14 +44,6 @@ export default function Footer() {
           >
             Privacy policy
           </a>
-          {/* <a
-            href={'https://github.com/azorin-studio/get-reply'}
-            target="_blank"
-            rel="noreferrer"
-            className="font-medium underline underline-offset-4"
-          >
-            GitHub
-          </a> */}
         </div>
       </div>
     </footer>

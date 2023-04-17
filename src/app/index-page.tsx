@@ -40,24 +40,11 @@ export default function IndexPage() {
             </p>
           </div>
           <div className="flex gap-4">
-            {/* <Link 
-              href="https://github.com/azorin-studio/get-reply/issues/1" 
-              className="inline-flex items-center align-items rounded-md bg-slate-800 py-3 px-5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              Join the beta
-              <span className="-mr-0.5 ml-2 h-5 w-5"><ArrowRight  /></span>
-            </Link> */}
+
             <NewsletterForm />
-            {/* <Link 
-              href="https://github.com/azorin-studio" 
-              className="inline-flex items-center align-items rounded-md py-3 px-8 text-sm font-semibold border hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              Github
-            </Link> */}
+
         </div>
         </section>
-        
-        {/* <hr className="border-slate-200" /> */}
         
         <section className="container grid justify-center gap-6 py-8 md:py-12 lg:py-24">
           <div className="mx-auto flex flex-col gap-4 md:max-w-[52rem]">
@@ -159,43 +146,9 @@ export default function IndexPage() {
             <p className="max-w-[85%] leading-normal text-slate-700 sm:text-lg sm:leading-7">
               GetReply is priced at $5 per month per user. This low subscription fee makes it accessible to individuals and small businesses with limited budgets, while still providing a high-quality solution that can help drive business results. Additionally, GetReply offers a 14-day free trial, giving you the opportunity to try the product before committing to a subscription.
             </p>
-            {/* <h3 className="text-xl font-bold leading-[1.1] tracking-tighter sm:text-xl md:text-xl">
-              Can I self host?
-            </h3>
-            <p className="max-w-[85%] leading-normal text-slate-700 sm:text-lg sm:leading-7">
-              Yes GetReply will support self hosting.
-            </p> */}
-            <h3 className="text-xl font-bold leading-[1.1] tracking-tighter sm:text-xl md:text-xl">
-              Whose behind GetReply?
-            </h3>
-            <p className="max-w-[85%] leading-normal text-slate-700 sm:text-lg sm:leading-7">
-              <a className="underline" href="https://azorin.studio">Azorin Studios</a>, we are a small product studio based in Valencia, Spain.
-            </p>
+
           </div>
         </section>
-
-        {/* <hr className="border-slate-200" /> */}
-
-        {/* <section className="container grid justify-center gap-6 py-8 md:py-12 lg:py-24">
-          <div className="mx-auto flex flex-col gap-4 md:max-w-[52rem]">
-            <h2 className="text-3xl font-bold leading-[1.1] tracking-tighter sm:text-3xl md:text-6xl">
-              Proudly Open Source
-            </h2>
-            <p className="max-w-[85%] leading-normal text-slate-700 sm:text-lg sm:leading-7">
-              GetReply is open source and powered by open source software. The code will be available on{" "}
-              
-              <Link
-                href='https://github.com/azorin-studio/get-reply'
-                target="_blank"
-                rel="noreferrer"
-                className="underline underline-offset-4"
-              >
-                GitHub
-              </Link>
-              .
-            </p>
-          </div>
-        </section> */}
 
       </main>
     </>
