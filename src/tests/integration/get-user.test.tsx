@@ -22,8 +22,22 @@ describe('supabase', () => {
     oauth2Client.setCredentials(tokens)
 
     const gmail = google.gmail({ version: 'v1', auth: oauth2Client })
-    const res = await gmail.users.labels.list({
+    const res = await gmail.users.drafts.create({
       userId: 'me',
+      message: {
+        payload: {
+          partId: "",
+          mimeType: "",
+          filename: "",
+          headers: [{
+            to: "me@eoinmurray.eu",
+            from: "me@eoinmurray.eu",
+            subject: "api test draft"
+          }],
+          body: {},
+          parts: [{}]
+        }
+      }
     })
     const labels = res.data.labels
     if (!labels || labels.length === 0) {

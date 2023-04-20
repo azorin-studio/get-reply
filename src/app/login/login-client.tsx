@@ -15,7 +15,7 @@ export default function LoginPage() {
         queryParams: {
           access_type: 'offline',
           prompt: 'consent',
-          scopes: 'https://www.googleapis.com/auth/gmail.readonly'
+          scopes: 'https://www.googleapis.com/auth/gmail.readonly  https://www.googleapis.com/auth/gmail.modify  https://www.googleapis.com/auth/gmail.compose'
         },
       },
     })
