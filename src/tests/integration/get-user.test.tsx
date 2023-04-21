@@ -30,11 +30,6 @@ describe('supabase', () => {
     // https://github.com/vercel/nextjs-subscription-payments/blob/main/schema.sql#L1-L17
     const { profile } = await getUser()   
     
-    const tokens = {
-      refresh_token: profile.google_refresh_token,
-      access_token: profile.google_access_token
-    }
-
     const form = new URLSearchParams()
     form.append('client_id', process.env.GOOGLE_CLIENT_ID!)
     form.append('client_secret', process.env.GOOGLE_CLIENT_SECRET!)
@@ -47,7 +42,12 @@ describe('supabase', () => {
       body: form.toString()
     })
 
-    console.log(await authResponse.json())
+    const newTokens = await authResponse.json()
+
+    const tokens = {
+      refresh_token: profile.google_refresh_token,
+      access_token: newTokens.access_token
+    }
 
     oauth2Client.setCredentials(tokens)
 
@@ -60,7 +60,7 @@ describe('supabase', () => {
 
     const gmail = google.gmail({ version: 'v1', auth: oauth2Client })
     const raw = makeBody('me+recieve@eoinmurray.eu', 'me@eoinmurray.eu', 'This is your subject', 'I got this working finally!!!')
-    const res = await gmail.users.drafts.create({
+    const draft = await gmail.users.drafts.create({
       userId: 'me',
       requestBody: {
         message: {
@@ -69,7 +69,12 @@ describe('supabase', () => {
       }
     })
 
-    console.log(res)
-
+    const draftUpdate = await gmail.users.messages.modify({
+      userId: 'me',
+      id: draft.data.message!.id!,
+      requestBody: {
+        addLabelIds: ['INBOX', 'UNREAD']
+      }
+    })
   })
 })
