@@ -1,8 +1,12 @@
 
-import getUser from '~/lib/get-user'
-import '@testing-library/jest-dom'
 import { google } from 'googleapis'
 import fetch from 'isomorphic-fetch'
+
+import getUser from '../get-user'
+import { makeBody } from './google'
+import sample from './sample'
+
+console.log(JSON.stringify(sample, null, 2))
 
 const oauth2Client = new google.auth.OAuth2(
   process.env.GOOGLE_CLIENT_ID,
@@ -10,27 +14,13 @@ const oauth2Client = new google.auth.OAuth2(
   process.env.GOOGLE_REDIRECT_URL
 )
 
-function makeBody(to: string, from: string, subject: string, message: string) {
-    const str = ["Content-Type: text/plain; charset=\"UTF-8\"\n",
-        "MIME-Version: 1.0\n",
-        "Content-Transfer-Encoding: 7bit\n",
-        "to: ", to, "\n",
-        "from: ", from, "\n",
-        "subject: ", subject, "\n\n",
-        message
-    ].join('');
 
-    const encodedMail = Buffer.from(str).toString("base64").replace(/\+/g, '-').replace(/\//g, '_')
-    return encodedMail
-}
-
-
-describe('supabase', () => {
-  test('gets user from supabase', async () => {
+describe('GMAIL', () => {
+  test('gets thread from gmail', async () => {
     // https://github.com/supabase/supabase/issues/347
     // https://github.com/vercel/nextjs-subscription-payments/blob/main/schema.sql#L1-L17
     const { profile } = await getUser()   
-    
+
     const form = new URLSearchParams()
     form.append('client_id', process.env.GOOGLE_CLIENT_ID!)
     form.append('client_secret', process.env.GOOGLE_CLIENT_SECRET!)
@@ -51,26 +41,46 @@ describe('supabase', () => {
     }
 
     oauth2Client.setCredentials(tokens)
+    const gmail = google.gmail({ version: 'v1', auth: oauth2Client })
 
-    oauth2Client.on('tokens', (tokens) => {
-      if (tokens.refresh_token) {
-        console.log(tokens.refresh_token)
-      }
-      console.log(tokens.access_token)
+    const to = sample.to.map(t => t.address)
+    const q = `${sample.subject} to: ${to} from: ${sample.from.address}`
+
+    console.log({q})
+    const threads = await gmail.users.messages.list({
+      userId: 'me',
+      q,
     })
 
-    const gmail = google.gmail({ version: 'v1', auth: oauth2Client })
-    const raw = makeBody('me+recieve@eoinmurray.eu', 'me@eoinmurray.eu', 'This is your subject', 'I got this working finally!!!')
+    console.log(threads.data)
+    if (!threads.data.messages || threads.data.messages!.length > 1) {
+      console.log('thread has reply or is deleted')
+      return
+    }
+
+    console.log(threads.data.messages)
+
+    const thread = await gmail.users.threads.get({
+      userId: 'me',
+      id: threads.data.messages![0].threadId!,
+    })
+    
+    console.log(thread.data.messages)
+
+    const raw = makeBody(to, profile.email, sample.subject, 'draft body')
+    console.log(raw)
     const draft = await gmail.users.drafts.create({
       userId: 'me',
       requestBody: {
         message: {
+          threadId: threads.data.messages![0].threadId!,
           raw
         }
       }
     })
+    console.log(draft.data.message)
 
-    const draftUpdate = await gmail.users.messages.modify({
+    await gmail.users.messages.modify({
       userId: 'me',
       id: draft.data.message!.id!,
       requestBody: {
