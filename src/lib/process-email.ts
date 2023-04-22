@@ -49,6 +49,7 @@ export const processEmail = async (email: Email) => {
   await createGmailDraftAndNotify(profile, to, subject, result.followUpEmail1, email)
   await createGmailDraftAndNotify(profile, to, subject, result.followUpEmail2, email)
 
+  // 
   return result
 }
 
