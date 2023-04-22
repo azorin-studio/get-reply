@@ -16,6 +16,8 @@ export async function POST (request: Request) {
     return NextResponse.json({ error: 'Auth failed' })
   }
 
+  console.log('Auth passed')
+  console.log(email)
   const res = await processEmail(email)
   return NextResponse.json({ res })
 }

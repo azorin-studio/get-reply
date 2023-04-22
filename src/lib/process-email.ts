@@ -39,17 +39,15 @@ export const processEmail = async (email: Email) => {
   }
   
   const profile = profiles[0]
-
   const sampleConstraints: string[] = []
-
+  
+  console.log('generating follow up emails')
   const result = await generateFollowUpEmails(email.text, sampleConstraints, 0)
-
+  console.log('generated follow up emails')
   const to = email.to.map(t => t.address)
-
+  console.log('creating gmail drafts')
   await createGmailDraftAndNotify(profile, to, subject, result.followUpEmail1, email)
   await createGmailDraftAndNotify(profile, to, subject, result.followUpEmail2, email)
-
-  // 
   return result
 }
 
