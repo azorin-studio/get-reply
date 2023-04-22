@@ -1,18 +1,18 @@
 import { NextResponse } from "next/server"
-import generate from "~/lib/generate"
+import { generateFollowUpEmails, FollowUpEmails } from "~/lib/generate-follow-ups"
 
 export async function POST (request: Request) {
   const body = await request.json()
 
-  const payload = body.payload || ''
-  if (payload.trim().length === 0) {
-    return NextResponse.json({ error: { message: "Please enter a valid payload" } })
+  const email = body.email || ''
+  if (email.trim().length === 0) {
+    return NextResponse.json({ error: { message: "Please enter a valid email" } })
   }
 
-  const userPrompt = body.userPrompt || ''
+  const userConstraints = body.userConstraints || []
 
   try {
-    const { data, prompt } = await generate(payload, userPrompt)
+    const followUps: FollowUpEmails = await generateFollowUpEmails(email, userConstraints)
 
     if (process.env.GRAPHJSON_API_KEY) {
       console.log(`Sending generations packet to GRAPHJSON`)
@@ -24,8 +24,7 @@ export async function POST (request: Request) {
             api_key: process.env.GRAPHJSON_API_KEY,
             collection: "generations",
             json: JSON.stringify({
-              followups: data,
-              prompt
+              followUps,
             }),
             timestamp: Math.floor(new Date().getTime() / 1000),
           })
@@ -34,7 +33,7 @@ export async function POST (request: Request) {
         console.error(err.message)
       }
     }
-    return NextResponse.json({ data })
+    return NextResponse.json(followUps)
 
   } catch(error: any) {
     console.error(error.message)

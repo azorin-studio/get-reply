@@ -8,6 +8,7 @@ import Footer from "~/components/Footer"
 import Header from "~/components/Header"
 import ms from "ms"
 import RatingButtons from "~/components/RatingButtons"
+import { FollowUpEmails, validateAndEscapeConstraints } from "~/lib/generate-follow-ups"
 
 const DEFAULT_EMAIL = `Dear Hiring Manager, 
 
@@ -23,17 +24,20 @@ const DEFAULT_RESULT = null
 
 export default function DemoPage() {
 const [busy, setBusy] = useState<boolean>(false)
-const [result, setResult] = useState<null | string[]>(DEFAULT_RESULT)
+const [result, setResult] = useState<null | FollowUpEmails>(DEFAULT_RESULT)
 const [timer, setTimer] = useState<null | string>(null)
 const [error, setError] = useState<null | string>(null)
 const [content, setContent] = useState<string | null>(DEFAULT_EMAIL)
-const [userPrompt, setUserPrompt] = useState<string>('')
+const [constraints, setConstraints] = useState<string[]>()
 
 async function onSubmit(event: any) {
   setBusy(false)
   setError(null)
   setTimer(null)
   event.preventDefault()
+
+  const escapedUserConstraints = validateAndEscapeConstraints(constraints!)
+
   try {
     setBusy(true)
     const t1 = new Date()
@@ -42,18 +46,20 @@ async function onSubmit(event: any) {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ payload: content, userPrompt }),
+      body: JSON.stringify({ email: content, constraints: escapedUserConstraints }),
     })
     const t2 = new Date()
     setTimer(ms(t2.getTime()-t1.getTime()))
 
-    const { data, error } = await response.json()
-    console.log(response)
-    if (response.status !== 200) {
-      throw error || new Error(`Request failed with status ${response.status}`)
+    const body = await response.json()
+    console.log({ body })
+    const { followUpEmail1, followUpEmail2, prompt, error } = body
+
+    if (error) {
+      throw new Error(error.message)
     }
 
-    setResult(data)
+    setResult({ followUpEmail1, followUpEmail2, prompt })
     // setContent("")
     setBusy(false)
   } catch(error: any) {
@@ -124,12 +130,15 @@ return (
                 />
               </div>
               <textarea
-                name="userPrompt"
+                name="constraints"
                 rows={5}
                 placeholder={`Enter custom prompts rules for the ai in a list separated by '-', example:\n\n- use the word "wow" a few times`}
                 className="p-2 w-full prose prose-sm max-w-full min-h-fit whitespace-pre-wrap block border rounded-md bg-transparent text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                value={userPrompt || ""}
-                onChange={(e) => setUserPrompt(e.target.value)}
+                onChange={(event) => {
+                  const userInput = event.target.value
+                  const constraintArray = userInput.split('\n').filter(line => line.trim() !== '')
+                  setConstraints(constraintArray)
+                }}
               />
               <button
                 type="submit" 
@@ -146,11 +155,11 @@ return (
                   GetReply will draft follow ups.
                 </h1>
                 <RatingButtons 
-                  disabled={!(!busy && !error && result?.length)}
+                  disabled={!(!busy && !error && result && result.followUpEmail1)}
                   result={result}
                 />
               </div>
-              {!busy && !error && result?.length && (
+              {!busy && !error && result && (
                 <div className="flex flex-col gap-4">
                   <div className="flex flex-col gap-4">
                     <p className="text-slate-700 text-sm">
@@ -161,7 +170,7 @@ return (
                         Generation took {timer}
                       </div>
                       <div className="p-2" data-testid="followup1">
-                        {result[0]} 
+                        {result.followUpEmail1} 
                       </div>
                     </div>
                   </div>
@@ -171,7 +180,7 @@ return (
                       GetReply will repeat the process if there is not a response after another few days.
                     </p>
                     <div className="border bg-slate-100 rounded p-2 prose-sm whitespace-pre-wrap" data-testid="followup2">
-                      {result[1]}
+                      {result.followUpEmail2}
                     </div>
                   </div>
                 </div>

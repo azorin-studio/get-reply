@@ -12,6 +12,7 @@ const customJestConfig = {
   reporters:['<rootDir>/src/tests/reporter.js'],
   // if using TypeScript with a baseUrl set to the root directory then you need the below for alias' to work
   moduleDirectories: ['node_modules', '<rootDir>/'],
+  modulePathIgnorePatterns: ["<rootDir>/tests/e2e/"],
   testEnvironment: 'jest-environment-jsdom',
 };
 

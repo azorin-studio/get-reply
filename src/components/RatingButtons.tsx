@@ -1,12 +1,13 @@
 import { ThumbsDown, ThumbsUp } from "lucide-react"
 import { useState } from "react"
+import { FollowUpEmails } from "~/lib/generate-follow-ups"
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
 }
 
 
-const RatingButtons = (props: { disabled: boolean, result: string[] | null }) => {
+const RatingButtons = (props: { disabled: boolean, result: FollowUpEmails | null }) => {
   const { disabled = false, result } = props
 
   const [voted, setVoted] = useState(false)
@@ -18,7 +19,7 @@ const RatingButtons = (props: { disabled: boolean, result: string[] | null }) =>
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ vote, followups: result }),
+      body: JSON.stringify({ vote, result }),
     })
     setVoted(true)
   }
