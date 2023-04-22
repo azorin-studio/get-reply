@@ -47,7 +47,7 @@ export const processEmail = async (email: Email) => {
   const to = email.to.map(t => t.address)
   console.log('creating gmail drafts')
   await createGmailDraftAndNotify(profile, to, subject, result.followUpEmail1, email)
-  await createGmailDraftAndNotify(profile, to, subject, result.followUpEmail2, email)
+  // await createGmailDraftAndNotify(profile, to, subject, result.followUpEmail2, email)
   return result
 }
 
