@@ -12,12 +12,6 @@ export async function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms))
 }
 
-const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY,
-})
-
-const openai = new OpenAIApi(configuration)
-
 export function validateAndEscapeConstraints(
   constraints: UserConstraint[],
   maxConstraints: number = 5,
@@ -73,18 +67,24 @@ Please provide the two follow-up emails, separated by the custom delimiter "@@@F
 @@@FOLLOW_UP_EMAILS_DELIMITER@@@
 [Your response for followUpEmail2 here]
 `
-  
-
   return pv2
 }
 
 export async function callGPT35Api(prompt: string, retries = 3, delay = 1000): Promise<FollowUpEmails> {
+  
+  const configuration = new Configuration({
+    apiKey: process.env.OPENAI_API_KEY,
+  })
+
+  const openai = new OpenAIApi(configuration)
+
   if (!configuration.apiKey) {
     throw new Error("OpenAI API key not configured, please follow instructions in README.md")
   }
 
   try {
-    const completion = await openai.createCompletion({
+    // console.log(`PROMPT:\n\n${prompt}\n\nEND PROMPT`)
+    const completionOptions = {
       model: "text-davinci-003",
       prompt,
       temperature: 0.7,
@@ -93,10 +93,17 @@ export async function callGPT35Api(prompt: string, retries = 3, delay = 1000): P
       presence_penalty: 0,
       max_tokens: 1024,
       n: 1,
-    })
+    }
+    // console.log({ completionOptions })
+    return {
+      followUpEmail1: 'hey1'.trim(),
+      followUpEmail2: 'hey2'.trim(),
+    }
+    const completion = await openai.createCompletion(completionOptions)
+    
     const response = completion.data.choices[0].text
     const delimiter = '@@@FOLLOW_UP_EMAILS_DELIMITER@@@'
-    console.log(`RESPONSE:\n\n${response}\n\n`)
+    console.log(`RESPONSE:\n\n${response}\n\nEND RESPONSE`)
 
     if (response!.includes(delimiter)) {
       let [followUpEmail1, followUpEmail2] = response!.split(delimiter)
@@ -111,35 +118,33 @@ export async function callGPT35Api(prompt: string, retries = 3, delay = 1000): P
       }
     } else {
       // Handle the error (e.g., log it, return a default value, or throw a custom error)
-      console.error('Error parsing GPT-3.5 response: Delimiter not found')
+      // console.error('Error parsing GPT-3.5 response: Delimiter not found')
       throw new Error('Error parsing GPT-3.5 response')
     }
 
   } catch(error: any) {
-    if (retries > 0) {
-      console.warn('Error in callGPT35Api, retrying:', error)
-      await sleep(delay)
-      return callGPT35Api(prompt, retries - 1, delay)
-    } else {
+    // if (retries > 0) {
+      // console.warn('Error in callGPT35Api, retrying:', error)
+      // await sleep(delay)
+      // return callGPT35Api(prompt, retries - 1, delay)
+    // } else {
       // Handle the error (e.g., log it, return a default value, or throw a custom error)
-      console.error('Error in callGPT35Api, no more retries:', error)
+      // console.error('Error in callGPT35Api, no more retries', error)
       throw new Error('Error parsing GPT-3.5 response after multiple retries')
-    }
+    // }
   }
 }
 
 export async function generateFollowUpEmails(
   email: string,
   userConstraints: UserConstraint[],
+  retries = 3
 ): Promise<FollowUpEmails> {
-  // The rest of the function remains the same, but replace the call to callGPT35Api with apiCaller(pv2)
+  console.log(6)
   const prompt = makePrompt(email, userConstraints)
-  // return {
-  //   followUpEmail1: 'hey',
-  //   followUpEmail2: 'hey',
-  //   prompt
-  // }
-  const followUpEmails = await callGPT35Api(prompt)
+  console.log(7)
+  const followUpEmails = await callGPT35Api(prompt, retries)
+  console.log(8)
   return { ...followUpEmails, prompt }
 }
 

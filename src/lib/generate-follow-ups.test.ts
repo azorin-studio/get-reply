@@ -1,4 +1,4 @@
-import { generateFollowUpEmails, callGPT35Api, validateAndEscapeConstraints, FollowUpEmails } from './generate-follow-ups' // Adjust the import path as needed
+import { generateFollowUpEmails , validateAndEscapeConstraints } from './generate-follow-ups' // Adjust the import path as needed
 
 // Mock the API call
 jest.mock('./generate-follow-ups', () => {
@@ -13,7 +13,7 @@ describe('GPT', () => {
   const sampleEmail = 'Sample email text';
   const sampleConstraints: string[] = ['Add humor', 'Mention a recent success'];
 
-  it('returns follow-up emails when provided with valid input', async () => {
+  it('returns follow-ups when provided with valid input', async () => {
     const result = await generateFollowUpEmails(sampleEmail, sampleConstraints);
 
     expect(result).toHaveProperty('followUpEmail1')
