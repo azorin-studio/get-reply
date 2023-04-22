@@ -21,7 +21,7 @@ export default async function Page() {
       .update({ google_access_token: session.provider_token, google_refresh_token: session.provider_refresh_token })
       .eq('email', session.user.email)
 
-    return redirect('/protected')
+    return redirect('/account')
   }
 
   return (

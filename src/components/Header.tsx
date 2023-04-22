@@ -44,12 +44,20 @@ export default function Header(props: { user?: object | null }) {
           </Link> */}
           {user && (
             <Link
+              href="/account"
+              className="items-center space-x-2 flex font-bold sm:inline-block hover:underline"
+            >
+              My Account
+            </Link>
+          )}
+          {/* {user && (
+            <Link
               href="/logout"
               className="items-center space-x-2 flex font-bold sm:inline-block hover:underline"
             >
               Logout
             </Link>
-          )}
+          )} */}
           {!user && (
             <Link
               href="/login"
