@@ -23,14 +23,20 @@ export default async function Page() {
       <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
         Hi from protected page
       </h2>
-      <pre 
+      <p>
+        Hi {session.user.email}
+      </p>
+      <p>
+        Please bcc bot@getreply.app using your gmail account and we will place easy to use follow ups in your drafts after two and three days.
+      </p>
+      {/* <pre 
         className='p-4 border rounded bg-slate-100'
         style={{
           overflowX: 'scroll'
         }}
       >
         {JSON.stringify(session, null, 2)}
-      </pre>
+      </pre> */}
     </main>
   )
 }

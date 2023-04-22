@@ -8,7 +8,8 @@ export async function POST (request: Request) {
   console.log('POST /api/process-email')
 
   const { email } = await request.json()
-
+  const to = email.to.map((t: any) => t.address)
+  console.log(to)
   const from = email.from.address
   const subject = email.subject
   const text = email.text
@@ -22,6 +23,6 @@ export async function POST (request: Request) {
   console.log('INCOMING EMAIL')
   console.log({ from, subject, text })
 
-  // const res = await processEmail(from, subject, text)
-  return NextResponse.json({ status: 'ok' })
+  const res = await processEmail(to, from, subject, text)
+  return NextResponse.json({ res })
 }

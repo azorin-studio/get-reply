@@ -1,5 +1,4 @@
 
-import '@testing-library/jest-dom'
 import { google } from 'googleapis'
 import fetch from 'isomorphic-fetch'
 
@@ -9,21 +8,23 @@ const oauth2Client = new google.auth.OAuth2(
   process.env.GOOGLE_REDIRECT_URL
 )
 
-function makeBody(to: string, from: string, subject: string, message: string) {
+function makeBody(to: string[], from: string, subject: string, message: string) {
     const str = ["Content-Type: text/plain; charset=\"UTF-8\"\n",
         "MIME-Version: 1.0\n",
         "Content-Transfer-Encoding: 7bit\n",
-        "to: ", to, "\n",
+        "to: ", to.join(', '), "\n",
         "from: ", from, "\n",
         "subject: ", subject, "\n\n",
         message
     ].join('');
 
+    console.log(str)
+
     const encodedMail = Buffer.from(str).toString("base64").replace(/\+/g, '-').replace(/\//g, '_')
     return encodedMail
 }
 
-export const createGmailDraftAndNotify = async (profile: any, subject: string, email: string) => { 
+export const createGmailDraftAndNotify = async (profile: any, to: string[], subject: string, email: string) => { 
     const form = new URLSearchParams()
     form.append('client_id', process.env.GOOGLE_CLIENT_ID!)
     form.append('client_secret', process.env.GOOGLE_CLIENT_SECRET!)
@@ -53,7 +54,8 @@ export const createGmailDraftAndNotify = async (profile: any, subject: string, e
     })
 
     const gmail = google.gmail({ version: 'v1', auth: oauth2Client })
-    const raw = makeBody('noreply@getreply.app', profile.email, subject, email)
+    const raw = makeBody(to, profile.email, subject, email)
+    console.log(raw)
     const draft = await gmail.users.drafts.create({
       userId: 'me',
       requestBody: {

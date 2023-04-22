@@ -83,7 +83,7 @@ export async function callGPT35Api(prompt: string, retries = 3, delay = 1000): P
   }
 
   try {
-    // console.log(`PROMPT:\n\n${prompt}\n\nEND PROMPT`)
+    console.log(`PROMPT:\n\n${prompt}\n\nEND PROMPT`)
     const completionOptions = {
       model: "text-davinci-003",
       prompt,
@@ -94,11 +94,7 @@ export async function callGPT35Api(prompt: string, retries = 3, delay = 1000): P
       max_tokens: 1024,
       n: 1,
     }
-    // console.log({ completionOptions })
-    return {
-      followUpEmail1: 'hey1'.trim(),
-      followUpEmail2: 'hey2'.trim(),
-    }
+    console.log({ completionOptions })
     const completion = await openai.createCompletion(completionOptions)
     
     const response = completion.data.choices[0].text
