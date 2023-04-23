@@ -5,7 +5,7 @@ import { headers, cookies } from "next/headers"
 import Header from "~/components/Header"
 import Footer from "~/components/Footer"
 import { createServerComponentSupabaseClient } from "@supabase/auth-helpers-nextjs"
-import { Database } from "~/lib/supabase/database.types"
+import { Database } from "~/lib/database.types"
 
 export const metadata = {
   title: "Create Next App",
