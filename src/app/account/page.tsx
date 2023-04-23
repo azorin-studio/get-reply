@@ -20,6 +20,13 @@ export default async function Page() {
     return redirect('/login')
   }
 
+
+  let { data: logs, error } = await supabase
+    .from('logs')
+    .select('*')
+
+  console.log(logs)
+
   return (
     <div className="max-w-2xl p-4 flex flex-row bg-white font-sans text-slate-800 antialiased">
       <main className="flex flex-col gap-8 p-4 mx-auto">
@@ -53,9 +60,18 @@ export default async function Page() {
           <h2 className="font-bold">
             Logs:
           </h2>
-          <p>
-            coming soon
-          </p>
+          {logs?.map((log) => (
+            <div key={log.id} className="flex flex-row gap-2">
+              <p className="text-sm">
+                {log.created_at}
+              </p>
+              <p className="text-sm">
+                {log.text}
+              </p>
+            </div>
+          )
+            
+          )}
         </div>
 
         <Link

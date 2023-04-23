@@ -13,26 +13,6 @@ export async function POST (request: Request) {
 
   try {
     const followUps: FollowUpEmails = await generateFollowUpEmails(email, userConstraints)
-
-    if (process.env.GRAPHJSON_API_KEY) {
-      console.log(`Sending generations packet to GRAPHJSON`)
-      try {
-        await fetch("https://api.graphjson.com/api/log", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            api_key: process.env.GRAPHJSON_API_KEY,
-            collection: "generations",
-            json: JSON.stringify({
-              followUps,
-            }),
-            timestamp: Math.floor(new Date().getTime() / 1000),
-          })
-        })  
-      } catch (err: any) {
-        console.error(err.message)
-      }
-    }
     return NextResponse.json(followUps)
 
   } catch(error: any) {

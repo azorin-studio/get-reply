@@ -43,11 +43,26 @@ export const processEmail = async (email: Email) => {
   
   console.log('generating follow up emails')
   const result = await generateFollowUpEmails(email.text, sampleConstraints, 0)
-  console.log('generated follow up emails')
+  const { followUpEmail1, followUpEmail2, prompt } = result
   const to = email.to.map(t => t.address)
   console.log('creating gmail drafts')
-  await createGmailDraftAndNotify(profile, to, subject, result.followUpEmail1, email)
-  // await createGmailDraftAndNotify(profile, to, subject, result.followUpEmail2, email)
+  const threadId = await createGmailDraftAndNotify(profile, to, subject, result.followUpEmail1, email)
+
+  const { data, error } = await supabaseAdminClient()
+  .from('logs')
+  .insert([
+    { 
+      followUpEmail1,
+      followUpEmail2,
+      prompt,
+      threadId,
+      to: to.join(','),
+      from,
+      subject,
+      text: email.text,
+    },
+  ])
+
   return result
 }
 

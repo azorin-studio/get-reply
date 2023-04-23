@@ -2,6 +2,7 @@
 import { google } from 'googleapis'
 import fetch from 'isomorphic-fetch'
 import { Email } from '../process-email';
+import { threadId } from 'worker_threads';
 
 const oauth2Client = new google.auth.OAuth2(
   process.env.GOOGLE_CLIENT_ID,
@@ -79,4 +80,6 @@ export const createGmailDraftAndNotify = async (profile: any, to: string[], subj
         addLabelIds: ['INBOX', 'UNREAD']
       }
     })
+
+    return threads.data.messages![0].threadId!
   }
