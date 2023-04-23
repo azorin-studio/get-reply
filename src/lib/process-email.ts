@@ -4,14 +4,14 @@ import { createGmailDraftAndNotify } from "~/lib/providers/google"
 import { Contact, IncomingEmail, Log, Profile } from "~/types"
 
 export const processEmail = async (incomingEmail: IncomingEmail) => {
-  const { from } = incomingEmail
-  const profile: Profile = await getProfileFromEmail(from.address)
+  const profile: Profile = await getProfileFromEmail(incomingEmail.from.address)
 
   if (!profile) {
     throw new Error('No profile found')
   }
 
   let log: Log = await createLog(incomingEmail, profile)
+  console.log('starting id:', log.id, 'from', (log.from as any).address)
 
   const { 
     followUpEmail1, 
@@ -25,11 +25,13 @@ export const processEmail = async (incomingEmail: IncomingEmail) => {
     prompt,
     status: 'generated'
   })
+  console.log('generated id:', log.id)
 
-  if (log.headers.length > 0) {
+  if (log.headers.length > 0 && profile.google_refresh_token) {
+    console.log('creating draft, id:', log.id)
     const threadId = await createGmailDraftAndNotify(
-      log.to as any as Contact[], 
-      log.from as any as Contact, 
+      log.to as any[], 
+      log.from as any, 
       log.subject, 
       log.followUpEmail1!, 
       profile.google_refresh_token!
@@ -37,8 +39,9 @@ export const processEmail = async (incomingEmail: IncomingEmail) => {
 
     log = await appendToLog(log, {
       threadId,
-      status: 'drafted email 1'
+      status: 'drafted email 1 in gmail'
     })
+    console.log('drafted email 1 in gmail, id:', log.id)
   }
 
   return log

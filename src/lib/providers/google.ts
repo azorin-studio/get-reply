@@ -46,11 +46,17 @@ export const createGmailDraftAndNotify = async (to: Contact[], from: Contact, su
 
   // Create the draft
   const gmail = google.gmail({ version: 'v1', auth: oauth2Client })
-  const q = `${subject} to: ${to.map(t => t!.address).join(', ')} from: ${from}`
+  const q = `${subject} to: ${to.map(t => t!.address).join(', ')} from: ${from.address}`
   const threads = await gmail.users.messages.list({
     userId: 'me',
     q,
   })
+
+  if (threads.data.resultSizeEstimate === 0) {
+    console.log('no thread found, q:', q)
+    console.log(JSON.stringify(threads.data, null, 2))
+    return
+  }
 
   if (threads.data.messages!.length > 1) {
     console.log('thread has reply', threads.data.messages)
