@@ -6,8 +6,6 @@ import getUser from '../get-user'
 import { makeBody } from './google'
 import sample from './sample'
 
-console.log(JSON.stringify(sample, null, 2))
-
 const oauth2Client = new google.auth.OAuth2(
   process.env.GOOGLE_CLIENT_ID,
   process.env.GOOGLE_CLIENT_SECRET,
@@ -15,8 +13,8 @@ const oauth2Client = new google.auth.OAuth2(
 )
 
 
-describe('GMAIL', () => {
-  test('gets thread from gmail', async () => {
+describe('gmail', () => {
+  test('gets thread', async () => {
     // https://github.com/supabase/supabase/issues/347
     // https://github.com/vercel/nextjs-subscription-payments/blob/main/schema.sql#L1-L17
     const { profile } = await getUser()   

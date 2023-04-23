@@ -1,4 +1,3 @@
-
 import { createClient } from '@supabase/supabase-js'
 
 import { email as TEST_EMAIL } from '~/data/test-email.json'
@@ -11,16 +10,12 @@ const getUser = async () => {
     }
   })
   
-  // Access auth admin api
-  const supabaseAdmin = supabase.auth.admin
-  
   const { data: profiles } = await supabase
     .from('profiles')
     .select("*")
     .eq('email', TEST_EMAIL.from.address)
     .limit(1)
 
-  console.log(profiles)
 
   return { profile: profiles![0] }
 }

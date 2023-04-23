@@ -2,7 +2,7 @@ import 'server-only'
 
 import { createServerComponentSupabaseClient } from '@supabase/auth-helpers-nextjs'
 import { headers, cookies } from "next/headers"
-import { Database } from '~/lib/database.types'
+import { Database } from '~/lib/supabase/database.types'
 import { redirect } from 'next/navigation'
 
 export default async function Page() {

@@ -3,7 +3,7 @@ import { ArrowUpRight } from 'lucide-react'
 import { headers, cookies } from "next/headers"
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
-import { Database } from '~/lib/database.types'
+import { Database } from '~/lib/supabase/database.types'
 
 export default async function Page() {
   const supabase = createServerComponentSupabaseClient<Database>({

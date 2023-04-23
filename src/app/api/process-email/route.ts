@@ -3,11 +3,11 @@ import 'server-only'
 import { headers } from 'next/headers'
 import { NextResponse } from 'next/server'
 import { processEmail } from '~/lib/process-email'
+import { IncomingEmail } from '~/types'
 
 export async function POST (request: Request) {
-  console.log('POST /api/process-email')
-
-  const { email } = await request.json()
+  const json = await request.json()
+  const email: IncomingEmail = json.email
 
   if (headers().get('Authorization') !== `Bearer ${process.env.GETREPLY_BOT_AUTH_TOKEN}`) {
     // TODO check dmarc and stuff
@@ -16,8 +16,6 @@ export async function POST (request: Request) {
     return NextResponse.json({ error: 'Auth failed' })
   }
 
-  console.log('Auth passed')
-  console.log(email)
   const res = await processEmail(email)
-  return NextResponse.json({ res })
+  return NextResponse.json(res)
 }

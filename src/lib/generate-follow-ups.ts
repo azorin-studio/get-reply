@@ -13,7 +13,7 @@ export async function sleep(ms: number): Promise<void> {
 }
 
 export function validateAndEscapeConstraints(
-  constraints: UserConstraint[],
+  constraints: UserConstraint[] | null,
   maxConstraints: number = 5,
   maxConstraintLength: number = 100
 ): string {
@@ -41,7 +41,7 @@ export function validateAndEscapeConstraints(
 
 export function makePrompt(
   email: string,
-  userConstraints: UserConstraint[]
+  userConstraints: UserConstraint[] | null
 ): string {
   const escapedUserConstraints = validateAndEscapeConstraints(userConstraints)
 
@@ -53,10 +53,12 @@ Hi GPT-3.5, I need your help to create two follow-up emails based on the given e
 3. Are short in length.
 4. Are not identical to each other.
 5. Include a mention in the second follow-up email that it's the last time you will follow up.
-
+${userConstraints ? userConstraints.length > 0 && 
+`
 Additionally, please consider the following user-defined constraints:
 ${escapedUserConstraints}
 
+` : ''}
 Here is the email text:
 
 "${email}"
@@ -83,7 +85,7 @@ export async function callGPT35Api(prompt: string, retries = 3, delay = 1000): P
   }
 
   try {
-    console.log(`PROMPT:\n\n${prompt}\n\nEND PROMPT`)
+    // console.log(`PROMPT:\n\n${prompt}\n\nEND PROMPT`)
     const completionOptions = {
       model: "text-davinci-003",
       prompt,
@@ -94,12 +96,12 @@ export async function callGPT35Api(prompt: string, retries = 3, delay = 1000): P
       max_tokens: 1024,
       n: 1,
     }
-    console.log({ completionOptions })
+    // console.log({ completionOptions })
     const completion = await openai.createCompletion(completionOptions)
     
     const response = completion.data.choices[0].text
     const delimiter = '@@@FOLLOW_UP_EMAILS_DELIMITER@@@'
-    console.log(`RESPONSE:\n\n${response}\n\nEND RESPONSE`)
+    // console.log(`RESPONSE:\n\n${response}\n\nEND RESPONSE`)
 
     if (response!.includes(delimiter)) {
       let [followUpEmail1, followUpEmail2] = response!.split(delimiter)
@@ -119,28 +121,25 @@ export async function callGPT35Api(prompt: string, retries = 3, delay = 1000): P
     }
 
   } catch(error: any) {
-    // if (retries > 0) {
-      // console.warn('Error in callGPT35Api, retrying:', error)
-      // await sleep(delay)
-      // return callGPT35Api(prompt, retries - 1, delay)
-    // } else {
+    if (retries > 0) {
+      console.warn('Error in callGPT35Api, retrying:', error)
+      await sleep(delay)
+      return callGPT35Api(prompt, retries - 1, delay)
+    } else {
       // Handle the error (e.g., log it, return a default value, or throw a custom error)
-      // console.error('Error in callGPT35Api, no more retries', error)
+      console.error('Error in callGPT35Api, no more retries', error)
       throw new Error('Error parsing GPT-3.5 response after multiple retries')
-    // }
+    }
   }
 }
 
 export async function generateFollowUpEmails(
   email: string,
-  userConstraints: UserConstraint[],
+  userConstraints: UserConstraint[] | null,
   retries = 3
 ): Promise<FollowUpEmails> {
-  console.log(6)
   const prompt = makePrompt(email, userConstraints)
-  console.log(7)
   const followUpEmails = await callGPT35Api(prompt, retries)
-  console.log(8)
   return { ...followUpEmails, prompt }
 }
 
