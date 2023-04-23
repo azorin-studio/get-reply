@@ -49,19 +49,20 @@ export const processEmail = async (email: Email) => {
   const threadId = await createGmailDraftAndNotify(profile, to, subject, result.followUpEmail1, email)
 
   const { data, error } = await supabaseAdminClient()
-  .from('logs')
-  .insert([
-    { 
-      followUpEmail1,
-      followUpEmail2,
-      prompt,
-      threadId,
-      to: to.join(','),
-      from,
-      subject,
-      text: email.text,
-    },
-  ])
+    .from('logs')
+    .insert([
+      { 
+        followUpEmail1,
+        followUpEmail2,
+        prompt,
+        threadId,
+        to: to.join(','),
+        from,
+        subject,
+        text: email.text,
+        user_id: profile.id,
+      },
+    ])
 
   return result
 }
