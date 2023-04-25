@@ -54,7 +54,7 @@ export default async function Page() {
         <div className="flex flex-row justify-between">
           <div>
             <div className="font-bold">
-              Plan:
+              Plan
             </div>
             <div>
               alpha
@@ -62,7 +62,7 @@ export default async function Page() {
           </div>
           <div>
             <div className="font-bold">
-              Email:
+              Email
             </div>
             <div>
               { profile.email }
@@ -70,7 +70,7 @@ export default async function Page() {
           </div>
           <div>
             <div className="font-bold">
-              Provider:
+              Provider
             </div>
             <div>
               { profile.google_refresh_token ? 'Google' : 'GetReply' }
@@ -79,7 +79,7 @@ export default async function Page() {
         </div>
         <div className='flex flex-col gap-2'>
         <div className="font-bold">
-          Get started:
+          Get started
         </div>
         <p>
           To get follow ups sent to your gmail please bcc this address:
@@ -93,10 +93,13 @@ export default async function Page() {
         </p>
         </div>
         <div>
+          
+          <div className="flex flex-col gap-4">
           <div className="font-bold">
-            Logs:
+            Logs
           </div>
           {logs && logs.map((log) => (<LogBadge key={log.id} log={log} />))}
+          </div>
         </div>
 
         <Link
