@@ -2,7 +2,7 @@ import 'server-only'
 
 import { createServerComponentSupabaseClient } from '@supabase/auth-helpers-nextjs'
 import { headers, cookies } from "next/headers"
-import { Database } from '~/lib/supabase/database.types'
+import { Database } from '~/lib/database.types'
 import { redirect } from 'next/navigation'
 
 export default async function Page() {
@@ -21,7 +21,9 @@ export default async function Page() {
       .update({ google_access_token: session.provider_token, google_refresh_token: session.provider_refresh_token })
       .eq('email', session.user.email)
 
-    return redirect('/account')
+    console.log(session)
+
+    // return redirect('/account')
   }
 
   return (

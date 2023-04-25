@@ -2,7 +2,7 @@
 import { Database, Json as JsonType } from "./lib/database.types"
 
 export type Log = Omit<Database['public']['Tables']['logs']['Row'], 'id'> & {
-  id?: number;
+  id?: string;
 }
 
 export type IncomingEmail = Pick<Log, 'bcc' | 'cc' | 'date' | 'from' | 'headers' | 'html' | 'messageId' | 'subject' | 'text' | 'to' > & {

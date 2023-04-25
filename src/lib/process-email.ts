@@ -1,7 +1,7 @@
 import { generateFollowUpEmails } from "~/lib/generate-follow-ups"
 import { getProfileFromEmail, createLog, appendToLog } from "~/lib/supabase"
 import { createGmailDraftAndNotify } from "~/lib/providers/google"
-import { Contact, IncomingEmail, Log, Profile } from "~/types"
+import { IncomingEmail, Log, Profile } from "~/types"
 
 export const processEmail = async (incomingEmail: IncomingEmail) => {
   const profile: Profile = await getProfileFromEmail(incomingEmail.from.address)

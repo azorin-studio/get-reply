@@ -14,19 +14,20 @@ export interface Database {
           bcc: Json[] | null
           cc: Json[] | null
           created_at: string | null
-          date: string
-          error_message: string | null
+          date: string | null
+          errorMessage: string | null
           followUpEmail1: string | null
           followUpEmail2: string | null
-          from: Json
-          headers: Json[]
-          html: string
-          id: number
-          messageId: string
+          from: Json | null
+          headers: Json[] | null
+          html: string | null
+          id: string
+          messageId: string | null
           prompt: string | null
-          status: string
-          subject: string
-          text: string
+          provider: string | null
+          status: string | null
+          subject: Json | null
+          text: string | null
           threadId: string | null
           to: Json[] | null
           user_id: string
@@ -35,19 +36,20 @@ export interface Database {
           bcc?: Json[] | null
           cc?: Json[] | null
           created_at?: string | null
-          date: string
-          error_message?: string | null
+          date?: string | null
+          errorMessage?: string | null
           followUpEmail1?: string | null
           followUpEmail2?: string | null
-          from: Json
-          headers: Json[]
-          html: string
-          id?: number
-          messageId: string
+          from?: Json | null
+          headers?: Json[] | null
+          html?: string | null
+          id?: string
+          messageId?: string | null
           prompt?: string | null
-          status: string
-          subject: string
-          text: string
+          provider?: string | null
+          status?: string | null
+          subject?: Json | null
+          text?: string | null
           threadId?: string | null
           to?: Json[] | null
           user_id: string
@@ -56,19 +58,20 @@ export interface Database {
           bcc?: Json[] | null
           cc?: Json[] | null
           created_at?: string | null
-          date?: string
-          error_message?: string | null
+          date?: string | null
+          errorMessage?: string | null
           followUpEmail1?: string | null
           followUpEmail2?: string | null
-          from?: Json
-          headers?: Json[]
-          html?: string
-          id?: number
-          messageId?: string
+          from?: Json | null
+          headers?: Json[] | null
+          html?: string | null
+          id?: string
+          messageId?: string | null
           prompt?: string | null
-          status?: string
-          subject?: string
-          text?: string
+          provider?: string | null
+          status?: string | null
+          subject?: Json | null
+          text?: string | null
           threadId?: string | null
           to?: Json[] | null
           user_id?: string
@@ -77,24 +80,21 @@ export interface Database {
       profiles: {
         Row: {
           email: string | null
-          google_access_token: string | null
           google_refresh_token: string | null
           id: string
-          userConstraints: string[] | null
+          user_constraints: string[] | null
         }
         Insert: {
           email?: string | null
-          google_access_token?: string | null
           google_refresh_token?: string | null
           id: string
-          userConstraints?: string[] | null
+          user_constraints?: string[] | null
         }
         Update: {
           email?: string | null
-          google_access_token?: string | null
           google_refresh_token?: string | null
           id?: string
-          userConstraints?: string[] | null
+          user_constraints?: string[] | null
         }
       }
     }

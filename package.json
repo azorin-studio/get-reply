@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "test": "jest",
-    "test:email": "http POST https://tunnel2.azorin.studio/api/process-email < ./src/data/test-email.json "
+    "test:email": "http POST https://tunnel2.azorin.studio/api/process-email < ./src/data/test-email.json",
+    "supabase:types": "supabase gen types typescript --project-id 'dwtrraqsrjkkheqloopn' --schema public > src/lib/database.types.ts"
   },
   "dependencies": {
     "@google-cloud/local-auth": "^2.1.0",
@@ -27,6 +28,7 @@
   },
   "devDependencies": {
     "@supabase/auth-helpers-nextjs": "0.5.8",
+    "@supabase/auth-helpers-react": "^0.3.1",
     "@supabase/supabase-js": "^2.20.0",
     "@tailwindcss/line-clamp": "^0.4.2",
     "@tailwindcss/typography": "^0.5.9",
