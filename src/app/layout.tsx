@@ -31,7 +31,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               <Header 
                 user={session && session.user || null}
               />
-              <div className="max-w-screen-lg mx-auto flex-grow">
+              <div className="max-w-screen-lg p-4 container mx-auto flex-grow">
                 {children}
               </div>
               <Footer/>

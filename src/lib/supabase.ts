@@ -53,20 +53,23 @@ export const createLog = async(incomingEmail: IncomingEmail, profile: Profile) =
   if (profile.google_refresh_token === null) {
     provider = 'getreply'
   }
+
+  const newLog: Log = {
+    ...incomingEmail,
+    user_id: profile.id,
+    status: 'pending',
+    created_at: (new Date()).toISOString(),
+    provider,
+    errorMessage: null,
+    followUpEmail1: null,
+    followUpEmail2: null,
+    prompt: null,
+    threadId: null,
+  }
+
   const { error, data: newLogs } = await supabaseAdminClient
     .from('logs')
-    .insert({
-      ...incomingEmail,
-      user_id: profile.id,
-      status: 'pending',
-      created_at: (new Date()).toISOString(),
-      provider,
-      errorMessage: null,
-      followUpEmail1: null,
-      followUpEmail2: null,
-      prompt: null,
-      threadId: null,
-    } as Log)
+    .insert(newLog as any)
     .select()
 
   if (error) {

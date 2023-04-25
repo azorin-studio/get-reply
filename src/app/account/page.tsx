@@ -4,6 +4,7 @@ import LogBadge from '~/components/LogBadge'
 import { createServerComponentSupabaseClient } from '@supabase/auth-helpers-nextjs'
 import { redirect } from 'next/navigation'
 import { Database } from '~/lib/database.types'
+import { Log } from '~/types'
 
 export default async function Page() {
   const supabase = createServerComponentSupabaseClient<Database>({
@@ -11,11 +12,11 @@ export default async function Page() {
     cookies,
   })
 
-  const { data: logs, error } = await supabase
+  const { data, error } = await supabase
     .from('logs')
     .select('*')
 
-  console.log(logs, error)
+  const logs: Log[] | null = data as Log[]
 
   const {
     data: { session },
@@ -42,47 +43,47 @@ export default async function Page() {
     return redirect('/login') 
   }
 
-  console.log({logs})
-
   return (
-    <div className="max-w-2xl p-4 flex flex-row bg-white font-sans text-slate-800 antialiased">
+    <div className="max-w-2xl mx-auto p-4 flex flex-row bg-white font-sans text-slate-800 antialiased">
       <main className="flex flex-col gap-8 p-4 mx-auto">
         <h1 className="text-2xl font-bold">
           My account
         </h1>
-        <div>
-          <h2 className="font-bold">
-            Your plan:
-          </h2>
-          <p>
-            alpha
-          </p>
-        </div>
-        <div>
-          <h2 className="font-bold">
-            Your email:
-          </h2>
-          <p>
-            { session.user.email }
-          </p>
-        </div>
-        <div>
-          <h2 className="font-bold">
-            Your provider:
-          </h2>
-          <p>
-            { profile.google_refresh_token ? 'Google' : 'GetReply' }
-          </p>
+        <div className="flex flex-row justify-between">
+          <div>
+            <div className="font-bold">
+              Plan:
+            </div>
+            <div>
+              alpha
+            </div>
+          </div>
+          <div>
+            <div className="font-bold">
+              Email:
+            </div>
+            <div>
+              { profile.email }
+            </div>
+          </div>
+          <div>
+            <div className="font-bold">
+              Provider:
+            </div>
+            <div>
+              { profile.google_refresh_token ? 'Google' : 'GetReply' }
+            </div>
+          </div>
         </div>
         <div className='flex flex-col gap-2'>
-        <h2 className="font-bold">
+        <div className="font-bold">
           Get started:
-        </h2>
+        </div>
         <p>
           To get follow ups sent to your gmail please bcc this address:
         </p>
 
-        <p className="text-xl border font-bold rounded p-2">
+        <p className="text border font-bold rounded p-2">
           bot@getreply.app
         </p>
         <p>
@@ -90,10 +91,10 @@ export default async function Page() {
         </p>
         </div>
         <div>
-          <h2 className="font-bold">
+          <div className="font-bold">
             Logs:
-          </h2>
-          {logs.map && logs.map((log) => (<LogBadge key={log.id} log={log} />))}
+          </div>
+          {logs && logs.map((log) => (<LogBadge key={log.id} log={log} />))}
         </div>
 
         <Link

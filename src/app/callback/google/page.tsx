@@ -16,14 +16,17 @@ export default async function Page() {
   } = await supabase.auth.getSession()
 
   if(session) {
-    await supabase
+    console.log('Trying to add google_refresh_token to profile')
+
+    const { error } = await supabase
       .from('profiles')
-      .update({ google_access_token: session.provider_token, google_refresh_token: session.provider_refresh_token })
-      .eq('email', session.user.email)
+      .update({ google_refresh_token: session.provider_refresh_token })
+      .eq('id', session.user.id)
+      .select('*')
 
-    console.log(session)
+    if (error) throw new Error(error.message)
 
-    // return redirect('/account')
+    return redirect('/account')
   }
 
   return (

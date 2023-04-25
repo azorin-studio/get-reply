@@ -26,7 +26,7 @@ export interface Database {
           prompt: string | null
           provider: string | null
           status: string | null
-          subject: Json | null
+          subject: string | null
           text: string | null
           threadId: string | null
           to: Json[] | null
@@ -48,7 +48,7 @@ export interface Database {
           prompt?: string | null
           provider?: string | null
           status?: string | null
-          subject?: Json | null
+          subject?: string | null
           text?: string | null
           threadId?: string | null
           to?: Json[] | null
@@ -70,7 +70,7 @@ export interface Database {
           prompt?: string | null
           provider?: string | null
           status?: string | null
-          subject?: Json | null
+          subject?: string | null
           text?: string | null
           threadId?: string | null
           to?: Json[] | null

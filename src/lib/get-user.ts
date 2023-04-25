@@ -1,6 +1,6 @@
 import { createClient } from '@supabase/supabase-js'
 
-import { email as TEST_EMAIL } from '~/data/test-email.json'
+import TEST_EMAIL from '~/data/test-email.json'
 
 const getUser = async () => {
   const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_KEY!, {

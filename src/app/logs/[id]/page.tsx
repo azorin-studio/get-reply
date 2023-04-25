@@ -1,10 +1,13 @@
 import LogBadge from '~/components/LogBadge'
+import LogBody from '~/components/LogBody'
 import { headers, cookies } from "next/headers"
 import { createServerComponentSupabaseClient } from '@supabase/auth-helpers-nextjs'
 import { Database } from '~/lib/database.types'
 import { Log } from '~/types'
 
-export default async function Page({ params }) {
+export default async function Page(props: { params: { id: string } }) {
+  const id = props.params.id
+
   const supabase = createServerComponentSupabaseClient<Database>({
     headers,
     cookies,
@@ -13,30 +16,29 @@ export default async function Page({ params }) {
   const { data: logs, error } = await supabase
     .from('logs')
     .select('*')
-    .eq('id', params.id)
+    .eq('id', id)
     .limit(1)
 
   let log = null
   if (logs && logs.length > 0) {
-    log = logs[0]
+    log = logs[0] as Log
   }
 
+  if (!log) return <div>404</div>
+
   return (
-    <div className="max-w-2xl p-4 flex flex-row bg-white font-sans text-slate-800 antialiased">
-      <main className="flex flex-col gap-8 p-4 mx-auto">
-        <div>
-          <h2 className="font-bold">
-            Log:
-          </h2>
-          {log && (
-            <LogBadge 
-              key={log.id} 
-              log={log} 
-            />
-          )}
-          
-        </div>
+    <div className="max-w-2xl mx-auto p-4 flex flex-row antialiased">
+      <main className="flex flex-col gap-4">
+        <h1 className="text-2xl font-bold">
+          Log
+        </h1>
+        <LogBadge 
+          log={log} 
+        />
+        <LogBody
+          log={log} 
+        />
       </main>
     </div>
-    )
+  )
 }
