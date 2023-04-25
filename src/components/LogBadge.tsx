@@ -4,6 +4,8 @@ import { Log } from '~/types'
 import { formatRelative } from 'date-fns'
 import { useSupabase } from '~/app/supabase-provider'
 
+export const revalidate = 0
+
 export default function LogBadge(props: { log: Log }) {
   const { supabase } = useSupabase()
   const { log } = props
@@ -17,7 +19,7 @@ export default function LogBadge(props: { log: Log }) {
     if (error) {
       console.error(error)
     } else {
-      window.location.href = '/account'
+      // window.location.href = '/account'
     }
   }
 

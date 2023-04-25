@@ -6,6 +6,8 @@ import { redirect } from 'next/navigation'
 import { Database } from '~/lib/database.types'
 import { Log } from '~/types'
 
+export const revalidate = 0
+
 export default async function Page() {
   const supabase = createServerComponentSupabaseClient<Database>({
     headers,

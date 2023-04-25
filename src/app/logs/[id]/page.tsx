@@ -5,6 +5,8 @@ import { createServerComponentSupabaseClient } from '@supabase/auth-helpers-next
 import { Database } from '~/lib/database.types'
 import { Log } from '~/types'
 
+export const revalidate = 0
+
 export default async function Page(props: { params: { id: string } }) {
   const id = props.params.id
 

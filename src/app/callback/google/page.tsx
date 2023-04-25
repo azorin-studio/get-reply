@@ -5,6 +5,8 @@ import { headers, cookies } from "next/headers"
 import { Database } from '~/lib/database.types'
 import { redirect } from 'next/navigation'
 
+export const revalidate = 0
+
 export default async function Page() {
   const supabase = createServerComponentSupabaseClient<Database>({
     headers,
