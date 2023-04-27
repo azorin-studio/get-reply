@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { generateFollowUpEmails, FollowUpEmails } from "~/lib/generate-follow-ups"
+import { generateFollowUpEmails, FollowUpEmails } from "~/lib/chat-gpt"
 
 export async function POST (request: Request) {
   const body = await request.json()

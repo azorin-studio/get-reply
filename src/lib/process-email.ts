@@ -1,4 +1,4 @@
-import { generateFollowUpEmails } from "~/lib/generate-follow-ups"
+import { generateFollowUps } from "./chat-gpt"
 import { getProfileFromEmail, createLog, appendToLog } from "~/lib/supabase"
 import { createGmailDraftAndNotify } from "~/lib/providers/google"
 import { IncomingEmail, Log, Profile } from "~/types"
@@ -17,19 +17,29 @@ export const processEmail = async (incomingEmail: IncomingEmail) => {
     throw new Error('No text found')
   } 
 
-  const { 
-    followUpEmail1, 
-    followUpEmail2, 
-    prompt 
-  } = await generateFollowUpEmails(incomingEmail.text, profile.user_constraints, 3)
+  try {
+    const { 
+      followUpEmail1, 
+      followUpEmail2, 
+      prompt 
+    } = await generateFollowUps(incomingEmail.text, profile.user_constraints, 3)
 
-  log = await appendToLog(log, {
-    followUpEmail1,
-    followUpEmail2,
-    prompt,
-    status: 'generated'
-  })
-  console.log('generated id:', log.id)
+    log = await appendToLog(log, {
+      followUpEmail1,
+      followUpEmail2,
+      prompt,
+      status: 'generated'
+    })
+
+    console.log('generated id:', log.id)
+  } catch (err: any) {
+    log = await appendToLog(log, {
+      status: 'error',
+      errorMessage: 'ChatGTP failed to generate follow up emails'
+    })
+  
+    throw err
+  }
 
   if ((log.headers && log.headers.length > 0) && profile.google_refresh_token) {
     console.log('creating draft, id:', log.id)
@@ -57,7 +67,6 @@ export const processEmail = async (incomingEmail: IncomingEmail) => {
   
       console.log('could not find thread in gmail, id:', log.id)  
     }
-
   }
 
   return log

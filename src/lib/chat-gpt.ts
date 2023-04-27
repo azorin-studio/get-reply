@@ -73,7 +73,6 @@ Please provide the two follow-up emails, separated by the custom delimiter "@@@F
 }
 
 export async function callGPT35Api(prompt: string, retries = 3, delay = 1000): Promise<FollowUpEmails> {
-  
   const configuration = new Configuration({
     apiKey: process.env.OPENAI_API_KEY,
   })
@@ -133,7 +132,7 @@ export async function callGPT35Api(prompt: string, retries = 3, delay = 1000): P
   }
 }
 
-export async function generateFollowUpEmails(
+export async function generateFollowUps(
   email: string,
   userConstraints: UserConstraint[] | null,
   retries = 3

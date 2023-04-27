@@ -47,6 +47,7 @@ export const createGmailDraftAndNotify = async (to: Contact[], from: Contact, su
   // Create the draft
   const gmail = google.gmail({ version: 'v1', auth: oauth2Client })
   const q = `${subject} to: ${to.map(t => t!.address).join(', ')} from: ${from.address}`
+  
   const threads = await gmail.users.messages.list({
     userId: 'me',
     q,

@@ -1,4 +1,4 @@
-import { generateFollowUpEmails , validateAndEscapeConstraints } from './generate-follow-ups' // Adjust the import path as needed
+import { generateFollowUpEmails , validateAndEscapeConstraints } from './chat-gpt' // Adjust the import path as needed
 
 jest.mock('./generate-follow-ups', () => {
   const actualModule = jest.requireActual('./generate-follow-ups')

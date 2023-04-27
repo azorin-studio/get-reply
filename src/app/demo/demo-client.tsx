@@ -8,7 +8,7 @@ import Footer from "~/components/Footer"
 import Header from "~/components/Header"
 import ms from "ms"
 import RatingButtons from "~/components/RatingButtons"
-import { FollowUpEmails, validateAndEscapeConstraints } from "~/lib/generate-follow-ups"
+import { FollowUpEmails, validateAndEscapeConstraints } from "~/lib/chat-gpt"
 
 const DEFAULT_EMAIL = `Dear Hiring Manager, 
 
