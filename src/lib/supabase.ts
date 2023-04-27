@@ -63,6 +63,7 @@ export const createLog = async(incomingEmail: IncomingEmail, profile: Profile) =
     errorMessage: null,
     followUpEmail1: null,
     followUpEmail2: null,
+    draftId: null,
     prompt: null,
     threadId: null,
   }
