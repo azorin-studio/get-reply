@@ -23,8 +23,7 @@ export function makeBody(to: Contact[], from: Contact, subject: string, message:
     return encodedMail
 }
 
-export const createGmailDraftAndNotify = async (to: Contact[], from: Contact, subject: string, text: string, google_refresh_token: string) => { 
-  // Refresh the access token
+export const refreshAccessToken = async (google_refresh_token: string) => {
   const form = new URLSearchParams()
   form.append('client_id', process.env.GOOGLE_CLIENT_ID!)
   form.append('client_secret', process.env.GOOGLE_CLIENT_SECRET!)
@@ -42,45 +41,54 @@ export const createGmailDraftAndNotify = async (to: Contact[], from: Contact, su
     refresh_token: google_refresh_token,
     access_token: newTokens.access_token
   }
-  oauth2Client.setCredentials(tokens)
+  return tokens
+}
 
-  // Create the draft
+export const createGmailDraftInThread = async (to: Contact[], from: Contact, subject: string, text: string, threadId: string, google_refresh_token: string) => {
+  const tokens = await refreshAccessToken(google_refresh_token)
+  oauth2Client.setCredentials(tokens)
   const gmail = google.gmail({ version: 'v1', auth: oauth2Client })
-  const q = `${subject} to: ${to.map(t => t!.address).join(', ')} from: ${from.address}`
-  
-  const threads = await gmail.users.messages.list({
+  const raw = makeBody(to, from, subject, text)
+  const res = await gmail.users.drafts.create({
+    userId: 'me',
+    requestBody: {
+      message: {
+        raw,
+        threadId
+      }
+    }
+  })
+  return res.data
+}
+
+export const findThread = async (subject: string, to: Contact[], google_refresh_token: string) => {
+  const tokens = await refreshAccessToken(google_refresh_token)
+  oauth2Client.setCredentials(tokens)
+  const gmail = google.gmail({ version: 'v1', auth: oauth2Client })
+  const q = `${subject} to: ${to.map(t => t!.address).join(', ')}`
+  const threads = await gmail.users.threads.list({
     userId: 'me',
     q,
   })
 
   if (threads.data.resultSizeEstimate === 0) {
-    console.log('no thread found, q:', q)
-    return
+    throw Error(`cannot find thread for q=${q}.`)
   }
 
   if (threads.data.messages!.length > 1) {
-    console.log('thread has reply', threads.data.messages)
-    return
+    throw Error('thread has reply')
   }
 
-  const raw = makeBody(to, from, subject, text)
-  const draft = await gmail.users.drafts.create({
-    userId: 'me',
-    requestBody: {
-      message: {
-        threadId: threads.data.messages![0].threadId!,
-        raw
-      }
-    }
-  })
+  return threads.data.messages[0]
+}
 
+export const makeUnreadInInbox = async (draft: any) => {
+  const gmail = google.gmail({ version: 'v1', auth: oauth2Client })
   await gmail.users.messages.modify({
     userId: 'me',
-    id: draft.data.message!.id!,
+    id: draft.message!.id!,
     requestBody: {
       addLabelIds: ['INBOX', 'UNREAD']
     }
   })
-
-  return threads.data.messages![0].threadId
 }
