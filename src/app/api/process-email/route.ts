@@ -1,12 +1,13 @@
 import 'server-only'
 
-import { headers } from 'next/headers'
 import { NextResponse } from 'next/server'
 import { processEmail } from '~/lib/process-email'
 import { IncomingEmail } from '~/types'
 
 export async function POST (request: Request) {
   const json = await request.json()
+
+  console.log(JSON.stringify(json, null, 2))
 
   if (json.attachments) {
     delete json.attachments

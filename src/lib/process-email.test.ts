@@ -1,27 +1,22 @@
+import testEmail from '~/data/test-email.json'
 import { processEmail } from './process-email'
-import { type IncomingEmail } from '~/types'
+import { Profile, type IncomingEmail } from '~/types'
+import { getProfileFromEmail } from './supabase'
 
 describe('process', () => {
-  const sampleEmail = 'Hi there Eoin,\n\nI\'m interested in your product. Can you tell me more about it?\n\nThanks,\n\nJohn';
-
   it('Creates follow ups email and puts in users drafts', async () => {
-    const testEmail: IncomingEmail = {
-      bcc: [{ address: 'bot@getreply.app', name: 'GetReply bot' }],
-      cc: [],
-      date: '2021-05-01T00:00:00.000Z',
-      from: {
-        address: 'amonecho1@gmail.com',
-        name: 'Amonecho',
-      },
-      headers: [],
-      html: '',
-      messageId: '',
-      subject: 'Test email',
-      text: sampleEmail,
-      to: [{ address: 'me@eoinmurray.eu', name: 'Eoin Murray' }]
+
+    const profile: Profile = await getProfileFromEmail(testEmail.from.address)
+
+    if (!profile) {
+      throw new Error(`Test user ${testEmail.from.address} profile not found. Its required for process tests to run.`)
     }
 
-    const log = await processEmail(testEmail)
+    if (testEmail.attachments) {
+      delete (testEmail as IncomingEmail).attachments
+    }
+
+    const log = await processEmail(testEmail as IncomingEmail)
     console.log(log)
   }, 30000)
 })

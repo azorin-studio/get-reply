@@ -30,6 +30,7 @@ export type IncomingEmail = Pick<Log, 'bcc' | 'cc' | 'date' | 'from' | 'headers'
   from: Contact;
   to: Contact[];
   bcc: Contact[];
+  attachments?: any[];
 }
 
 export type Json = JsonType
