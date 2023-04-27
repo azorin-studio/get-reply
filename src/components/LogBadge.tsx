@@ -1,7 +1,7 @@
 'use client'
 import Link from 'next/link'
 import { Log } from '~/types'
-import { formatRelative } from 'date-fns'
+import { formatDistance } from 'date-fns'
 import { useSupabase } from '~/app/supabase-provider'
 
 export const revalidate = 0
@@ -36,7 +36,7 @@ export default function LogBadge(props: { log: Log }) {
             </Link>
           </div>
           <div className="text-sm">
-            { log.created_at && formatRelative(new Date(log.created_at), new Date()) }
+            { log.created_at && formatDistance(new Date(log.created_at), new Date(), { addSuffix: true }) }
           </div>
         </div>
 
