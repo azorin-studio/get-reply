@@ -15,6 +15,7 @@ export interface Database {
           cc: Json[] | null
           created_at: string | null
           date: string | null
+          draftId: string | null
           errorMessage: string | null
           followUpEmail1: string | null
           followUpEmail2: string | null
@@ -37,6 +38,7 @@ export interface Database {
           cc?: Json[] | null
           created_at?: string | null
           date?: string | null
+          draftId?: string | null
           errorMessage?: string | null
           followUpEmail1?: string | null
           followUpEmail2?: string | null
@@ -59,6 +61,7 @@ export interface Database {
           cc?: Json[] | null
           created_at?: string | null
           date?: string | null
+          draftId?: string | null
           errorMessage?: string | null
           followUpEmail1?: string | null
           followUpEmail2?: string | null

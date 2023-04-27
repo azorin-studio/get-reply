@@ -7,8 +7,6 @@ import { IncomingEmail } from '~/types'
 export async function POST (request: Request) {
   const json = await request.json()
 
-  console.log(JSON.stringify(json, null, 2))
-
   if (json.attachments) {
     delete json.attachments
   }

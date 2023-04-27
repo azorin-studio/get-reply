@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { generateFollowUpEmails, FollowUpEmails } from "~/lib/chat-gpt"
+import { generateFollowUps, FollowUpEmails } from "~/lib/chat-gpt"
 
 export async function POST (request: Request) {
   const body = await request.json()
@@ -12,7 +12,7 @@ export async function POST (request: Request) {
   const userConstraints = body.userConstraints || []
 
   try {
-    const followUps: FollowUpEmails = await generateFollowUpEmails(email, userConstraints)
+    const followUps: FollowUpEmails = await generateFollowUps(email, userConstraints)
     return NextResponse.json(followUps)
 
   } catch(error: any) {

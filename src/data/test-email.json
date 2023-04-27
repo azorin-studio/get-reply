@@ -2,11 +2,11 @@
   "headers": [
     {
       "key": "received",
-      "value": "from mail-pf1-x42a.google.com (2607:f8b0:4864:20::42a) by email.cloudflare.net (unknown) id wlJ4QeDjUVtl for <bot@getreply.app>; Thu, 27 Apr 2023 13:53:09 +0000"
+      "value": "from mail-pg1-x52d.google.com (2607:f8b0:4864:20::52d) by email.cloudflare.net (unknown) id GvaHAh5DbDjD for <bot@getreply.app>; Thu, 27 Apr 2023 23:06:36 +0000"
     },
     {
       "key": "received-spf",
-      "value": "pass (mx.cloudflare.net: domain of amonecho1@gmail.com designates 2607:f8b0:4864:20::42a as permitted sender) helo=\"mail-pf1-x42a.google.com\"; envelope-from=\"amonecho1@gmail.com\";"
+      "value": "pass (mx.cloudflare.net: domain of amonecho1@gmail.com designates 2607:f8b0:4864:20::52d as permitted sender) helo=\"mail-pg1-x52d.google.com\"; envelope-from=\"amonecho1@gmail.com\";"
     },
     {
       "key": "authentication-results",
@@ -14,43 +14,43 @@
     },
     {
       "key": "arc-seal",
-      "value": "i=1; a=rsa-sha256; s=2022; d=email.cloudflare.net; cv=none; b=etmgTEnbFQu11C+7flBHxXkQJ4zGwu+6oXelVLQxKy5ZtAHZlDidbLSE0GzM71DLgY96exU4h 51wvFPYCRvRf+IQzN8vt8ImNANZuVozxxBBIPzI5z+pRXQTlyP4rg8HhlEYW6LdxCsDQPpESBcc AzhJ+JEo4opgBMC8/g+o/Aq/SGzYXwlEbkpBHpdupdgYXV6LPgneL7GGdxmub7SPyaWFTB3YV2B 5idsvplj00S0V5PkuHZyerCPDiuhrEP5rHUMTVi0Y0tI2SIfrVn/OCAwphn0a0KM5b76uizVvtb rrzX10CBLXZts/ZbUW3zTlrn6Op8MPNmIGUogfZW3aqQ==;"
+      "value": "i=1; a=rsa-sha256; s=2022; d=email.cloudflare.net; cv=none; b=bgzy6A8xX8V0rvLMs6uLrW+w8IRG7ZQPsuopddAzROiZH8OPdxzb0VbKzuJViSijOaWKjivqh tRGDD+TaZ18DEw8dnWJOgtdmj7o178qQlYcq1t1/0tv0sUN+eMfXNO8aO/g8xwVeHpMaVSQwpFm 02kbVWbU+J99E+tmVKHd+Aji8r23M0cixmMH6f+a3w8ktKsfyAHUoZwotNyAHMFED8OxgK8PQhT xgvurtpYsqpyrwmi3k4UCcPFxR636faXSCvga0LiII1MjYCEZjNdS06dAM0WH0DgTKviPygkcJl 3QbjRY8Fy85Y8aYFZ1lNZDbkWB/HZ/ucQ/x35M+r+H/g==;"
     },
     {
       "key": "arc-message-signature",
-      "value": "i=1; a=rsa-sha256; s=2022; d=email.cloudflare.net; c=relaxed/relaxed; h=To:Subject:Date:From:reply-to:cc:resent-date:resent-from:resent-to :resent-cc:in-reply-to:references:list-id:list-help:list-unsubscribe :list-subscribe:list-post:list-owner:list-archive; t=1682603590; bh=xV86EU/ G1T7gbYN0cy8lbf56dWuuOTSaIewR5Q+IT4c=; b=mlyMimPS9M7EnhjoNMhDEVyqke2eYLlAD5 ZS+gMo9Enait3EBZSY2BJOPn0kDtm8NEQHt1s27Nf6cD/TDhISMdHy/ljpNz9D7m3rI8544RkGk gr8DlTcy1Fr7RG5Po64fVr2jaSvYqm68YXIAEZCE+e/jBQwXh9B5LjXpvD1DsPxnsJ0q1kwIo0W M1x0RWOOp8evMiXsWKHAyVGMw/3xZ+lfYEPaFqfAhE2G6Je2Y4JIHBYCkGw12JU4QGrAsjh9lM9 YmrrGRNgO4fyUARD3S4t9ShKsBD9lWZ1T1iZAcgYRpnnOz6qYFos7acUjy1iqaejOfxYTywl9kM bf/xZ9gA==;"
+      "value": "i=1; a=rsa-sha256; s=2022; d=email.cloudflare.net; c=relaxed/relaxed; h=To:Subject:Date:From:reply-to:cc:resent-date:resent-from:resent-to :resent-cc:in-reply-to:references:list-id:list-help:list-unsubscribe :list-subscribe:list-post:list-owner:list-archive; t=1682636797; bh=6hMXyN4 iuE+hPLKYpEmp48D6qFVYu/aeplHF6pPLgqo=; b=OELKn2WJvSUhwSZDjc9IsRo+WtSPYEXRLe 1F813eDJeO7L7YjHFfv2J6jrHQ3dIBTd8m6ql7HdKkF75ub0wXxrMxXlW4J4HOUcFJM1KsD97Mj qeIaOBfwZ6ttkt+ElJMhj4z7FA3eoIET48Ourq2E6lTY+kWnfG4d/RIfnY3S/omUxuA9BXQ1h2v K5WeO3sv/IHCpNZIJfUlN9mnOS/MGLX22Qpi7VKOPFYBnSInA3Xabygj3fFd4rL5h4q1X93vlYb tUZR3fogATr9klcPgJgJE2yPiT6DZWIEx6xbli572KMvlnMB1+mOxKZA+Y3NwkYh6MelbNjrFjT PTLWBmEA==;"
     },
     {
       "key": "arc-authentication-results",
-      "value": "i=1; mx.cloudflare.net; dkim=pass header.d=gmail.com header.s=20221208 header.b=oJ3DB/0w; dmarc=pass header.from=gmail.com policy.dmarc=none; spf=none (mx.cloudflare.net: no SPF records found for postmaster@mail-pf1-x42a.google.com) smtp.helo=mail-pf1-x42a.google.com; spf=pass (mx.cloudflare.net: domain of amonecho1@gmail.com designates 2607:f8b0:4864:20::42a as permitted sender) smtp.mailfrom=amonecho1@gmail.com; arc=none smtp.remote-ip=2607:f8b0:4864:20::42a"
+      "value": "i=1; mx.cloudflare.net; dkim=pass header.d=gmail.com header.s=20221208 header.b=cmhXkvSI; dmarc=pass header.from=gmail.com policy.dmarc=none; spf=none (mx.cloudflare.net: no SPF records found for postmaster@mail-pg1-x52d.google.com) smtp.helo=mail-pg1-x52d.google.com; spf=pass (mx.cloudflare.net: domain of amonecho1@gmail.com designates 2607:f8b0:4864:20::52d as permitted sender) smtp.mailfrom=amonecho1@gmail.com; arc=none smtp.remote-ip=2607:f8b0:4864:20::52d"
     },
     {
       "key": "dkim-signature",
-      "value": "v=1; a=rsa-sha256; s=2022; d=email.cloudflare.net; c=relaxed/relaxed; h=To:Subject:Date:From:reply-to:cc:resent-date:resent-from:resent-to :resent-cc:in-reply-to:references:list-id:list-help:list-unsubscribe :list-subscribe:list-post:list-owner:list-archive; t=1682603590; bh=xV86EU/ G1T7gbYN0cy8lbf56dWuuOTSaIewR5Q+IT4c=; b=DSJyJL1MsUOSwGUUFdaofqSDOCYSvcXNBZ xpwnVTTOOYb7XSg56siH7o7qMLvmDNvFkUteYAOqQEqspJ+TOXYKbwNGm+h1oIaiD6feIgYHXMZ CYsuYuGjV7Ou/lPEnMMcTqSd5sAep0pNdPySl+ZwCZ+Zso47kHOJd8XtgL8fUw4Ll0D9aAvlKZN iRyoxEF+8g827w81ZPeKUJCoatP1/RAglLY2IsqKLGJ+sHOaUpILrpHBP2ycwQKSGifKITuYWMU dzpHb55BAK7cL0dlgHMYO1oe5m8V8vDEudsXbMJ1R0NqYx+s/PMuaO7Oqt8bgLcLcFyJYAEBgsK LXWDxKiQ==;"
+      "value": "v=1; a=rsa-sha256; s=2022; d=email.cloudflare.net; c=relaxed/relaxed; h=To:Subject:Date:From:reply-to:cc:resent-date:resent-from:resent-to :resent-cc:in-reply-to:references:list-id:list-help:list-unsubscribe :list-subscribe:list-post:list-owner:list-archive; t=1682636797; bh=6hMXyN4 iuE+hPLKYpEmp48D6qFVYu/aeplHF6pPLgqo=; b=Rdp4ibUjwIDvWiJtWE8XTH851Ov8JNjDof 5oRu4cxlAG1lyEocKD+rkC6tBxieP0oe5fR/mhI2h/cvUaUo3sZe3wpOHeRJFN5dWXv1lfCE8GG U5oUTvy8SdO3Hm4rfMSCu/mu0VXTvepEk3P1uOIvw0Uvmv3DZuOYpzknbruj8/6BBX96tBgntsl DitFtBc3LApPvEZDBaQMOwYoflXQSCoTlyMcLntrMaHxZ0lkhG4S6gD5X5Ta31ALtdZVEsXr5Ze /mD2MqNd4EqcRB9nAN5hbUqg0ipHn3uakB0e4QP2gJacnwhNhvPVFoRaysgh4W6314dhS4S6TmY 9D+veA4g==;"
     },
     {
       "key": "received",
-      "value": "by mail-pf1-x42a.google.com with SMTP id d2e1a72fcca58-63b7588005fso7065735b3a.0 for <bot@getreply.app>; Thu, 27 Apr 2023 06:53:09 -0700 (PDT)"
+      "value": "by mail-pg1-x52d.google.com with SMTP id 41be03b00d2f7-52867360efcso3329544a12.2 for <bot@getreply.app>; Thu, 27 Apr 2023 16:06:36 -0700 (PDT)"
     },
     {
       "key": "dkim-signature",
-      "value": "v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20221208; t=1682603589; x=1685195589; h=to:subject:message-id:date:from:mime-version:from:to:cc:subject :date:message-id:reply-to; bh=xV86EU/G1T7gbYN0cy8lbf56dWuuOTSaIewR5Q+IT4c=; b=oJ3DB/0w/kTHFguBapZ1L8XgGzIL2s3MbyylLgrfRhCrbnRhIknPKDWEIPp1pDoB26 c7u5ozdrLa+648tuAFvsK4F+vVDq4ceiSh4aK5H9BkXkB7dyRVCxI+sQJtUOtuuL/iUu MiSY8OxCR9Th5NwgQJANGzlaKKFlVoVgCyxdRWApJrTNTQgbfeoQuQucFx2VBa8xTf2e 1vQiCWOJ2U477tsxaRpJjnK4RFY9M1DCutId1JMdr5e9pzEA5wN2PX3VqQ9lIBsR3aWM zYi3rIrwCWIsQnE4VdbI1he8fIURYFr9SlLITchusJiEmj3BAirdTlo8FoJzn1UPFKL9 /Dsg=="
+      "value": "v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20221208; t=1682636796; x=1685228796; h=to:subject:message-id:date:from:mime-version:from:to:cc:subject :date:message-id:reply-to; bh=6hMXyN4iuE+hPLKYpEmp48D6qFVYu/aeplHF6pPLgqo=; b=cmhXkvSI/n+6pbuKaSUygbnscHrKpPIbLVKUaK9dWzdv+HZ2UqfGnUY0ZJZ5uka46K sBFz6EQP9ToYaC5/zNAnWQR82wF05vRqoegumqihmvNJEjyTeBEWa548Ai6XL5JjJv88 +Jpda5kntqJxzDqulSJczBRYF3Qbn37MiLR69PZV95rGeeG2S6fhG4q88W3D+I7D7c25 j1MJRh0DUn4YpI3x/tC2W9kPsOttF/MjFpAHPEO5cotohcwmAtL/S0DzkCTX2aVt5kWg 74KwnFZJq6TC7dIbVezAc+7eeb+Wu4MkEX9D1s5Zfn6kAvSvkTNdWWMD0f8a9StgaMrM oGFw=="
     },
     {
       "key": "x-google-dkim-signature",
-      "value": "v=1; a=rsa-sha256; c=relaxed/relaxed; d=1e100.net; s=20221208; t=1682603589; x=1685195589; h=to:subject:message-id:date:from:mime-version:x-gm-message-state :from:to:cc:subject:date:message-id:reply-to; bh=xV86EU/G1T7gbYN0cy8lbf56dWuuOTSaIewR5Q+IT4c=; b=PueDW1R8MOSaYBuHjIXDr73Sg7CXsPm/Tz9yzQ+mYa4ER5omJCfwBKz+j0ATzRYL7o HqCOv7/+PyVKdK5IeepsWx0NR/YyQSn0h3V4O18QlEKErvAKTFHLKQnItS8MeXPOb8p0 eLyNUT7XQdDpj94R5z4/hW4kscbqBd9QZuXUvJIQzWncozuzHq2aiynHgfz3w/znOsq3 qNVxQVSuqHB4qxTRa5Xs1gXPZSnrwFvwTcIiH8d1AX2z0uq3zhK7C6JIe1ioBLxJk3gQ rMeuSx1L6QOktd0+LE5Ogq4KbFAQmLxGQFW+eqBwasohg+qF99a9OD9ryEiBoF1/qsWk msEw=="
+      "value": "v=1; a=rsa-sha256; c=relaxed/relaxed; d=1e100.net; s=20221208; t=1682636796; x=1685228796; h=to:subject:message-id:date:from:mime-version:x-gm-message-state :from:to:cc:subject:date:message-id:reply-to; bh=6hMXyN4iuE+hPLKYpEmp48D6qFVYu/aeplHF6pPLgqo=; b=GPY6yTUxxh1LWFcaH0RX1fbraMYgd6r2u5mFVcUHxdyW38geqZaz2scmxZ0Xq7yO07 I+h3NJCNXzvRDCyCxr1jbIr1RXNdyUGy9JVh2MHgmVl1WlzPiuBPCBm3oA6gxW5j7oyz ybSh7DNCknIW1CsrYMIQwfU7BNfis+05P9zajDXBWhg94Zb4TRECADBhqTMNLwEyA+UQ 9G36tM5v73gI9cV2mk2Trv7bZagqYiukbZYk03IyYr1qo1MvYLgw84ljeUfZNBy3udnm Fs7Ji44dtE/W1s5DjVxXOjdq5eqDrc2YvtmtXgXnoNIvWSCv+HxgXZUGeflVNJOj7adJ YR/Q=="
     },
     {
       "key": "x-gm-message-state",
-      "value": "AC+VfDw/saCtJTg0gE5u04r1IDEIk8KH8NmLOFx3IhQhunuGDvQr4kGc v96UzpbPIZwtlJLvfKUyVjpA39+eURDG/p6BzfIZQcgEeODn/A=="
+      "value": "AC+VfDxMgmYAdAFjlmwGU69hQyxLPpPTBL9OdRmQkyJZWpfTZUaC7jVw p8pXfgZqb3d9aAWxj1OUqFi9VHGRM3m0ZjrZwZuu9ToK7Rs="
     },
     {
       "key": "x-google-smtp-source",
-      "value": "ACHHUZ5TrweiDaOG5+vC87LIXCUgq21qDxvCwnZQ62wrZVNygCKkQk+wNVn8myw5d5Sa29xjSETRKksZkTeBAq5AfQA="
+      "value": "ACHHUZ61e1yZG6yIVGacCuRSJqLqVnv2o5whQhrR0tBFW98zToH04Aw/qMLNpVAAnWUJ1qTwQmVQX+kNnDjktOAAy1c="
     },
     {
       "key": "x-received",
-      "value": "by 2002:a17:90b:33c6:b0:247:761d:a6af with SMTP id lk6-20020a17090b33c600b00247761da6afmr1893077pjb.17.1682603588547; Thu, 27 Apr 2023 06:53:08 -0700 (PDT)"
+      "value": "by 2002:a17:90a:690d:b0:247:1f35:3314 with SMTP id r13-20020a17090a690d00b002471f353314mr3142360pjj.48.1682636795800; Thu, 27 Apr 2023 16:06:35 -0700 (PDT)"
     },
     {
       "key": "mime-version",
@@ -62,15 +62,15 @@
     },
     {
       "key": "date",
-      "value": "Thu, 27 Apr 2023 15:52:56 +0200"
+      "value": "Fri, 28 Apr 2023 01:06:24 +0200"
     },
     {
       "key": "message-id",
-      "value": "<CAG9yPc184VWUmQL2hhHQTvLiqEaWApGAgoJ8at05fNYsqfki0Q@mail.gmail.com>"
+      "value": "<CAG9yPc1rZwQvuJduBaVYwJbP4g=t8fPH90yQ1eoXBKdoYcJJew@mail.gmail.com>"
     },
     {
       "key": "subject",
-      "value": "TEST FIXTURE DO NOT DELETE: Introducing GymX for mobile"
+      "value": "simpler thread"
     },
     {
       "key": "to",
@@ -78,7 +78,7 @@
     },
     {
       "key": "content-type",
-      "value": "multipart/alternative; boundary=\"000000000000317ce705fa51ad6e\""
+      "value": "multipart/alternative; boundary=\"00000000000081cd2b05fa5968dd\""
     }
   ],
   "from": {
@@ -93,10 +93,10 @@
   ],
   "cc": [],
   "bcc": [],
-  "subject": "TEST FIXTURE DO NOT DELETE: Introducing GymX for mobile",
-  "messageId": "<CAG9yPc184VWUmQL2hhHQTvLiqEaWApGAgoJ8at05fNYsqfki0Q@mail.gmail.com>",
-  "date": "2023-04-27T13:52:56.000Z",
-  "html": "<div dir=\"ltr\"><div>\nDear Mr. Strong,</div><div><br></div><div>I hope this email finds you well. I&#39;m writingclear to introduce you to GymX, a\nmobile app designed to help gym-goers track their workouts, set goals, and\nstay motivated. <br></div><div><br></div><div>A key feature of GymX is we use machine learning to identify all the\nworkout moves. <br></div><div><br></div><div>If you&#39;re interested in learning more, I would be happy to provide you\nwith a demo of the app and answer any questions you may have. Please let me\nknow if this is something you&#39;d be interested in. <br></div><div><br></div><div>Thank you for your time, <br></div><div>John Smith\n\n</div></div>\n\n",
-  "text": " Dear Mr. Strong,\n\nI hope this email finds you well. I'm writingclear to introduce you to\nGymX, a mobile app designed to help gym-goers track their workouts, set\ngoals, and stay motivated.\n\nA key feature of GymX is we use machine learning to identify all the\nworkout moves.\n\nIf you're interested in learning more, I would be happy to provide you with\na demo of the app and answer any questions you may have. Please let me know\nif this is something you'd be interested in.\n\nThank you for your time,\nJohn Smith\n\n",
+  "subject": "simpler thread",
+  "messageId": "<CAG9yPc1rZwQvuJduBaVYwJbP4g=t8fPH90yQ1eoXBKdoYcJJew@mail.gmail.com>",
+  "date": "2023-04-27T23:06:24.000Z",
+  "html": "<div dir=\"ltr\"><div>simpler thread for now</div></div>\n\n",
+  "text": "simpler thread for now\n\n",
   "attachments": []
 }

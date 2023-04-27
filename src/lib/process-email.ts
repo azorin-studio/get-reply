@@ -63,20 +63,19 @@ export const processEmail = async (incomingEmail: IncomingEmail) => {
         thread.threadId!,
         profile.google_refresh_token
       )
-
-      console.log({ draft })      
       log = await appendToLog(log, {
         threadId: thread.id,
-        status: 'drafted'
+        status: 'drafted',
+        draftId: draft.id
       })
+      console.log('drafted email 1 in gmail, id:', log.id, 'draft id:', draft.id)  
 
-      makeUnreadInInbox(draft)  
+      makeUnreadInInbox(draft)
       log = await appendToLog(log, {
         threadId: thread.id,
         status: 'ready-in-inbox'
       })
-
-      console.log('drafted email 1 in gmail, id:', log.id)  
+      console.log('ready in inbox, id:', log.id, 'draft id:', draft.id)  
     }
 
   }

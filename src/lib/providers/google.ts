@@ -61,6 +61,17 @@ export const createGmailDraftInThread = async (to: Contact[], from: Contact, sub
   return res.data
 }
 
+export const deleteDraft = async (draftId: string, google_refresh_token: string) => {
+  const tokens = await refreshAccessToken(google_refresh_token)
+  oauth2Client.setCredentials(tokens)
+  const gmail = google.gmail({ version: 'v1', auth: oauth2Client })
+  const res = await gmail.users.drafts.delete({
+    userId: 'me',
+    id: draftId
+  })
+  return res.data
+}
+
 export const findThread = async (subject: string, to: Contact[], google_refresh_token: string) => {
   const tokens = await refreshAccessToken(google_refresh_token)
   oauth2Client.setCredentials(tokens)
@@ -71,15 +82,15 @@ export const findThread = async (subject: string, to: Contact[], google_refresh_
     q,
   })
 
-  if (threads.data.resultSizeEstimate === 0) {
+  if (!threads.data.threads || threads.data.resultSizeEstimate === 0) {
     throw Error(`cannot find thread for q=${q}.`)
   }
 
-  if (threads.data.messages!.length > 1) {
-    throw Error('thread has reply')
+  if (threads.data.threads.length > 1) {
+    throw Error('thread has reply or other draft.')
   }
 
-  return threads.data.messages[0]
+  return threads.data.threads[0] as any
 }
 
 export const makeUnreadInInbox = async (draft: any) => {
