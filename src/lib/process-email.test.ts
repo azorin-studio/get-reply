@@ -1,11 +1,13 @@
 import testEmail from '~/data/test-email.json'
 import { processEmail } from './process-email'
-import { Profile, type IncomingEmail } from '~/types'
-import { getProfileFromEmail } from './supabase'
+import { Profile, type IncomingEmail, Log } from '~/types'
+import { getProfileFromEmail, supabaseAdminClient } from './supabase'
 
 describe('process', () => {
-  it('Creates follow ups email and puts in users drafts', async () => {
 
+  let log: Log | null = null
+
+  it('Creates follow ups email and puts in users drafts', async () => {
     const profile: Profile = await getProfileFromEmail(testEmail.from.address)
 
     if (!profile) {
@@ -16,7 +18,20 @@ describe('process', () => {
       delete (testEmail as IncomingEmail).attachments
     }
 
-    const log = await processEmail(testEmail as IncomingEmail)
-    console.log(log)
+    log = await processEmail(testEmail as IncomingEmail)
+    
+    expect(log.status).toBe('drafted')
   }, 30000)
+
+  afterAll(async () => {
+    if (!log){
+      return 
+    }
+
+    console.log('deleting log', log.id)
+    await supabaseAdminClient
+      .from('logs')
+      .delete()
+      .eq('id', log.id)
+  })
 })

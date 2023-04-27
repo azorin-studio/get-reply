@@ -41,11 +41,23 @@ export const processEmail = async (incomingEmail: IncomingEmail) => {
       profile.google_refresh_token!
     )
 
-    log = await appendToLog(log, {
-      threadId,
-      status: 'drafted'
-    })
-    console.log('drafted email 1 in gmail, id:', log.id)
+    if (threadId) {
+      log = await appendToLog(log, {
+        threadId,
+        status: 'drafted'
+      })
+  
+      console.log('drafted email 1 in gmail, id:', log.id)  
+    } else {
+      log = await appendToLog(log, {
+        threadId,
+        status: 'error',
+        errorMessage: 'Could not find thread in gmail'
+      })
+  
+      console.log('could not find thread in gmail, id:', log.id)  
+    }
+
   }
 
   return log

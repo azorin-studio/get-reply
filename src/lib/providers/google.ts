@@ -54,7 +54,6 @@ export const createGmailDraftAndNotify = async (to: Contact[], from: Contact, su
 
   if (threads.data.resultSizeEstimate === 0) {
     console.log('no thread found, q:', q)
-    console.log(JSON.stringify(threads.data, null, 2))
     return
   }
 
