@@ -5,17 +5,17 @@ import { getProfileFromEmail, supabaseAdminClient } from './supabase'
 import { generateFollowUps } from './chat-gpt'
 import { deleteDraft } from './providers/google'
 
-// jest.mock('./chat-gpt')
+jest.mock('./chat-gpt')
 
 describe('process', () => {
   let log: Log | null = null
   let profile: Profile | null
 
-  // // ts-ignore
-  // generateFollowUps.mockResolvedValue({ 
-  //   followUpEmail1: 'followUpEmail1',
-  //   followUpEmail2: 'followUpEmail2',
-  // })
+  // ts-ignore
+  generateFollowUps.mockResolvedValue({ 
+    followUpEmail1: 'followUpEmail1',
+    followUpEmail2: 'followUpEmail2',
+  })
 
   if (testEmail.attachments) {
     delete (testEmail as IncomingEmail).attachments
