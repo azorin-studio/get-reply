@@ -1,6 +1,6 @@
 import { ThumbsDown, ThumbsUp } from "lucide-react"
 import { useState } from "react"
-import { FollowUpEmails } from "~/lib/chat-gpt"
+import { FollowUpEmails } from "~/chat-gpt"
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')

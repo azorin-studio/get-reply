@@ -1,5 +1,5 @@
 
-import { Database, Json as JsonType } from "./lib/database.types"
+import { Database, Json as JsonType } from "./database.types"
 
 export interface Contact {
   address: string;

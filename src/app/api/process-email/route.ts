@@ -1,7 +1,7 @@
 import 'server-only'
 
 import { NextResponse } from 'next/server'
-import { processEmail } from '~/lib/process-email'
+import { processEmail } from '~/process-email'
 import { IncomingEmail } from '~/types'
 
 export async function POST (request: Request) {

@@ -3,7 +3,7 @@ import { headers, cookies } from 'next/headers'
 import LogBadge from '~/components/LogBadge'
 import { createServerComponentSupabaseClient } from '@supabase/auth-helpers-nextjs'
 import { redirect } from 'next/navigation'
-import { Database } from '~/lib/database.types'
+import { Database } from '~/database.types'
 import { Log } from '~/types'
 
 export const revalidate = 0

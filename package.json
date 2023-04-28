@@ -9,7 +9,7 @@
     "lint": "next lint",
     "test": "jest",
     "test:email": "http POST https://tunnel2.azorin.studio/api/process-email < ./src/data/test-email.json",
-    "supabase:types": "supabase gen types typescript --project-id 'dwtrraqsrjkkheqloopn' --schema public > src/lib/database.types.ts"
+    "supabase:types": "supabase gen types typescript --project-id 'dwtrraqsrjkkheqloopn' --schema public > src/database.types.ts"
   },
   "dependencies": {
     "@google-cloud/local-auth": "^2.1.0",

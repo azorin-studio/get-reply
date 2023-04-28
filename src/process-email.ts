@@ -1,6 +1,6 @@
 import { generateFollowUps } from "./chat-gpt"
-import { getProfileFromEmail, createLog, appendToLog } from "~/lib/supabase"
-import { createGmailDraftInThread, findThread, makeUnreadInInbox } from "~/lib/providers/google"
+import { getProfileFromEmail, createLog, appendToLog } from "~/supabase"
+import { createGmailDraftInThread, findThread, makeUnreadInInbox } from "~/providers/google"
 import { IncomingEmail, Log, Profile } from "~/types"
 
 export const processEmail = async (incomingEmail: IncomingEmail) => {

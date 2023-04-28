@@ -1,7 +1,7 @@
 import { headers, cookies } from 'next/headers'
 import { createServerComponentSupabaseClient } from '@supabase/auth-helpers-nextjs'
 import { redirect } from 'next/navigation'
-import { Database } from '~/lib/database.types'
+import { Database } from '~/database.types'
 
 export const revalidate = 0
 import IndexPage from './index-page'
