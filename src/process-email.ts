@@ -10,8 +10,14 @@ export const processEmail = async (incomingEmail: IncomingEmail) => {
     throw new Error('No profile found')
   }
 
-  let log: Log = await createLog(incomingEmail, profile)
-  console.log('starting id:', log.id, 'from', (log.from as any).address)
+  let log: Log | null = null
+  try {
+    log = await createLog(incomingEmail, profile)
+    console.log('starting id:', log.id, 'from', (log.from as any).address)
+  } catch (err: any) {
+    console.error(err)
+    throw err
+  }
 
   if (!incomingEmail.text) {
     log = await appendToLog(log, {
