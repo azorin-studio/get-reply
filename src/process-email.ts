@@ -14,7 +14,11 @@ export const processEmail = async (incomingEmail: IncomingEmail) => {
   console.log('starting id:', log.id, 'from', (log.from as any).address)
 
   if (!incomingEmail.text) {
-    throw new Error('No text found')
+    log = await appendToLog(log, {
+      status: 'generated',
+      errorMesaage: 'No text found in incoming email'
+    })
+    return log
   } 
 
   try {
@@ -77,7 +81,6 @@ export const processEmail = async (incomingEmail: IncomingEmail) => {
       })
       console.log('ready in inbox, id:', log.id, 'draft id:', draft.id)  
     }
-
   }
 
   return log
