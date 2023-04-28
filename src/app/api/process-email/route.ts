@@ -4,10 +4,6 @@ import { NextResponse } from 'next/server'
 import { processEmail } from '~/process-email'
 import { IncomingEmail } from '~/types'
 
-export const config = {
-  runtime: 'edge'
-}
-
 export async function POST (request: Request) {
   const json = await request.json()
 
