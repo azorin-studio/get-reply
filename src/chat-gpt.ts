@@ -121,12 +121,12 @@ export async function callGPT35Api(prompt: string, retries = 3, delay = 1000): P
 
   } catch(error: any) {
     if (retries > 0) {
-      console.warn('Error in callGPT35Api, retrying:', error)
+      console.warn(`Error in callGPT35Api, ${retries-1} tries remaining. Trying again.`, error)
       await sleep(delay)
       return callGPT35Api(prompt, retries - 1, delay)
     } else {
       // Handle the error (e.g., log it, return a default value, or throw a custom error)
-      console.error('Error in callGPT35Api, no more retries', error)
+      console.error(`Error in callGPT35Api, 0  tries remaining. Terminating.`, error)
       throw new Error('Error parsing GPT-3.5 response after multiple retries')
     }
   }
