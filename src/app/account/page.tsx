@@ -1,10 +1,9 @@
 import Link from 'next/link'
 import { headers, cookies } from 'next/headers'
-import LogBadge from '~/components/LogBadge'
 import { createServerComponentSupabaseClient } from '@supabase/auth-helpers-nextjs'
 import { redirect } from 'next/navigation'
 import { Database } from '~/database.types'
-import { Log } from '~/types'
+import UnpureLogsList from '~/components/UnpureLogsList'
 
 export const revalidate = 0
 
@@ -13,12 +12,6 @@ export default async function Page() {
     headers,
     cookies,
   })
-
-  const { data, error } = await supabase
-    .from('logs')
-    .select('*')
-
-  const logs: Log[] | null = data as Log[]
 
   const {
     data: { session },
@@ -92,15 +85,8 @@ export default async function Page() {
           While in alpha, GetReply will place one draft in your account immediately, and not two follow ups after three and six days.
         </p>
         </div>
-        <div>
-          
-          <div className="flex flex-col gap-4">
-          <div className="font-bold">
-            Logs
-          </div>
-          {logs && logs.map((log) => (<LogBadge key={log.id} log={log} />))}
-          </div>
-        </div>
+        
+        <UnpureLogsList />
 
         <Link
           href="/logout"

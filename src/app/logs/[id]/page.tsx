@@ -1,9 +1,8 @@
-import LogBadge from '~/components/LogBadge'
-import LogBody from '~/components/LogBody'
 import { headers, cookies } from "next/headers"
 import { createServerComponentSupabaseClient } from '@supabase/auth-helpers-nextjs'
 import { Database } from '~/database.types'
 import { Log } from '~/types'
+import UnpureLogItem from '~/components/UnpureLogItem'
 
 export const revalidate = 0
 
@@ -15,7 +14,7 @@ export default async function Page(props: { params: { id: string } }) {
     cookies,
   })
 
-  const { data: logs, error } = await supabase
+  const { data: logs } = await supabase
     .from('logs')
     .select('*')
     .eq('id', id)
@@ -34,12 +33,7 @@ export default async function Page(props: { params: { id: string } }) {
         <h1 className="text-2xl font-bold">
           Log
         </h1>
-        <LogBadge 
-          log={log} 
-        />
-        <LogBody
-          log={log} 
-        />
+        <UnpureLogItem id={id} />
       </main>
     </div>
   )
