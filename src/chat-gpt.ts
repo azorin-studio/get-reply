@@ -116,7 +116,7 @@ export async function callGPT35Api(prompt: string, retries = 3, delay = 1000): P
     } else {
       // Handle the error (e.g., log it, return a default value, or throw a custom error)
       // console.error('Error parsing GPT-3.5 response: Delimiter not found')
-      throw new Error('Error parsing GPT-3.5 response')
+      throw new Error('Error parsing GPT-3.5 response: Delimiter not found')
     }
 
   } catch(error: any) {
