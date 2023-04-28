@@ -50,6 +50,7 @@
     "openai": "^3.2.1",
     "server-only": "^0.0.1",
     "supabase": "^1.50.13",
-    "tailwindcss": "^3.2.7"
+    "tailwindcss": "^3.2.7",
+    "vercel": "29.0.0"
   }
 }
