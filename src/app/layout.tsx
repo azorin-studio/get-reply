@@ -5,6 +5,7 @@ import { headers, cookies } from "next/headers"
 import Header from "~/components/Header"
 import Footer from "~/components/Footer"
 import { createServerComponentSupabaseClient } from "@supabase/auth-helpers-nextjs"
+import { Analytics } from '@vercel/analytics/react'
 import { Database } from "~/database.types"
 
 export const metadata = {
@@ -38,6 +39,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             </div>
           </div>
         </SupabaseProvider>
+        <Analytics />
       </body>
     </html>
   )

@@ -1,7 +1,5 @@
 # Get Reply Website and App
 
-
-
 Services:
 
 - 1. Vercel for the app.
