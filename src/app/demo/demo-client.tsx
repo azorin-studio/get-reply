@@ -51,7 +51,8 @@ async function onSubmit(event: any) {
     const t2 = new Date()
     setTimer(ms(t2.getTime()-t1.getTime()))
 
-    const body = await response.json()
+    const body
+     = await response.json()
     console.log({ body })
     const { followUpEmail1, followUpEmail2, prompt, error } = body
 

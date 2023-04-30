@@ -61,10 +61,9 @@ export const createLog = async(incomingEmail: IncomingEmail, profile: Profile) =
     created_at: (new Date()).toISOString(),
     provider,
     errorMessage: null,
-    followUpEmail1: null,
-    followUpEmail2: null,
+    generations: null,
     draftId: null,
-    prompt: null,
+    prompts: null,
     threadId: null,
   }
 

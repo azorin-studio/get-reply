@@ -17,14 +17,13 @@ export interface Database {
           date: string | null
           draftId: string | null
           errorMessage: string | null
-          followUpEmail1: string | null
-          followUpEmail2: string | null
           from: Json | null
+          generations: string[] | null
           headers: Json[] | null
           html: string | null
           id: string
           messageId: string | null
-          prompt: string | null
+          prompts: string[] | null
           provider: string | null
           status: string | null
           subject: string | null
@@ -40,14 +39,13 @@ export interface Database {
           date?: string | null
           draftId?: string | null
           errorMessage?: string | null
-          followUpEmail1?: string | null
-          followUpEmail2?: string | null
           from?: Json | null
+          generations?: string[] | null
           headers?: Json[] | null
           html?: string | null
           id?: string
           messageId?: string | null
-          prompt?: string | null
+          prompts?: string[] | null
           provider?: string | null
           status?: string | null
           subject?: string | null
@@ -63,14 +61,13 @@ export interface Database {
           date?: string | null
           draftId?: string | null
           errorMessage?: string | null
-          followUpEmail1?: string | null
-          followUpEmail2?: string | null
           from?: Json | null
+          generations?: string[] | null
           headers?: Json[] | null
           html?: string | null
           id?: string
           messageId?: string | null
-          prompt?: string | null
+          prompts?: string[] | null
           provider?: string | null
           status?: string | null
           subject?: string | null

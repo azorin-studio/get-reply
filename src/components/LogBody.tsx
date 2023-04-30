@@ -29,24 +29,20 @@ export default function LogBody(props: { log: Log }) {
           {log.text?.trim()}
         </div>
       </div>
-      <div className="prose flex flex-col">
-        <div className="font-bold">followUpEmail1: </div>
-        <div className="whitespace-pre-wrap">
-          {log.followUpEmail1?.trim()}
+        <div className="prose flex flex-col">
+          {log.generations?.map((generation, index) => (
+            <div key={`gen${index}`}>
+              <div className="font-bold">prompt {index + 1}: </div>
+              <div className="whitespace-pre-wrap">
+                {log.prompts![index]?.trim()}
+              </div>
+              <div className="font-bold">generation {index + 1}: </div>
+              <div className="whitespace-pre-wrap">
+                {generation?.trim()}
+              </div>
+            </div>
+          ))}
         </div>
-      </div>
-      <div className="prose flex flex-col">
-        <div className="font-bold">followUpEmail2: </div>
-        <div className="whitespace-pre-wrap">
-          {log.followUpEmail2?.trim()}
-        </div>
-      </div>
-      <div className="prose flex flex-col">
-        <div className="font-bold">prompt: </div>
-        <div className="whitespace-pre-wrap">
-          {log.prompt?.trim()}
-        </div>
-      </div>
       </div>
     </div>
   )

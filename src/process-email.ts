@@ -1,4 +1,5 @@
-import { generateFollowUps } from "./chat-gpt"
+import { callGPT35Api } from "./chat-gpt"
+import { makeFollowUp1Prompt, makeFollowUp2Prompt } from "./prompts"
 import { getProfileFromEmail, createLog, appendToLog } from "~/supabase"
 import { createGmailDraftInThread, findThread, makeUnreadInInbox } from "~/providers/google"
 import { IncomingEmail, Log, Profile } from "~/types"
@@ -28,16 +29,14 @@ export const processEmail = async (incomingEmail: IncomingEmail) => {
   } 
 
   try {
-    const { 
-      followUpEmail1, 
-      followUpEmail2, 
-      prompt 
-    } = await generateFollowUps(incomingEmail.text, profile.user_constraints, 3)
+    const prompt1: string = makeFollowUp1Prompt(incomingEmail.text, profile.user_constraints)
+    const prompt2: string = makeFollowUp2Prompt(incomingEmail.text, profile.user_constraints)
+    const followUp1: string = await callGPT35Api(prompt1, 3)
+    const followUp2: string = await callGPT35Api(prompt2, 3)
 
     log = await appendToLog(log, {
-      followUpEmail1,
-      followUpEmail2,
-      prompt,
+      generations: [followUp1, followUp2],
+      prompts: [prompt1, prompt2],
       status: 'generated'
     })
 
@@ -69,7 +68,7 @@ export const processEmail = async (incomingEmail: IncomingEmail) => {
         log.to as any[],
         log.from as any,
         log.subject || '',
-        log.followUpEmail1!,
+        log.generations![0],
         thread.threadId!,
         profile.google_refresh_token
       )

@@ -2,7 +2,7 @@ import testEmail from '~/data/test-email.json'
 import { processEmail } from './process-email'
 import { Profile, type IncomingEmail, Log } from '~/types'
 import { getProfileFromEmail, supabaseAdminClient } from './supabase'
-import { generateFollowUps } from './chat-gpt'
+import { callGPT35Api } from './chat-gpt'
 import { deleteDraft } from './providers/google'
 
 jest.mock('./chat-gpt')
@@ -10,12 +10,6 @@ jest.mock('./chat-gpt')
 describe('process', () => {
   let log: Log | null = null
   let profile: Profile | null
-
-  // ts-ignore
-  generateFollowUps.mockResolvedValue({ 
-    followUpEmail1: 'followUpEmail1',
-    followUpEmail2: 'followUpEmail2',
-  })
 
   if (testEmail.attachments) {
     delete (testEmail as IncomingEmail).attachments
@@ -29,9 +23,16 @@ describe('process', () => {
   })
 
   it('Creates follow ups email and puts in users drafts', async () => {
+    // ts-ignore
+    callGPT35Api.mockResolvedValue('follow up 1 text content')
+    callGPT35Api.mockResolvedValue('follow up 2 text content')
+
     log = await processEmail(testEmail as IncomingEmail)    
     expect(log.errorMessage).toBeNull()
     expect(log.status).toBe('ready-in-inbox')
+    expect(log.prompts).toHaveLength(2)
+    expect(log.generations).toHaveLength(2)
+    // console.log(JSON.stringify(log, null, 2))
   }, 30000)
 
   afterAll(async () => {
