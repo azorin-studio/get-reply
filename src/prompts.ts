@@ -13,7 +13,7 @@ Hi GPT-3.5, I need your help to create a follow-up email based on the given emai
 4. Do not include explanations like "Follow-up Email:"
 Here is the email text:
 
-"${email}"
+"<your-email-here>"
 `
   return prompt.trim()
 }

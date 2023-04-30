@@ -1,8 +1,8 @@
 import { callGPT35Api } from "./chat-gpt"
-import { makeFollowUp1Prompt, makeFollowUp2Prompt } from "./prompts"
 import { getProfileFromEmail, createLog, appendToLog } from "~/supabase"
 import { createGmailDraftInThread, findThread, makeUnreadInInbox } from "~/providers/google"
 import { IncomingEmail, Log, Profile } from "~/types"
+import supabaseAdminClient from "~/supabase"
 
 export const processEmail = async (incomingEmail: IncomingEmail) => {
   const profile: Profile = await getProfileFromEmail(incomingEmail.from.address)
@@ -26,20 +26,87 @@ export const processEmail = async (incomingEmail: IncomingEmail) => {
       errorMesaage: 'No text found in incoming email'
     })
     return log
-  } 
+  }
+
+  let allToEmails: any[] = []
+  if (incomingEmail.to) {
+    allToEmails = [...allToEmails, ...incomingEmail.to.map((to) => to.address)]
+  }
+  if (incomingEmail.cc) {
+    allToEmails = [...allToEmails, ...incomingEmail.cc.map((to) => to.address)]
+  }
+  if (incomingEmail.bcc) {
+    allToEmails = [...allToEmails, ...incomingEmail.bcc.map((to) => to.address)]
+  }
+
+  const toGetReply = allToEmails.find((email) => email.endsWith('getreply.app'))
+
+  if (!toGetReply) {
+    if (!incomingEmail.text) {
+      log = await appendToLog(log, {
+        status: 'generated',
+        errorMesaage: 'No to: getreply.app address found in incoming email'
+      })
+      return log
+    }  
+  }
+
+  const { error, data: sequences } = await supabaseAdminClient
+    .from('sequences')
+    .select()
+    .eq('name', toGetReply?.split('@')[0])
+
+  if (error || !sequences || sequences.length === 0) {
+    log = await appendToLog(log, {
+      status: 'error',
+      errorMessage: 'Could not find sequence'
+    })
+    return log
+  }
+
+  const sequence = sequences[0]
+
+  if (!sequence || !sequence.prompt_list || sequence.prompt_list.length === 0) {
+    log = await appendToLog(log, {
+      status: 'error',
+      errorMessage: 'Could not find sequence'
+    })
+    return log
+  }
 
   try {
-    const prompt1: string = makeFollowUp1Prompt(incomingEmail.text, profile.user_constraints)
-    const prompt2: string = makeFollowUp2Prompt(incomingEmail.text, profile.user_constraints)
-    const followUp1: string = await callGPT35Api(prompt1, 3)
-    const followUp2: string = await callGPT35Api(prompt2, 3)
+    const generations = await Promise.all(sequence.prompt_list.map(async (item: any) => {
+      const prompt_id = item.prompt_id
+      const { error, data: prompts } = await supabaseAdminClient
+        .from('prompts')
+        .select()
+        .eq('id', prompt_id)
+        .limit(1)
+  
+      if (error) {
+        throw error
+      }
+  
+      if (!prompts || prompts.length === 0) {
+        throw new Error(`Could not find prompt ${prompt_id}`)
+      }
+
+      const prompt = prompts[0]
+      const fullPrompt = (prompt.prompt! as string).replace('<your-email-here>', incomingEmail.text!)
+      const generation: string = await callGPT35Api(fullPrompt, 3)
+  
+      return {
+        prompt: prompt.prompt,
+        generation
+      }
+    }))
 
     log = await appendToLog(log, {
-      generations: [followUp1, followUp2],
-      prompts: [prompt1, prompt2],
+      generations: generations.map(({ generation }) => generation),
+      prompts: generations.map(({ prompt }) => prompt),
       status: 'generated'
     })
-
+  
     console.log('generated id:', log.id)
   } catch (err: any) {
     log = await appendToLog(log, {

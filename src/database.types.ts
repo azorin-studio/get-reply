@@ -97,6 +97,52 @@ export interface Database {
           user_constraints?: string[] | null
         }
       }
+      prompts: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          id: string
+          name: string | null
+          prompt: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name?: string | null
+          prompt?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name?: string | null
+          prompt?: string | null
+        }
+      }
+      sequences: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          id: string
+          name: string | null
+          prompt_list: Json[] | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name?: string | null
+          prompt_list?: Json[] | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name?: string | null
+          prompt_list?: Json[] | null
+        }
+      }
     }
     Views: {
       [_ in never]: never
