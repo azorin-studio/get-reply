@@ -17,7 +17,6 @@ Best regards,
 Mike Smith`
 
 const DEFAULT_RESULT = null
-// const DEFAULT_RESULT = ['a', 'b']
 
 export default function DemoPage() {
 const [busy, setBusy] = useState<boolean>(false)
@@ -34,6 +33,9 @@ async function onSubmit(event: any) {
   event.preventDefault()
 
   try {
+    if (!content) {
+      throw new Error('Please enter some text')
+    }
     const fullPrompt = prompt.replace('<your_email_will_go_here>', content)
     setBusy(true)
     const t1 = new Date()

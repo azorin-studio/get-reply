@@ -1,13 +1,12 @@
 import { ThumbsDown, ThumbsUp } from "lucide-react"
 import { useState } from "react"
-import { FollowUpEmails } from "~/chat-gpt"
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
 }
 
 
-const RatingButtons = (props: { disabled: boolean, result: FollowUpEmails | null }) => {
+const RatingButtons = (props: { disabled: boolean, result: null }) => {
   const { disabled = false, result } = props
 
   const [voted, setVoted] = useState(false)
