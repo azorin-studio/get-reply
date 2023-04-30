@@ -1,26 +1,24 @@
 import { NextResponse } from "next/server"
-import { generateFollowUps, FollowUpEmails } from "~/chat-gpt"
+import { callGPT35Api } from "~/chat-gpt"
 
 export async function POST (request: Request) {
   const body = await request.json()
 
-  const email = body.email || ''
-  if (email.trim().length === 0) {
-    return NextResponse.json({ error: { message: "Please enter a valid email" } })
+  const prompt = body.prompt || ''
+  if (prompt.trim().length === 0) {
+    return NextResponse.json({ error: "Please enter a prompt" })
   }
 
-  const userConstraints = body.userConstraints || []
-
   try {
-    const followUps: FollowUpEmails = await generateFollowUps(email, userConstraints)
-    return NextResponse.json(followUps)
+    const generation: string = await callGPT35Api(prompt, 3)
+    return NextResponse.json({ generation, error: null })
 
   } catch(error: any) {
     console.error(error.message)
     if (error.response) {
       return NextResponse.json(error.response.data)
     } else {
-      return NextResponse.json({ error: { message: error.message || 'An error occurred during your request.' } })
+      return NextResponse.json({ error: error.message || 'An error occurred during your request.' })
     }
   }
 }

@@ -57,7 +57,7 @@ export async function callGPT35Api(prompt: string, retries = 3, delay = 1000): P
     }
     const completion = await openai.createCompletion(completionOptions)
     
-    const response = completion.data.choices[0].text
+    const response = completion.data.choices[0].text?.trim()
     if (response) {
       console.log(`GPT-3.5 response: ${response}`)
       return response
