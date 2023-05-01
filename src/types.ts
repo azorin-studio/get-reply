@@ -38,3 +38,5 @@ export type Json = JsonType
 export type Profile = Database['public']['Tables']['profiles']['Row']
 
 export type Prompt = Database['public']['Tables']['prompts']['Row']
+
+export type Sequence = Database['public']['Tables']['sequences']['Row']

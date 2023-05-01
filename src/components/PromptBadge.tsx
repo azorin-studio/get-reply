@@ -6,9 +6,9 @@ import { useSupabase } from '~/app/supabase-provider'
 
 export const revalidate = 0
 
-export default function PromptBadge(props: { prompt: Prompt }) {
+export default function PromptBadge(props: { prompt: Prompt, compact?: boolean }) {
   const { supabase } = useSupabase()
-  const { prompt } = props
+  const { prompt, compact = false } = props
   
   const handleDelete = async (prompt: Prompt) => {
     const { error } = await supabase
@@ -24,9 +24,9 @@ export default function PromptBadge(props: { prompt: Prompt }) {
   }
 
   return (
-    <div className="border p-2 rounded flex flex-col gap-4">
+    <div className="flex flex-col gap-4">
       <div className='flex justify-between'>
-        <div className="inline-flex flex-row gap-2">
+        <div className="inline-flex flex-col gap-2">
           <div className="truncate text-sm min-w-32">
             <Link 
               href={`/prompts/${prompt.id}`}
@@ -35,9 +35,12 @@ export default function PromptBadge(props: { prompt: Prompt }) {
               {prompt.name}
             </Link>
           </div>
-          <div className="text-sm">
-            { prompt.created_at && formatDistance(new Date(prompt.created_at), new Date(), { addSuffix: true }) }
+          {/* {!compact && (
+            <div className="text-sm ">
+            { prompt.prompt }
           </div>
+          )} */}
+          
         </div>
       </div>
       

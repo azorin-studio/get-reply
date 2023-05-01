@@ -3,7 +3,9 @@ import { headers, cookies } from 'next/headers'
 import { createServerComponentSupabaseClient } from '@supabase/auth-helpers-nextjs'
 import { redirect } from 'next/navigation'
 import { Database } from '~/database.types'
+import { Sequence } from '~/types'
 import UnpureLogsList from '~/components/UnpureLogsList'
+import UnpurePromptItem from '~/components/UnpurePromptItem'
 
 export const revalidate = 0
 
@@ -16,6 +18,11 @@ export default async function Page() {
   const {
     data: { session },
   } = await supabase.auth.getSession()
+
+  const { data: sequences } = await supabase
+    .from('sequences')
+    .select('*')
+    .order('created_at', { ascending: false })
 
   if (!session) {
     console.log('My Account: session does not exist, redirecting to /login')
@@ -40,7 +47,7 @@ export default async function Page() {
 
   return (
     <div className="max-w-2xl mx-auto p-4 flex flex-row bg-white font-sans text-slate-800 antialiased">
-      <main className="flex flex-col gap-8 p-4 mx-auto">
+      <main className="flex flex-col gap-4 mx-auto">
         <h1 className="text-2xl font-bold">
           My account
         </h1>
@@ -74,16 +81,43 @@ export default async function Page() {
         <div className="font-bold">
           Get started
         </div>
-        <p>
-          To get follow ups sent to your gmail please bcc this address:
-        </p>
 
-        <p className="text border font-bold rounded p-2">
-          bot@getreply.app
-        </p>
-        <p>
-          While in alpha, GetReply will place one draft in your account immediately, and not two follow ups after three and six days.
-        </p>
+        <div className="flex flex-col gap-2">
+          {sequences && sequences.map((sequence: Sequence) => (
+            <div 
+              key={sequence.id} 
+              className="flex flex-col gap-2 border rounded p-2"
+            >
+              <div className="text-sm">
+                Send an email email to {' '}
+                <span className="italic">
+                  {sequence.name}@getreply.app
+                </span> {' '}so that
+              </div>
+              {sequence.prompt_list?.map((prompt, index) => (
+                <>
+                  <UnpurePromptItem 
+                    key={prompt!.prompt_id}
+                    id={prompt!.prompt_id} 
+                    compact={true}
+                  />
+                  <div className="text-sm">
+                    will run after {prompt!.delay} days
+                  </div>
+                  {index < sequence.prompt_list.length - 1 && (
+                    <div className="text-sm">
+                      and then
+                    </div>
+                    )
+                  }
+                </>
+              ))}
+            </div>
+
+
+          )) }
+        </div>
+
         </div>
         
         <UnpureLogsList />
