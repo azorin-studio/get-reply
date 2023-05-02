@@ -40,4 +40,12 @@ export type Profile = Database['public']['Tables']['profiles']['Row']
 
 export type Prompt = Database['public']['Tables']['prompts']['Row']
 
-export type Sequence = Database['public']['Tables']['sequences']['Row']
+export type Sequence = Omit<
+  Database['public']['Tables']['sequences']['Row'],
+  'prompt_list'
+> & {
+  prompt_list?: {
+    prompt_id: string;
+    delay:    number;
+  }[] | null
+}

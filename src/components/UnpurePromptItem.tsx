@@ -9,7 +9,7 @@ import PromptBody from './PromptBody'
 
 export const revalidate = 0
 
-const UnpurePromptItem = (props: { id: string, compact: boolean }) => {
+const UnpurePromptItem = (props: { id: string, compact?: boolean }) => {
   const { id, compact = false } = props
   const { supabase } = useSupabase()
   const [prompt, setPrompt] = useState<Prompt | null>(null)

@@ -19,10 +19,12 @@ export default async function Page() {
     data: { session },
   } = await supabase.auth.getSession()
 
-  const { data: sequences } = await supabase
+  const { data } = await supabase
     .from('sequences')
     .select('*')
     .order('created_at', { ascending: false })
+
+  const sequences = data as Sequence[]
 
   if (!session) {
     console.log('My Account: session does not exist, redirecting to /login')
@@ -83,7 +85,7 @@ export default async function Page() {
         </div>
 
         <div className="flex flex-col gap-2">
-          {sequences && sequences.map((sequence: Sequence) => (
+          {sequences && sequences.map((sequence) => (
             <div 
               key={sequence.id} 
               className="flex flex-col gap-2 border rounded p-2"
@@ -104,7 +106,7 @@ export default async function Page() {
                   <div className="text-sm">
                     will run after {prompt!.delay} days
                   </div>
-                  {index < sequence.prompt_list.length - 1 && (
+                  {(sequence.prompt_list && index < sequence.prompt_list.length - 1) && (
                     <div className="text-sm">
                       and then
                     </div>
