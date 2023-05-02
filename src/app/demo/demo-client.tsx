@@ -5,7 +5,6 @@ import Head from "next/head"
 import { useState } from "react"
 import fetch from 'isomorphic-fetch'
 import ms from "ms"
-import { defaultPrompt } from '~/prompts'
 
 const DEFAULT_EMAIL = `Dear Hiring Manager, 
 
@@ -24,7 +23,7 @@ const [result, setResult] = useState<null>(DEFAULT_RESULT)
 const [timer, setTimer] = useState<null | string>(null)
 const [error, setError] = useState<null | string>(null)
 const [content, setContent] = useState<string | null>(DEFAULT_EMAIL)
-const [prompt, setPrompt] = useState<string>(defaultPrompt('<your_email_will_go_here>'))
+const [prompt, setPrompt] = useState<string>('<your_email_will_go_here>')
 
 async function onSubmit(event: any) {
   setBusy(false)

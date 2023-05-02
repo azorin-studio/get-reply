@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
-import { IncomingEmail, Log, Profile } from '~/types'
+import { IncomingEmail, Log } from '~/types'
 import { Database } from './database.types'
 
 if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
@@ -68,6 +68,10 @@ export const createLog = async(incomingEmail: IncomingEmail) => {
     throw error
   }
 
+  if (!newLogs || newLogs.length === 0) {
+    throw new Error('Could not create log')
+  }
+
   return newLogs[0] as Log
 }
 
@@ -87,4 +91,19 @@ export const appendToLog = async(log: Log, newTerms: object) => {
 
 export default supabaseAdminClient
 
+export const getLogsByStatus = async (status: string) => {
+  const { error, data: logs } = await supabaseAdminClient
+    .from('logs')
+    .select()
+    .eq('status', status)
 
+  if (error) {
+    throw error
+  }
+
+  if (!logs) {
+    throw new Error(`No logs with status ${status}`)
+  }
+
+  return logs as Log[]
+}

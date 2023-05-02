@@ -1,36 +1,7 @@
 import { Configuration, OpenAIApi } from "openai"
 
-export type UserConstraint = string
-
 export async function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms))
-}
-
-export function validateAndEscapeConstraints(
-  constraints: UserConstraint[] | null,
-  maxConstraints: number = 5,
-  maxConstraintLength: number = 100
-): string {
-  if (!Array.isArray(constraints) || constraints.length > maxConstraints) {
-    return '' // Return an empty string if the input is invalid or exceeds the maximum number of constraints
-  }
-
-  return constraints
-    .map(constraint => {
-      if (typeof constraint !== 'string' || constraint.length > maxConstraintLength) {
-        return null // Skip constraints that are not strings or exceed the maximum character limit
-      }
-
-      // Remove potentially malicious content (e.g., HTML tags or script tags)
-      const sanitizedConstraint = constraint.replace(/<[^>]*>?/gm, '')
-
-      // Escape special characters
-      const escapedConstraint = sanitizedConstraint.replace(/["\\]/g, '\\$&')
-
-      return escapedConstraint
-    })
-    .filter(constraint => constraint !== null) // Remove any skipped constraints
-    .join('\n')
 }
 
 export async function callGPT35Api(prompt: string, retries = 3, delay = 1000): Promise<string> {
