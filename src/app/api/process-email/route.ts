@@ -6,7 +6,6 @@ import { IncomingEmail, Log, Profile } from '~/types'
 import { appendToLog, createLog, getProfileFromEmail } from '~/supabase'
 import testEmail from '~/data/test-email.json'
 
-
 export async function POST (request: Request) {
   if (headers().get('Authorization') !== `Bearer ${process.env.GETREPLY_BOT_AUTH_TOKEN}`) {
     return NextResponse.json({ error: 'Auth failed' })
@@ -57,7 +56,6 @@ export async function POST (request: Request) {
   })
 
   return log
-
 }
 
 export async function GET () {

@@ -5,6 +5,7 @@ import { Log, Profile } from "~/types"
 export const verify = async (log: Log): Promise<Log> => {
   // TODO check dmarc and stuff
   if (!log.text) {
+    console.log('No text found in incoming email')
     log = await appendToLog(log, {
       status: 'error',
       errorMesaage: 'No text found in incoming email'
@@ -27,6 +28,7 @@ export const verify = async (log: Log): Promise<Log> => {
 
   if (!toGetReply) {
     if (!log.text) {
+      console.log('No to: getreply.app address found in incoming email')
       log = await appendToLog(log, {
         status: 'generated',
         errorMesaage: 'No to: getreply.app address found in incoming email'
@@ -41,6 +43,7 @@ export const verify = async (log: Log): Promise<Log> => {
     .eq('name', toGetReply?.split('@')[0])
 
   if (error || !sequences || sequences.length === 0) {
+    console.log('Could not find sequence for this address')
     log = await appendToLog(log, {
       status: 'error',
       errorMessage: 'Could not find sequence for this address'
@@ -51,6 +54,7 @@ export const verify = async (log: Log): Promise<Log> => {
   const sequence = sequences[0]
 
   if (!sequence || !sequence.prompt_list || sequence.prompt_list.length === 0) {
+    console.log('Could not find sequence')
     log = await appendToLog(log, {
       status: 'error',
       errorMessage: 'Could not find sequence'
@@ -58,6 +62,7 @@ export const verify = async (log: Log): Promise<Log> => {
     return log
   }
 
+  console.log('Verified', sequence)
   log = await appendToLog(log, {
     status: 'verified'
   })
@@ -76,9 +81,11 @@ export async function GET () {
   }
 
   if (!logs || logs.length === 0) {
+    console.log('No logs to verify')
     return NextResponse.json({ result: `No logs to verify` })
   }
 
+  console.log(`Verifying ${logs.length} logs`)
   const processedLogs = await Promise.all(logs.map((log) => verify(log as Log)))
   return NextResponse.json(processedLogs)
 }
