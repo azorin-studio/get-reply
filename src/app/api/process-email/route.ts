@@ -2,8 +2,8 @@ import 'server-only'
 
 import { NextResponse } from 'next/server'
 import { headers } from 'next/headers'
-import { IncomingEmail, Log } from '~/types'
-import { createLog } from '~/supabase'
+import { IncomingEmail, Log, Profile } from '~/types'
+import { appendToLog, createLog, getProfileFromEmail } from '~/supabase'
 import testEmail from '~/data/test-email.json'
 
 
@@ -27,6 +27,37 @@ export async function POST (request: Request) {
     console.error(err)
     throw err
   }
+
+  if (!log.from) {
+    log = await appendToLog(log, {
+      status: 'error',
+      errorMessage: 'No from address found in log'
+    })
+    return log
+  }
+
+  const profile: Profile = await getProfileFromEmail(log.from.address)
+
+  if (!profile) {
+    log = await appendToLog(log, {
+      status: 'error',
+      errorMessage: 'No profile found for this email'
+    })
+  }
+
+  let provider = 'google'
+  if (profile.google_refresh_token === null) {
+    provider = 'getreply'
+  }
+
+  log = await appendToLog(log, {
+    status: 'user-added',
+    user_id: profile.id,
+    provider,
+  })
+
+  return log
+
 }
 
 export async function GET () {

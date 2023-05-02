@@ -4,35 +4,6 @@ import { Log, Profile } from "~/types"
 
 export const verify = async (log: Log): Promise<Log> => {
   // TODO check dmarc and stuff
-
-  if (!log.from) {
-    log = await appendToLog(log, {
-      status: 'error',
-      errorMessage: 'No from address found in log'
-    })
-    return log
-  }
-
-  const profile: Profile = await getProfileFromEmail(log.from.address)
-
-  if (!profile) {
-    log = await appendToLog(log, {
-      status: 'error',
-      errorMessage: 'No profile found for this email'
-    })
-  }
-
-  let provider = 'google'
-  if (profile.google_refresh_token === null) {
-    provider = 'getreply'
-  }
-
-  log = await appendToLog(log, {
-    status: 'user-added',
-    user_id: profile.id,
-    provider,
-  })
-
   if (!log.text) {
     log = await appendToLog(log, {
       status: 'error',
