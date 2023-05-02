@@ -17,7 +17,6 @@ export const supabaseAdminClient = createClient<Database>(
   }
 )
 
-
 export const supabaseClient = createClient<Database>(
   process.env.NEXT_PUBLIC_SUPABASE_URL, 
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!, 
@@ -28,7 +27,6 @@ export const supabaseClient = createClient<Database>(
     }
   }
 )
-
 
 export const getProfileFromEmail = async (email: string) => {
   const { data: profiles, error } = await supabaseAdminClient
@@ -48,18 +46,12 @@ export const getProfileFromEmail = async (email: string) => {
   return profiles[0]
 }
 
-export const createLog = async(incomingEmail: IncomingEmail, profile: Profile) => {
-  let provider = 'google'
-  if (profile.google_refresh_token === null) {
-    provider = 'getreply'
-  }
-
+export const createLog = async(incomingEmail: IncomingEmail) => {
   const newLog: Log = {
     ...incomingEmail,
-    user_id: profile.id,
     status: 'pending',
     created_at: (new Date()).toISOString(),
-    provider,
+    provider: 'unknown',
     errorMessage: null,
     generations: null,
     draftId: null,

@@ -13,9 +13,10 @@ export interface Header {
 
 export type Log = Omit<
     Database['public']['Tables']['logs']['Row'], 
-    'id' | 'from' | 'to' | 'bcc' | 'cc'
+    'id' | 'from' | 'to' | 'bcc' | 'cc' | 'user_id'
   > & {
   id?: string;
+  user_id?: string | null | undefined;
 
   // // this is done to stop it being a Json type, because of this issue:
   // // Property 'address' does not exist on type 'string | number | boolean | { [key: string]: Json; } | Json[]'.

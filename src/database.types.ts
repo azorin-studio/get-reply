@@ -30,7 +30,7 @@ export interface Database {
           text: string | null
           threadId: string | null
           to: Json[] | null
-          user_id: string
+          user_id: string | null
         }
         Insert: {
           bcc?: Json[] | null
@@ -52,7 +52,7 @@ export interface Database {
           text?: string | null
           threadId?: string | null
           to?: Json[] | null
-          user_id: string
+          user_id?: string | null
         }
         Update: {
           bcc?: Json[] | null
@@ -74,7 +74,7 @@ export interface Database {
           text?: string | null
           threadId?: string | null
           to?: Json[] | null
-          user_id?: string
+          user_id?: string | null
         }
       }
       profiles: {
