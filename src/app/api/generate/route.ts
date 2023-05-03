@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server"
 import { callGPT35Api } from "~/chat-gpt"
 
+export const revalidate = 0
+
 export async function POST (request: Request) {
   const body = await request.json()
 

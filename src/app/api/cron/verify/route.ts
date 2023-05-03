@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server"
 import { handleVerifyEvent } from "~/cron"
 
+export const revalidate = 0
+
 export async function GET () {
   console.log(1)
   try {
