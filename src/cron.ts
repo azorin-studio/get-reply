@@ -3,6 +3,26 @@ import { createGmailDraftInThread, findThread, makeUnreadInInbox } from "./googl
 import supabaseAdminClient, { appendToLog, createLog, getLogsByStatus, getProfileFromEmail } from "./supabase"
 import { IncomingEmail, Log, Profile } from "./types"
 
+const getSequenceName = (log: Log) => {
+  let allToEmails: any[] = []
+  if (log.to) {
+    allToEmails = [...allToEmails, ...log.to.map((to) => to.address)]
+  }
+  if (log.cc) {
+    allToEmails = [...allToEmails, ...log.cc.map((to) => to.address)]
+  }
+  if (log.bcc) {
+    allToEmails = [...allToEmails, ...log.bcc.map((to) => to.address)]
+  }
+
+  const toGetReply = allToEmails.find((email) => email.endsWith('getreply.app'))
+  if (!toGetReply) {
+    return null
+  }
+
+  return toGetReply.split('@')[0]
+}
+
 export const generate = async (log: Log): Promise<Log> => {
   if (!log.from) {
     log = await appendToLog(log, {
@@ -21,18 +41,7 @@ export const generate = async (log: Log): Promise<Log> => {
     })
   }
 
-  let allToEmails: any[] = []
-  if (log.to) {
-    allToEmails = [...allToEmails, ...log.to.map((to) => to.address)]
-  }
-  if (log.cc) {
-    allToEmails = [...allToEmails, ...log.cc.map((to) => to.address)]
-  }
-  if (log.bcc) {
-    allToEmails = [...allToEmails, ...log.bcc.map((to) => to.address)]
-  }
-
-  const toGetReply = allToEmails.find((email) => email.endsWith('getreply.app'))
+  const toGetReply = getSequenceName(log)
 
   if (!toGetReply) {
     if (!log.text) {
@@ -47,7 +56,7 @@ export const generate = async (log: Log): Promise<Log> => {
   const { error, data: sequences } = await supabaseAdminClient
     .from('sequences')
     .select()
-    .eq('name', toGetReply?.split('@')[0])
+    .eq('name', toGetReply)
 
   if (error || !sequences || sequences.length === 0) {
     log = await appendToLog(log, {
@@ -128,19 +137,7 @@ export const verify = async (log: Log): Promise<Log> => {
     return log
   }
 
-  let allToEmails: any[] = []
-  if (log.to) {
-    allToEmails = [...allToEmails, ...log.to.map((to) => to.address)]
-  }
-  if (log.cc) {
-    allToEmails = [...allToEmails, ...log.cc.map((to) => to.address)]
-  }
-  if (log.bcc) {
-    allToEmails = [...allToEmails, ...log.bcc.map((to) => to.address)]
-  }
-
-  const toGetReply = allToEmails.find((email) => email.endsWith('getreply.app'))
-
+  const toGetReply = getSequenceName(log)
   if (!toGetReply) {
     if (!log.text) {
       console.log('No to: getreply.app address found in incoming email')
@@ -155,7 +152,7 @@ export const verify = async (log: Log): Promise<Log> => {
   const { error, data: sequences } = await supabaseAdminClient
     .from('sequences')
     .select()
-    .eq('name', toGetReply?.split('@')[0])
+    .eq('name', toGetReply)
 
   if (error || !sequences || sequences.length === 0) {
     console.log('Could not find sequence for this address')
@@ -188,6 +185,28 @@ export const createDraftAndNotify = async (log: Log): Promise<Log> => {
   if (!log.from) {
     throw new Error('No from address found in log')
   }
+
+  const toGetReply = getSequenceName(log)
+  const { error, data: sequences } = await supabaseAdminClient
+    .from('sequences')
+    .select()
+    .eq('name', toGetReply)
+
+  if (error || !sequences || sequences.length === 0) {
+    log = await appendToLog(log, {
+      status: 'error',
+      errorMessage: 'Could not find sequence for this address'
+    })
+    return log
+  }
+
+  const sequence = sequences[0]
+  const n = 5
+  function daysBetween(first, second) {        
+      return Math.round((second - first) / (1000 * 60 * 60 * 24));
+  }
+
+  console.log(daysBetween(new Date(log.created_at), new Date()))
 
   const profile: Profile = await getProfileFromEmail(log.from.address)
 
