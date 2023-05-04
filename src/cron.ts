@@ -3,6 +3,10 @@ import { createGmailDraftInThread, findThread, makeUnreadInInbox } from "./googl
 import supabaseAdminClient, { appendToLog, createLog, getLogsByStatus, getProfileFromEmail } from "./supabase"
 import { IncomingEmail, Log, Profile } from "./types"
 
+const daysBetween = (first: Date, second: Date): number => {
+  return Math.round((second.getTime() - first.getTime()) / (1000 * 60 * 60 * 24))
+}
+
 const getSequenceName = (log: Log) => {
   let allToEmails: any[] = []
   if (log.to) {
@@ -23,6 +27,22 @@ const getSequenceName = (log: Log) => {
   return toGetReply.split('@')[0]
 }
 
+const getSequenceFromLog = async (log: Log) => {
+  const toGetReply = getSequenceName(log)
+
+  const { error, data: sequences } = await supabaseAdminClient
+    .from('sequences')
+    .select()
+    .eq('name', toGetReply)
+
+  if (error || !sequences || sequences.length === 0) {
+    return null
+  }
+
+  const sequence = sequences[0]
+  return sequence
+}
+
 export const generate = async (log: Log): Promise<Log> => {
   if (!log.from) {
     log = await appendToLog(log, {
@@ -41,37 +61,12 @@ export const generate = async (log: Log): Promise<Log> => {
     })
   }
 
-  const toGetReply = getSequenceName(log)
-
-  if (!toGetReply) {
-    if (!log.text) {
-      log = await appendToLog(log, {
-        status: 'generated',
-        errorMesaage: 'No to: getreply.app address found in incoming email'
-      })
-      return log
-    }  
-  }
-
-  const { error, data: sequences } = await supabaseAdminClient
-    .from('sequences')
-    .select()
-    .eq('name', toGetReply)
-
-  if (error || !sequences || sequences.length === 0) {
-    log = await appendToLog(log, {
-      status: 'error',
-      errorMessage: 'Could not find sequence for this address'
-    })
-    return log
-  }
-
-  const sequence = sequences[0]
+  const sequence = await getSequenceFromLog(log)
 
   if (!sequence || !sequence.prompt_list || sequence.prompt_list.length === 0) {
     log = await appendToLog(log, {
       status: 'error',
-      errorMessage: `No prompt list on sequence: ${sequence.id}`
+      errorMessage: `No prompt list on sequence`
     })
     return log
   }
@@ -137,34 +132,8 @@ export const verify = async (log: Log): Promise<Log> => {
     return log
   }
 
-  const toGetReply = getSequenceName(log)
-  if (!toGetReply) {
-    if (!log.text) {
-      console.log('No to: getreply.app address found in incoming email')
-      log = await appendToLog(log, {
-        status: 'generated',
-        errorMesaage: 'No to: getreply.app address found in incoming email'
-      })
-      return log
-    }  
-  }
-
-  const { error, data: sequences } = await supabaseAdminClient
-    .from('sequences')
-    .select()
-    .eq('name', toGetReply)
-
-  if (error || !sequences || sequences.length === 0) {
-    console.log('Could not find sequence for this address')
-    log = await appendToLog(log, {
-      status: 'error',
-      errorMessage: 'Could not find sequence for this address'
-    })
-    return log
-  }
-
-  const sequence = sequences[0]
-
+  const sequence = getSequenceFromLog(log)
+  
   if (!sequence || !sequence.prompt_list || sequence.prompt_list.length === 0) {
     console.log('Could not find sequence')
     log = await appendToLog(log, {
@@ -186,27 +155,14 @@ export const createDraftAndNotify = async (log: Log): Promise<Log> => {
     throw new Error('No from address found in log')
   }
 
-  const toGetReply = getSequenceName(log)
-  const { error, data: sequences } = await supabaseAdminClient
-    .from('sequences')
-    .select()
-    .eq('name', toGetReply)
-
-  if (error || !sequences || sequences.length === 0) {
+  const sequence = getSequenceFromLog(log)
+  if (!sequence) {
     log = await appendToLog(log, {
       status: 'error',
       errorMessage: 'Could not find sequence for this address'
     })
     return log
   }
-
-  const sequence = sequences[0]
-  const n = 5
-  function daysBetween(first, second) {        
-      return Math.round((second - first) / (1000 * 60 * 60 * 24));
-  }
-
-  console.log(daysBetween(new Date(log.created_at), new Date()))
 
   const profile: Profile = await getProfileFromEmail(log.from.address)
 

@@ -28,6 +28,12 @@ describe('cron', () => {
     expect(log.status).toBe('pending')
   })
 
+  
+  it('should check if sequence should be sent today', async () => {
+    log = await handleProcessEmailEvent(testEmail as IncomingEmail)
+    console.log(log)
+  })
+
   it('should handleVerifyEvent', async () => {
     const logs = await handleVerifyEvent()
     expect(logs.length).toBe(1)
