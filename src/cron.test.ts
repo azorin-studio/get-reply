@@ -1,12 +1,21 @@
-import { handleCreateDraftEvent, handleGenerateEvent, handleProcessEmailEvent, handleVerifyEvent } from "./cron"
+import { getSequenceFromLog, handleCreateDraftEvent, handleGenerateEvent, handleProcessEmailEvent, handleVerifyEvent } from "./cron"
 import testEmail from '~/data/test-email.json'
 import { IncomingEmail, Log, Profile } from "./types"
 import supabaseAdminClient, { getProfileFromEmail } from "./supabase"
 import { createGmailDraftInThread, deleteDraft, findThread, makeUnreadInInbox } from "./google"
 import { callGPT35Api } from "./chat-gpt"
+import { addDays } from "date-fns"
 
 jest.mock('./chat-gpt')
 jest.mock('./google')
+
+const deleteLog = async (log: Log) => {
+  console.log('deleting log', log!.id)
+  await supabaseAdminClient
+    .from('logs')
+    .delete()
+    .eq('id', log!.id)
+}
 
 describe('cron', () => {
   let log: Log | null = null
@@ -31,7 +40,14 @@ describe('cron', () => {
   
   it('should check if sequence should be sent today', async () => {
     log = await handleProcessEmailEvent(testEmail as IncomingEmail)
-    console.log(log)
+    const sequence = await getSequenceFromLog(log)
+    
+    await Promise.all(sequence?.prompt_list?.map(async (prompt, index) => {
+      console.log(log?.created_at, addDays(log?.created_at, prompt.delay))
+      return { a: 1 }
+    }))
+      
+    await deleteLog(log
   })
 
   it('should handleVerifyEvent', async () => {
@@ -61,11 +77,7 @@ describe('cron', () => {
 
   afterAll(async () => {
     if (log) {
-      console.log('deleting log', log!.id)
-      await supabaseAdminClient
-        .from('logs')
-        .delete()
-        .eq('id', log!.id)
+      await deleteLog(log)
 
       if (log.draftId && profile?.google_refresh_token) {
         console.log('deleting draft', log!.draftId)

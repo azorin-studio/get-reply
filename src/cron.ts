@@ -3,11 +3,11 @@ import { createGmailDraftInThread, findThread, makeUnreadInInbox } from "./googl
 import supabaseAdminClient, { appendToLog, createLog, getLogsByStatus, getProfileFromEmail } from "./supabase"
 import { IncomingEmail, Log, Profile } from "./types"
 
-const daysBetween = (first: Date, second: Date): number => {
+export const daysBetween = (first: Date, second: Date): number => {
   return Math.round((second.getTime() - first.getTime()) / (1000 * 60 * 60 * 24))
 }
 
-const getSequenceName = (log: Log) => {
+export const getSequenceName = (log: Log) => {
   let allToEmails: any[] = []
   if (log.to) {
     allToEmails = [...allToEmails, ...log.to.map((to) => to.address)]
@@ -27,7 +27,7 @@ const getSequenceName = (log: Log) => {
   return toGetReply.split('@')[0]
 }
 
-const getSequenceFromLog = async (log: Log) => {
+export const getSequenceFromLog = async (log: Log) => {
   const toGetReply = getSequenceName(log)
 
   const { error, data: sequences } = await supabaseAdminClient
