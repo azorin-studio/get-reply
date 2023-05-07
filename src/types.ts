@@ -18,6 +18,7 @@ export type Log = Omit<
     'id' | 'from' | 'to' | 'bcc' | 'cc' | 'user_id' | 'created_at'
   > & {
   id?: string;
+  created_at?: string;
   user_id?: string | null | undefined;
 
   // // this is done to stop it being a Json type, because of this issue:

@@ -36,7 +36,17 @@ export const getSequenceFromLog = async (log: Log) => {
     .select()
     .eq('name', toGetReply)
 
-  if (error || !sequences || sequences.length === 0) {
+  // console.log(
+  //   toGetReply,
+  //   sequences, 
+  //   error
+  // )
+
+  if (error) {
+    throw error
+  }
+
+  if (!sequences || sequences.length === 0) {
     return null
   }
 
@@ -158,9 +168,10 @@ export const createDraftAndNotify = async (log: Log): Promise<Log> => {
 
   const sequence = await getSequenceFromLog(log)
   if (!sequence) {
+    const sequenceName = getSequenceName(log)
     log = await appendToLog(log, {
       status: 'error',
-      errorMessage: 'Could not find sequence for this address'
+      errorMessage: `Could not find sequence for this address: ${sequenceName}`
     })
     return log
   }
