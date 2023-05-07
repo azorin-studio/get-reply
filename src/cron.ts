@@ -100,7 +100,7 @@ export const generate = async (log: Log): Promise<Log> => {
       }
 
       const prompt = prompts[0]
-      const fullPrompt = (prompt.prompt! as string).replace('<your-email-here>', log.text!)
+      const fullPrompt = (prompt.prompt! as string).replace('{email}', log.text!)
       const generation: string = await callGPT35Api(fullPrompt, 3)
   
       return {
