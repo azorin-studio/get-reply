@@ -18,6 +18,7 @@ const cleanup = async (log: Log, google_refresh_token: string | null | undefined
   await deleteLog(log)
 
   if (log.draftIds && google_refresh_token) {
+    console.log('deleting drafts', log.draftIds)
     await Promise.all(log.draftIds.map(async (draftId: string) => {
       try {
         await deleteDraft(draftId!, google_refresh_token)
@@ -93,6 +94,7 @@ describe('cron', () => {
   it('should handleVerifyEvent', async () => {
     const logs = await handleVerifyEvent()
     expect(logs.length).toBe(1)
+    expect(logs[0].errorMessage).toBe(null)
     expect(logs[0].status).toBe('verified')
   })
 
@@ -101,7 +103,10 @@ describe('cron', () => {
     callGPT35Api.mockResolvedValue('follow up 2 text content')
 
     const logs = await handleGenerateEvent()
+
+    // this can fail if the about 'should handleVerifyEvent' test fails
     expect(logs.length).toBe(1)
+    expect(logs[0].errorMessage).toBe(null)
     expect(logs[0].status).toBe('generated')
   })
 

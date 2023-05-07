@@ -133,13 +133,13 @@ export const verify = async (log: Log): Promise<Log> => {
     return log
   }
 
-  const sequence = getSequenceFromLog(log)
-  
+  const sequence = await getSequenceFromLog(log)
   if (!sequence || !sequence.prompt_list || sequence.prompt_list.length === 0) {
-    console.log('Could not find sequence')
+    const sequenceName = getSequenceName(log)
+    console.log(`Could not find sequence:${sequenceName}`)
     log = await appendToLog(log, {
       status: 'error',
-      errorMessage: 'Could not find sequence'
+      errorMessage: `Could not find sequence:${sequenceName}`
     })
     return log
   }
@@ -161,6 +161,14 @@ export const createDraftAndNotify = async (log: Log): Promise<Log> => {
     log = await appendToLog(log, {
       status: 'error',
       errorMessage: 'Could not find sequence for this address'
+    })
+    return log
+  }
+
+  if (!sequence.prompt_list) {
+    log = await appendToLog(log, {
+      status: 'error',
+      errorMessage: 'No prompt list found for this sequence'
     })
     return log
   }
@@ -193,7 +201,7 @@ export const createDraftAndNotify = async (log: Log): Promise<Log> => {
   }
 
   // only one prompt can be placed per day
-  const todaysPromptIndex = sequence?.prompt_list?.findIndex((prompt: any) => {
+  const todaysPromptIndex = sequence.prompt_list.findIndex((prompt: any) => {
     const today = new Date()
     const dateToSend = addDays(parseISO(log!.date!), prompt.delay)
     return daysBetween(today, dateToSend) === 0
@@ -206,6 +214,8 @@ export const createDraftAndNotify = async (log: Log): Promise<Log> => {
     })
     return log
   }
+
+  const isLastPrompt = todaysPromptIndex === sequence.prompt_list.length - 1
 
   const draft = await createGmailDraftInThread(
     log.to as any[],
@@ -221,16 +231,22 @@ export const createDraftAndNotify = async (log: Log): Promise<Log> => {
   if (newDraftId) {
     allDraftIds = [...allDraftIds, newDraftId]
   }
-  
+
   log = await appendToLog(log, {
     threadId: thread.id,
-    status: 'drafted',
     draftIds: allDraftIds
   })
+
+  if (isLastPrompt) {
+    log = await appendToLog(log, {
+      status: 'drafted'
+    })
+  }
     
   if (draft.message!.id) {
     await makeUnreadInInbox(draft.message!.id, profile.google_refresh_token)
   }
+
   return log
 }
 
@@ -238,7 +254,6 @@ export const processEmail = async (incomingEmail: IncomingEmail): Promise<Log> =
   let log: Log | null = null
   try {
     log = await createLog(incomingEmail)
-    // console.log('starting id:', log.id, 'from', (log.from as any).address)
   } catch (err: any) {
     console.error(err)
     throw err
@@ -276,35 +291,35 @@ export const processEmail = async (incomingEmail: IncomingEmail): Promise<Log> =
 }  
 
 export const handleProcessEmailEvent = async (incomingEmail: IncomingEmail): Promise<Log> => {
-  // console.log('process: handling process email event')
+  console.log('process: handling process email event')
   const log = await processEmail(incomingEmail)
-  // console.log('process: processed email', log.id)
+  console.log('process: processed email', log.id)
   return log
 }  
 
 export const handleVerifyEvent = async () => {
-  // console.log('verify: handling verify event')
+  console.log('verify: handling verify event')
   const logs = await getLogsByStatus('pending')
-  // console.log('verify: found logs', logs.length)
+  console.log('verify: found logs', logs.length)
   const processedLogs = await Promise.all(logs.map((log) => verify(log as Log)))
-  // console.log('verify: processed logs', processedLogs.length)
+  console.log('verify: processed logs', processedLogs.length)
   return processedLogs
 }
 
 export const handleGenerateEvent = async () => {
-  // console.log('generate: handling generate event')
+  console.log('generate: handling generate event')
   const logs = await getLogsByStatus('verified')
-  // console.log('generate: found logs', logs.length)
+  console.log('generate: found logs', logs.length)
   const processedLogs = await Promise.all(logs.map((log) => generate(log as Log)))
-  // console.log('generate: processed logs', processedLogs.length)
+  console.log('generate: processed logs', processedLogs.length)
   return processedLogs
 }
 
 export const handleCreateDraftEvent = async () => {
-  // console.log('create-draft: handling create-draft event')
+  console.log('create-draft: handling create-draft event')
   const logs = await getLogsByStatus('generated')
-  // console.log('create-draft: found logs', logs.length)
+  console.log('create-draft: found logs', logs.length)
   const processedLogs = await Promise.all(logs.map((log) => createDraftAndNotify(log as Log)))
-  // console.log('create-draft: processed logs', processedLogs.length)
+  console.log('create-draft: processed logs', processedLogs.length)
   return processedLogs
 }
