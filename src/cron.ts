@@ -155,7 +155,7 @@ export const createDraftAndNotify = async (log: Log): Promise<Log> => {
     throw new Error('No from address found in log')
   }
 
-  const sequence = getSequenceFromLog(log)
+  const sequence = await getSequenceFromLog(log)
   if (!sequence) {
     log = await appendToLog(log, {
       status: 'error',
@@ -180,27 +180,39 @@ export const createDraftAndNotify = async (log: Log): Promise<Log> => {
   
       console.log('could not find thread in gmail, id:', log.id)  
     } else {
-      const draft = await createGmailDraftInThread(
-        log.to as any[],
-        log.from as any,
-        log.subject || '',
-        log.generations![0],
-        thread.threadId!,
-        profile.google_refresh_token
-      )
-      log = await appendToLog(log, {
-        threadId: thread.id,
-        status: 'drafted',
-        draftId: draft.id
-      })
-      console.log('drafted email 1 in gmail, id:', log.id, 'draft id:', draft.id)  
 
-      await makeUnreadInInbox(draft)
-      log = await appendToLog(log, {
-        threadId: thread.id,
-        status: 'ready-in-inbox'
-      })
-      console.log('ready in inbox, id:', log.id, 'draft id:', draft.id)  
+      await Promise.all(sequence?.prompt_list?.map(async (prompt, index) => {
+        const days = daysBetween(
+          new Date(),
+          addDays(parseISO(log?.created_at), prompt.delay)
+        )
+  
+        if (days === 0) {
+          // put generation in draft
+          
+          const draft = await createGmailDraftInThread(
+            log.to as any[],
+            log.from as any,
+            log.subject || '',
+            log.generations![index],
+            thread.threadId!,
+            profile.google_refresh_token
+          )
+          log = await appendToLog(log, {
+            threadId: thread.id,
+            status: 'drafted',
+            draftId: draft.id
+          })
+          console.log('drafted email 1 in gmail, id:', log.id, 'draft id:', draft.id)  
+          await makeUnreadInInbox(draft)
+          log = await appendToLog(log, {
+            threadId: thread.id,
+            status: 'ready-in-inbox'
+          })
+          console.log('ready in inbox, id:', log.id, 'draft id:', draft.id)          
+        }
+      }))
+
     }
   }
 

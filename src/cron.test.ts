@@ -1,10 +1,10 @@
-import { getSequenceFromLog, handleCreateDraftEvent, handleGenerateEvent, handleProcessEmailEvent, handleVerifyEvent } from "./cron"
+import { daysBetween, getSequenceFromLog, handleCreateDraftEvent, handleGenerateEvent, handleProcessEmailEvent, handleVerifyEvent } from "./cron"
 import testEmail from '~/data/test-email.json'
 import { IncomingEmail, Log, Profile } from "./types"
 import supabaseAdminClient, { getProfileFromEmail } from "./supabase"
 import { createGmailDraftInThread, deleteDraft, findThread, makeUnreadInInbox } from "./google"
 import { callGPT35Api } from "./chat-gpt"
-import { addDays } from "date-fns"
+import { addDays, parseISO } from "date-fns"
 
 jest.mock('./chat-gpt')
 jest.mock('./google')
@@ -43,11 +43,21 @@ describe('cron', () => {
     const sequence = await getSequenceFromLog(log)
     
     await Promise.all(sequence?.prompt_list?.map(async (prompt, index) => {
-      console.log(log?.created_at, addDays(log?.created_at, prompt.delay))
+      const days = daysBetween(
+        new Date(),
+        addDays(parseISO(log?.created_at), prompt.delay)
+      )
+
+      if (days === 0) {
+        // put generation in draft
+      }
+
+      console.log({ days })
+
       return { a: 1 }
     }))
       
-    await deleteLog(log
+    await deleteLog(log)
   })
 
   it('should handleVerifyEvent', async () => {
