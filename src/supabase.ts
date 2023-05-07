@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js'
 import { IncomingEmail, Log } from '~/types'
 import { Database } from './database.types'
+import { parseISO } from 'date-fns'
 
 if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
   throw new Error('Missing env.NEXT_PUBLIC_SUPABASE_URL')
@@ -50,11 +51,11 @@ export const createLog = async(incomingEmail: IncomingEmail) => {
   const newLog: Log = {
     ...incomingEmail,
     status: 'pending',
-    created_at: (new Date()).toISOString(),
+    // created_at: (new Date()).toISOString(),
     provider: 'unknown',
     errorMessage: null,
     generations: null,
-    draftId: null,
+    draftIds: null,
     prompts: null,
     threadId: null,
   }

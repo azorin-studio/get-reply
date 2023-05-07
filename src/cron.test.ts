@@ -1,21 +1,74 @@
-import { daysBetween, getSequenceFromLog, handleCreateDraftEvent, handleGenerateEvent, handleProcessEmailEvent, handleVerifyEvent } from "./cron"
+import { createDraftAndNotify, handleGenerateEvent, handleProcessEmailEvent, handleVerifyEvent } from "./cron"
 import testEmail from '~/data/test-email.json'
 import { IncomingEmail, Log, Profile } from "./types"
-import supabaseAdminClient, { getProfileFromEmail } from "./supabase"
-import { createGmailDraftInThread, deleteDraft, findThread, makeUnreadInInbox } from "./google"
+import supabaseAdminClient, { appendToLog, getProfileFromEmail } from "./supabase"
+import { deleteDraft } from "./google"
 import { callGPT35Api } from "./chat-gpt"
-import { addDays, parseISO } from "date-fns"
 
 jest.mock('./chat-gpt')
-jest.mock('./google')
 
 const deleteLog = async (log: Log) => {
-  console.log('deleting log', log!.id)
   await supabaseAdminClient
     .from('logs')
     .delete()
     .eq('id', log!.id)
 }
+
+const cleanup = async (log: Log, google_refresh_token: string | null | undefined) => {
+  await deleteLog(log)
+
+  if (log.draftIds && google_refresh_token) {
+    await Promise.all(log.draftIds.map(async (draftId: string) => {
+      try {
+        await deleteDraft(draftId!, google_refresh_token)
+      } catch (error) {
+        console.log('error deleting draft', error)
+      }
+      
+      return 
+    }))
+  }
+}
+
+describe('cron:dates', () => {
+  let testLog: Log | null = null
+  let profile: Profile | null
+
+  if (testEmail.attachments) {
+    delete (testEmail as IncomingEmail).attachments
+  }
+
+  beforeAll(async () => {
+    profile = await getProfileFromEmail(testEmail.from.address)
+    if (!profile) {
+      throw new Error(`Test user ${testEmail.from.address} profile not found. Its required for process tests to run.`)
+    }
+  })
+
+  it('should check if sequence should be sent today', async () => {
+    // Important, testEmail must be addressed to followup@getreply.app
+    // in order to have the correct sequence
+
+    // three days ago
+    testEmail.date = new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString()
+
+    testLog = await handleProcessEmailEvent(testEmail as IncomingEmail)
+
+    testLog = await appendToLog(testLog, {
+      generations: ['g1', 'g2']
+    })
+
+    // set the logs date to three days from now in order to make a draft
+    testLog = await createDraftAndNotify(testLog)    
+    expect(testLog.errorMessage).toBe(null)
+    expect(testLog.threadId).toBeDefined()
+  })
+
+  afterAll(async () => {
+    if (!testLog) return
+    await cleanup(testLog, profile?.google_refresh_token)
+  })
+})
 
 describe('cron', () => {
   let log: Log | null = null
@@ -36,30 +89,7 @@ describe('cron', () => {
     log = await handleProcessEmailEvent(testEmail as IncomingEmail)
     expect(log.status).toBe('pending')
   })
-
   
-  it('should check if sequence should be sent today', async () => {
-    log = await handleProcessEmailEvent(testEmail as IncomingEmail)
-    const sequence = await getSequenceFromLog(log)
-    
-    await Promise.all(sequence?.prompt_list?.map(async (prompt, index) => {
-      const days = daysBetween(
-        new Date(),
-        addDays(parseISO(log?.created_at), prompt.delay)
-      )
-
-      if (days === 0) {
-        // put generation in draft
-      }
-
-      console.log({ days })
-
-      return { a: 1 }
-    }))
-      
-    await deleteLog(log)
-  })
-
   it('should handleVerifyEvent', async () => {
     const logs = await handleVerifyEvent()
     expect(logs.length).toBe(1)
@@ -75,25 +105,11 @@ describe('cron', () => {
     expect(logs[0].status).toBe('generated')
   })
 
-  it('should handleCreateDraftEvent', async () => {
-    findThread.mockResolvedValue({ id: 'some id' })
-    createGmailDraftInThread.mockResolvedValue({ id: 'draft id' })
-    makeUnreadInInbox.mockResolvedValue('some response')
-
-    const logs = await handleCreateDraftEvent()
-    expect(logs.length).toBe(1)
-    expect(logs[0].status).toBe('ready-in-inbox')
-  })
-
   afterAll(async () => {
-    if (log) {
-      await deleteLog(log)
-
-      if (log.draftId && profile?.google_refresh_token) {
-        console.log('deleting draft', log!.draftId)
-        await deleteDraft(log!.draftId!, profile.google_refresh_token)
-      }
-    }    
+    if (!log) {
+      return 
+    }
+    await cleanup(log, profile?.google_refresh_token)    
   })
 })  
 

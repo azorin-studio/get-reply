@@ -15,7 +15,7 @@ export interface Database {
           cc: Json[] | null
           created_at: string | null
           date: string | null
-          draftId: string | null
+          draftIds: string[] | null
           errorMessage: string | null
           from: Json | null
           generations: string[] | null
@@ -37,7 +37,7 @@ export interface Database {
           cc?: Json[] | null
           created_at?: string | null
           date?: string | null
-          draftId?: string | null
+          draftIds?: string[] | null
           errorMessage?: string | null
           from?: Json | null
           generations?: string[] | null
@@ -59,7 +59,7 @@ export interface Database {
           cc?: Json[] | null
           created_at?: string | null
           date?: string | null
-          draftId?: string | null
+          draftIds?: string[] | null
           errorMessage?: string | null
           from?: Json | null
           generations?: string[] | null

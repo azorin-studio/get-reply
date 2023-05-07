@@ -74,7 +74,7 @@
     },
     {
       "key": "to",
-      "value": "bot@getreply.app"
+      "value": "followup@getreply.app"
     },
     {
       "key": "content-type",

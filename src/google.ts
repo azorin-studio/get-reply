@@ -77,27 +77,28 @@ export const findThread = async (subject: string, to: Contact[], google_refresh_
   oauth2Client.setCredentials(tokens)
   const gmail = google.gmail({ version: 'v1', auth: oauth2Client })
   const q = `${subject} to: ${to.map(t => t!.address).join(', ')}`
+  // console.log({ q })
   const threads = await gmail.users.threads.list({
     userId: 'me',
     q,
   })
 
   if (!threads.data.threads || threads.data.resultSizeEstimate === 0) {
-    throw Error(`cannot find thread for q=${q}.`)
-  }
-
-  if (threads.data.threads.length > 1) {
-    throw Error('thread has reply or other draft.')
+    return null
   }
 
   return threads.data.threads[0] as any
 }
 
-export const makeUnreadInInbox = async (draft: any) => {
+export const makeUnreadInInbox = async (draftId: string, google_refresh_token: string) => {
+  const tokens = await refreshAccessToken(google_refresh_token)
+  oauth2Client.setCredentials(tokens)
+  
   const gmail = google.gmail({ version: 'v1', auth: oauth2Client })
+
   await gmail.users.messages.modify({
     userId: 'me',
-    id: draft.message!.id!,
+    id: draftId,
     requestBody: {
       addLabelIds: ['INBOX', 'UNREAD']
     }
