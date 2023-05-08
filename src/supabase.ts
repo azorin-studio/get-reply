@@ -1,12 +1,12 @@
 import { createClient } from '@supabase/supabase-js'
 import { IncomingEmail, Log } from '~/types'
 import { Database } from './database.types'
-import { parseISO } from 'date-fns'
 
 if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
   throw new Error('Missing env.NEXT_PUBLIC_SUPABASE_URL')
 }
 
+// server only
 export const supabaseAdminClient = createClient<Database>(
   process.env.NEXT_PUBLIC_SUPABASE_URL, 
   process.env.SUPABASE_SERVICE_KEY!, 
@@ -18,6 +18,7 @@ export const supabaseAdminClient = createClient<Database>(
   }
 )
 
+// server only
 export const supabaseClient = createClient<Database>(
   process.env.NEXT_PUBLIC_SUPABASE_URL, 
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!, 

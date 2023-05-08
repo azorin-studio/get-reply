@@ -2,9 +2,12 @@
 
 import { Loader } from "lucide-react"
 import Head from "next/head"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import fetch from 'isomorphic-fetch'
 import ms from "ms"
+import { useSearchParams, useRouter } from "next/navigation"
+import usePrompts from "~/hooks/use-prompts"
+import { Prompt } from "~/types"
 
 const DEFAULT_EMAIL = `Dear Hiring Manager, 
 
@@ -18,14 +21,25 @@ Mike Smith`
 const DEFAULT_RESULT = null
 
 export default function DemoPage(props: any) {
-  const { prompts } = props
-
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const prompts = usePrompts()  
   const [busy, setBusy] = useState<boolean>(false)
   const [result, setResult] = useState<null>(DEFAULT_RESULT)
   const [timer, setTimer] = useState<null | string>(null)
-  const [error, setError] = useState<null | string>(null)
   const [content, setContent] = useState<string | null>(DEFAULT_EMAIL)
-  const [prompt, setPrompt] = useState<string>('<your_email_will_go_here>')
+  const [activePrompt, setActivePrompt] = useState<Prompt | null>(null)
+  const [error, setError] = useState<null | string>(null)
+
+  useEffect(() => {
+    const promptName = searchParams.get('prompt') || 'followup1'
+    const promptIndex = prompts.findIndex((p: any) => p.name === promptName)
+    // console.log({promptIndex, promptName, p: prompts[promptIndex]})
+    if (promptIndex > -1) {
+      setActivePrompt(prompts[promptIndex])
+    }  
+    router.replace(`/demo`)
+  }, [prompts])
 
   async function onSubmit(event: any) {
     setBusy(false)
@@ -37,7 +51,10 @@ export default function DemoPage(props: any) {
       if (!content) {
         throw new Error('Please enter some text')
       }
-      const fullPrompt = prompt.replace('{email}', content)
+      if (!activePrompt || !activePrompt.prompt) {
+        throw new Error('No prompt chosen')
+      }
+      const fullPrompt = activePrompt.prompt.replace('{email}', content)
       setBusy(true)
       const t1 = new Date()
       const response = await fetch("/api/generate", {
@@ -66,9 +83,6 @@ export default function DemoPage(props: any) {
     }
   }
 
-  // TODO: add prompts selector to UI
-
-
   return (
     <div>
       <Head>
@@ -83,10 +97,33 @@ export default function DemoPage(props: any) {
               <form className="basis-1/2 flex flex-col gap-4"
                 onSubmit={onSubmit}
               >
-                <h1 className="text-2xl font-bold leading-[1.1] tracking-tighter sm:text-2xl md:text-2xl">
-                  Test the prompt
-                </h1>
-                <div>
+                  <div>
+                    <label htmlFor="location" className="block text-sm font-medium leading-6 text-gray-900">
+                      Choose prompt {activePrompt && activePrompt.name}
+                    </label>
+                    <select
+                      id="prompt-selector"
+                      name="prompt-selector"
+                      className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                      value={activePrompt?.name || ""}
+                      onChange={(e) => {
+                        const userInput = e.target.value
+                        const prompt = prompts.find((p: any) => p.name === userInput)
+                        if (prompt) {
+                          setActivePrompt(prompt)
+                        }
+                      }}
+                    >
+                      {prompts.map((prompt: any) => (
+                        <option 
+                          key={prompt.name} 
+                          value={prompt.name}
+                        >
+                          {prompt.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                   <textarea
                     name="email"
                     rows={10}
@@ -95,18 +132,20 @@ export default function DemoPage(props: any) {
                     value={content || ""}
                     onChange={(e) => setContent(e.target.value)}
                   />
-                </div>
-                <textarea
+                <pre className="whitespace-pre-wrap">
+                  {activePrompt && activePrompt.prompt}
+                </pre>
+                {/* <textarea
                   name="constraints"
                   rows={5}
                   placeholder={`Enter prompt for the ai`}
                   className="p-2 w-full prose prose-sm max-w-full min-h-fit whitespace-pre-wrap block border rounded-md bg-transparent text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                  value={prompt || ""}
+                  value={activePrompt.prompt || ""}
                   onChange={(event) => {
                     const userInput = event.target.value
                     setPrompt(userInput)
                   }}
-                />
+                /> */}
                 <button
                   type="submit" 
                   value="Generate"
