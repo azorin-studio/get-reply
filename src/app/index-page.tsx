@@ -1,15 +1,15 @@
 "use client";
 
-import Head from 'next/head'
-import Link from 'next/link'
-import hero from "../../public/hero.svg"
-import Image from 'next/image'
-import Examples from '~/components/Examples'
+import Head from 'next/head';
+import Image from 'next/image';
+import Link from 'next/link';
+import Examples from '~/components/Examples';
+import hero from "../../public/hero.svg";
 
-import EXAMPLES from '~/data/examples'
-import { useState } from 'react'
-import NewsletterForm from '~/components/NewsletterForm'
-import { ArrowUpRight } from 'lucide-react'
+import { ArrowUpRight } from 'lucide-react';
+import { useState } from 'react';
+import NewsletterForm from '~/components/NewsletterForm';
+import EXAMPLES from '~/data/examples';
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')

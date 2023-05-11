@@ -1,10 +1,11 @@
 "use client"
 
-import { Loader } from "lucide-react"
-import { useEffect, useState } from "react"
 import fetch from 'isomorphic-fetch'
+import { Loader } from "lucide-react"
 import ms from "ms"
-import { useSearchParams, useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
+import { useEffect, useState } from "react"
+import { useSupabase } from "~/app/supabase-provider"
 import usePrompts from "~/hooks/use-prompts"
 import { Prompt } from "~/types"
 
@@ -20,9 +21,12 @@ Mike Smith`
 const DEFAULT_RESULT = null
 
 export default function DemoPage(props: any) {
-  const router = useRouter()
   const searchParams = useSearchParams()
+  const { supabase } = useSupabase()
   const prompts = usePrompts()  
+  const router = useRouter()
+
+  const [creatingNew, setCreatingNew] = useState<boolean>(false)
   const [busy, setBusy] = useState<boolean>(false)
   const [result, setResult] = useState<null>(DEFAULT_RESULT)
   const [timer, setTimer] = useState<null | string>(null)
@@ -30,15 +34,64 @@ export default function DemoPage(props: any) {
   const [activePrompt, setActivePrompt] = useState<Prompt | null>(null)
   const [error, setError] = useState<null | string>(null)
 
+  const [user, setUser] = useState<any>(null)
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const { data: { user }, error } = await supabase.auth.getUser()
+      setUser(user)
+    }
+    fetchUser()
+  }, [])
+
   useEffect(() => {
     const promptName = searchParams.get('prompt') || 'followup1'
     const promptIndex = prompts.findIndex((p: any) => p.name === promptName)
-    // console.log({promptIndex, promptName, p: prompts[promptIndex]})
     if (promptIndex > -1) {
       setActivePrompt(prompts[promptIndex])
     }  
     router.replace(`/demo`)
   }, [prompts])
+
+  const deletePrompt = async () => {
+    if (!activePrompt || !activePrompt.prompt) {
+      throw new Error('No prompt chosen')
+    }
+
+    const { data, error } = await supabase
+      .from('prompts')
+      .delete()
+      .match({ id: activePrompt.id })
+  }
+
+  const saveNewPrompt = async () => {
+    if (!activePrompt || !activePrompt.prompt) {
+      throw new Error('No prompt chosen')
+    }
+
+    const { data, error } = await supabase
+      .from('prompts')
+      .insert([
+        { 
+          prompt: activePrompt.prompt, 
+          name: activePrompt.name, 
+          description: activePrompt.description,
+          user_id: user.id,
+        }
+      ])
+      .select()
+
+    if (error) {
+      throw new Error(error.message)
+    }
+
+    if (!data || data.length !== 1) {
+      throw new Error('Error saving prompt')
+    }
+
+    const newPrompt = data[0]
+    setActivePrompt(newPrompt as Prompt)
+  }
 
   async function onSubmit(event: any) {
     setBusy(false)
@@ -88,70 +141,106 @@ export default function DemoPage(props: any) {
     }
   }
 
-  const createNewPrompt = async (userInput: string) => {
-    if (userInput === 'new') {
-      const newPrompt = {
-        name: `new`,
-        description: `Prompt ${prompts.length+1}`,
-        prompt: userInput,
-        id: `new`,
-        created_at: new Date().toISOString(),
-      }
-      setActivePrompt(newPrompt)
-    }
-
-    const prompt = prompts.find((p: any) => p.name === userInput)
-    if (prompt) {
-      setActivePrompt(prompt)
-    }
-  }
-
   return (
     <main className="flex-grow h-full grid grid-cols-3 gap-4 rounded border">
       <div className="border p-2 rounded flex-grow">
-        <div>
-          <label htmlFor="location" className="block text-sm font-medium leading-6 text-gray-900">
-            Choose a prompt or create a new one
-          </label>
-          <select
-            id="prompt-selector"
-            name="prompt-selector"
-            className="mt-2 rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
-            value={activePrompt?.name || ""}
-            onChange={(e) => createNewPrompt(e.target.value)}
-          >
-            {prompts.map((prompt: any) => (
-              <option key={prompt.name} value={prompt.name}>
-                {prompt.name}
-              </option>
-            ))}
-            <option value="new">New prompt</option>
-          </select>
-        </div>
-        
-        {activePrompt?.name === 'new' ? 
-          <textarea
-            rows={10}
-            placeholder={`Enter prompt for the ai`}
-            className="text-sm w-full min-h-fit whitespace-pre-wrap block border rounded-md bg-transparent text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-            value={activePrompt?.prompt || ""}
-            onChange={(event) => {
-              const newPrompt = {
-                name: `new`,
-                description: `Prompt ${prompts.length+1}`,
-                prompt: event.target.value,
-                id: `new`,
-                created_at: new Date().toISOString(),
-              }
+        {!creatingNew && (  
+          <div> 
+            <div className='flex flex-row justify-between'>
+              <select
+                id="prompt-selector"
+                name="prompt-selector"
+                className="rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 text-sm"
+                value={activePrompt?.name || ""}
+                onChange={(e) => {
+                  const prompt = prompts.find((p: any) => p.name === e.target.value)
+                  if (prompt) {
+                    setActivePrompt(prompt)
+                  }
+                }}
+              >
+                {prompts.map((prompt: any) => (
+                  <option key={prompt.name} value={prompt.name}>
+                    {prompt.name}
+                  </option>
+                ))}
+              </select>
 
-              setActivePrompt(newPrompt)
-            }}
-          />
-          :
-          <div className="text-sm whitespace-pre-wrap">
-            {activePrompt?.prompt || ""}
+              <button 
+                className="text-sm text-blue-600"
+                onClick={(e) => {
+                  setCreatingNew(true)
+                  setActivePrompt({
+                    name: 'new',
+                    prompt: '',
+                    description: '',
+                    user_id: user.id,
+                  })
+                }}
+              >
+                + Create new
+              </button>
+              {user && user.id === activePrompt?.user_id && (
+                <button 
+                  className="text-sm text-blue-600"
+                  onClick={(e) => {
+                    deletePrompt()
+                  }}
+                >
+                  Delete
+                </button>
+              )}
+            </div>
+            <div className="text-sm whitespace-pre-wrap">
+              {activePrompt?.prompt || ""}
+            </div>
           </div>
-        }
+        )}
+        {creatingNew && (
+          <div>
+            <div className="p-2 flex flex-row justify-between">
+              <input 
+                type="text"
+                className='border p-1 rounded'
+                placeholder='Name'
+                onChange={(e) => {
+                  const newPrompt = {
+                    ...activePrompt,
+                    name: e.target.value,
+                  }
+                  setActivePrompt(newPrompt)
+                }}
+              />
+              <button 
+                className="text-sm text-blue-600"
+                onClick={saveNewPrompt}
+              >
+                Save
+              </button>
+              <button 
+                className="text-sm text-blue-600"
+                onClick={(e) => setCreatingNew(false)}
+              >
+                Cancel
+              </button>
+            </div>
+            <textarea
+              rows={10}
+              placeholder={`Enter prompt for the ai`}
+              className="text-sm w-full min-h-fit whitespace-pre-wrap block border rounded-md bg-transparent text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+              value={activePrompt?.prompt || ""}
+              onChange={(event) => {
+                const newPrompt = {
+                  ...activePrompt,
+                  prompt: event.target.value,
+                }
+
+                setActivePrompt(newPrompt)
+              }}
+            />
+          </div>
+        )}
+        
       </div>
       
       <div>

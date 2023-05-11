@@ -126,21 +126,21 @@ export interface Database {
           description: string | null
           id: string
           name: string | null
-          prompt_list: Json[] | null
+          steps: Json[] | null
         }
         Insert: {
           created_at?: string | null
           description?: string | null
           id?: string
           name?: string | null
-          prompt_list?: Json[] | null
+          steps?: Json[] | null
         }
         Update: {
           created_at?: string | null
           description?: string | null
           id?: string
           name?: string | null
-          prompt_list?: Json[] | null
+          steps?: Json[] | null
         }
       }
     }

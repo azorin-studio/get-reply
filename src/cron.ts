@@ -74,7 +74,7 @@ export const generate = async (log: Log): Promise<Log> => {
 
   const sequence = await getSequenceFromLog(log)
 
-  if (!sequence || !sequence.prompt_list || sequence.prompt_list.length === 0) {
+  if (!sequence || !sequence.steps || sequence.steps.length === 0) {
     log = await appendToLog(log, {
       status: 'error',
       errorMessage: `No prompt list on sequence`
@@ -83,7 +83,7 @@ export const generate = async (log: Log): Promise<Log> => {
   }
 
   try {
-    const generations = await Promise.all(sequence.prompt_list.map(async (item: any) => {
+    const generations = await Promise.all(sequence.steps.map(async (item: any) => {
       const prompt_id = item.prompt_id
       const { error, data: prompts } = await supabaseAdminClient
         .from('prompts')
@@ -144,7 +144,7 @@ export const verify = async (log: Log): Promise<Log> => {
   }
 
   const sequence = await getSequenceFromLog(log)
-  if (!sequence || !sequence.prompt_list || sequence.prompt_list.length === 0) {
+  if (!sequence || !sequence.steps || sequence.steps.length === 0) {
     const sequenceName = getSequenceName(log)
     console.log(`Could not find sequence:${sequenceName}`)
     log = await appendToLog(log, {
@@ -176,7 +176,7 @@ export const createDraftAndNotify = async (log: Log): Promise<Log> => {
     return log
   }
 
-  if (!sequence.prompt_list) {
+  if (!sequence.steps) {
     log = await appendToLog(log, {
       status: 'error',
       errorMessage: 'No prompt list found for this sequence'
@@ -212,7 +212,7 @@ export const createDraftAndNotify = async (log: Log): Promise<Log> => {
   }
 
   // only one prompt can be placed per day
-  const todaysPromptIndex = sequence.prompt_list.findIndex((prompt: any) => {
+  const todaysPromptIndex = sequence.steps.findIndex((prompt: any) => {
     const today = new Date()
     const dateToSend = addDays(parseISO(log!.date!), prompt.delay)
     return daysBetween(today, dateToSend) === 0
@@ -226,7 +226,7 @@ export const createDraftAndNotify = async (log: Log): Promise<Log> => {
     return log
   }
 
-  const isLastPrompt = todaysPromptIndex === sequence.prompt_list.length - 1
+  const isLastPrompt = todaysPromptIndex === sequence.steps.length - 1
 
   const draft = await createGmailDraftInThread(
     log.to as any[],

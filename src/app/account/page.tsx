@@ -1,11 +1,11 @@
-import Link from 'next/link'
-import { headers, cookies } from 'next/headers'
 import { createServerComponentSupabaseClient } from '@supabase/auth-helpers-nextjs'
+import { cookies, headers } from 'next/headers'
+import Link from 'next/link'
 import { redirect } from 'next/navigation'
-import { Database } from '~/database.types'
-import { Sequence } from '~/types'
 import UnpureLogsList from '~/components/UnpureLogsList'
 import UnpurePromptItem from '~/components/UnpurePromptItem'
+import { Database } from '~/database.types'
+import { Sequence } from '~/types'
 
 export const revalidate = 0
 
@@ -81,7 +81,7 @@ export default async function Page() {
         </div>
         <div className='flex flex-col gap-2'>
         <div className="font-bold">
-          Get started
+          My sequences
         </div>
 
         <div className="flex flex-col gap-2">
@@ -96,17 +96,17 @@ export default async function Page() {
                   {sequence.name}@getreply.app
                 </span> {' '}so that
               </div>
-              {sequence.prompt_list?.map((prompt, index) => (
+              {sequence.steps?.map((prompt, index) => (
                 <>
                   <UnpurePromptItem 
                     key={prompt!.prompt_id}
-                    id={prompt!.prompt_id} 
+                    id={prompt!.prompt_id}
                     compact={true}
                   />
                   <div className="text-sm">
                     will run after {prompt!.delay} days
                   </div>
-                  {(sequence.prompt_list && index < sequence.prompt_list.length - 1) && (
+                  {(sequence.steps && index < sequence.steps.length - 1) && (
                     <div className="text-sm">
                       and then
                     </div>

@@ -1,5 +1,5 @@
 
-import { Database, Json as JsonType } from "./database.types"
+import { Database, Json as JsonType } from "./database.types";
 
 export type Status = 'pending' | 'verified' | 'generated' | 'drafted'
 
@@ -46,9 +46,9 @@ export type Prompt = Database['public']['Tables']['prompts']['Row']
 
 export type Sequence = Omit<
   Database['public']['Tables']['sequences']['Row'],
-  'prompt_list'
+  'steps'
 > & {
-  prompt_list?: {
+  steps?: {
     prompt_id: string;
     delay:    number;
   }[] | null
