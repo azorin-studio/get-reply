@@ -1,9 +1,9 @@
-import { createDraftAndNotify, handleGenerateEvent, handleProcessEmailEvent, handleVerifyEvent } from "./cron"
 import testEmail from '~/data/test-email.json'
-import { IncomingEmail, Log, Profile } from "./types"
-import supabaseAdminClient, { appendToLog, getProfileFromEmail } from "./supabase"
-import { deleteDraft } from "./google"
 import { callGPT35Api } from "./chat-gpt"
+import { createDraftAndNotify, handleGenerateEvent, handleProcessEmailEvent, handleVerifyEvent } from "./cron"
+import { deleteDraft } from "./google"
+import supabaseAdminClient, { appendToLog, getProfileFromEmail } from "./supabase"
+import { IncomingEmail, Log, Profile } from "./types"
 
 jest.mock('./chat-gpt')
 
@@ -47,7 +47,7 @@ describe('cron:dates', () => {
   })
 
   it('should check if sequence should be sent today', async () => {
-    // Important, testEmail must be addressed to followup@getreply.app
+    // Important, testEmail must be addressed to test@getreply.app
     // in order to have the correct sequence
 
     // three days ago

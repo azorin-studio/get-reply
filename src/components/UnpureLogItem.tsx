@@ -1,10 +1,10 @@
 'use client'
 
-import LogBadge from '~/components/LogBadge'
 import { Loader } from "lucide-react"
-import { Log } from '~/types'
-import { useSupabase } from '~/app/supabase-provider'
 import { useEffect, useState } from 'react'
+import { useSupabase } from '~/app/supabase-provider'
+import LogBadge from '~/components/LogBadge'
+import { Log } from '~/types'
 import LogBody from './LogBody'
 
 export const revalidate = 0
@@ -58,6 +58,7 @@ const UnpureLogItem = (props: { id: string }) => {
       <LogBody
         log={log} 
       />
+      <div className="text-red-500">{log.errorMessage}</div>
     </div>
   )
 }

@@ -1,5 +1,5 @@
+import { ArrowUpRight, MailPlus } from 'lucide-react'
 import Link from 'next/link'
-import { MailPlus, Github, ArrowUpRight } from 'lucide-react'
 
 export default function Header(props: { user?: object | null }) {
   const { user = null } = props
@@ -25,7 +25,7 @@ export default function Header(props: { user?: object | null }) {
         </div>
         <nav className="flex flex-row gap-4">
           <Link
-            href="/demo"
+            href="/prompts/new"
             className="items-center space-x-2 flex hover:underline"
           >
             <ArrowUpRight />
@@ -44,10 +44,10 @@ export default function Header(props: { user?: object | null }) {
           </Link> */}
           {user && (
             <Link
-              href="/account"
+              href="/sequences"
               className="items-center space-x-2 flex font-bold sm:inline-block hover:underline"
             >
-              My Account
+              My Sequences
             </Link>
           )}
           {/* {user && (

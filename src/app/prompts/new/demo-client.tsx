@@ -50,7 +50,7 @@ export default function DemoPage(props: any) {
     if (promptIndex > -1) {
       setActivePrompt(prompts[promptIndex])
     }  
-    router.replace(`/demo`)
+    router.replace(`/prompts/new`)
   }, [prompts])
 
   const deletePrompt = async () => {

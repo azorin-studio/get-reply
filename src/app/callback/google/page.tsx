@@ -1,9 +1,9 @@
 import 'server-only'
 
 import { createServerComponentSupabaseClient } from '@supabase/auth-helpers-nextjs'
-import { headers, cookies } from "next/headers"
-import { Database } from '~/database.types'
+import { cookies, headers } from "next/headers"
 import { redirect } from 'next/navigation'
+import { Database } from '~/database.types'
 
 export const revalidate = 0
 
@@ -28,7 +28,7 @@ export default async function Page() {
 
     if (error) throw new Error(error.message)
 
-    return redirect('/account')
+    return redirect('/sequences')
   }
 
   return (

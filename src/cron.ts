@@ -36,12 +36,6 @@ export const getSequenceFromLog = async (log: Log) => {
     .select()
     .eq('name', toGetReply)
 
-  // console.log(
-  //   toGetReply,
-  //   sequences, 
-  //   error
-  // )
-
   if (error) {
     throw error
   }

@@ -1,5 +1,5 @@
 import NewSequence from '~/app/sequences/new/new-sequence-client'
 
-export default async function Page() {
-  return <NewSequence />
+export default async function Page(params: any) {
+  return <NewSequence {...params} />
 }

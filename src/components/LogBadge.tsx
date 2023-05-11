@@ -1,8 +1,8 @@
 'use client'
-import Link from 'next/link'
-import { Log } from '~/types'
 import { formatDistance } from 'date-fns'
+import Link from 'next/link'
 import { useSupabase } from '~/app/supabase-provider'
+import { Log } from '~/types'
 
 export const revalidate = 0
 
@@ -19,7 +19,7 @@ export default function LogBadge(props: { log: Log }) {
     if (error) {
       console.error(error)
     } else {
-      window.location.href = '/account'
+      window.location.href = '/sequences'
     }
   }
 
@@ -27,21 +27,21 @@ export default function LogBadge(props: { log: Log }) {
     <div className="border p-2 rounded flex flex-col gap-4">
       <div className='flex justify-between'>
         <div className="inline-flex flex-row gap-2">
-          <div className="truncate text-sm min-w-32">
+          <div className="truncate text-sm min-w-64">
             <Link 
               href={`/logs/${log.id}`}
               className='text-blue-500 underline '
             >
-              {log.id}
+              {log.subject}
             </Link>
           </div>
-          <div className="text-sm">
-            { log.created_at && formatDistance(new Date(log.created_at), new Date(), { addSuffix: true }) }
-          </div>
+          
         </div>
 
         <div className="flex flex-row gap-4 items-center text-sm">
-          <div>{log.status}</div>
+        <div className="text-sm">
+            { log.created_at && formatDistance(new Date(log.created_at), new Date(), { addSuffix: true }) }
+          </div>
           <Link 
             href={`#`}
             className='text-red-500 underline text-sm'
@@ -55,6 +55,10 @@ export default function LogBadge(props: { log: Log }) {
             Delete
           </Link>
         </div>
+      </div>
+
+      <div>
+        {log.status}
       </div>
       
       <div className="">

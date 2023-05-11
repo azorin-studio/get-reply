@@ -1,8 +1,7 @@
 'use client'
 import Link from 'next/link'
-import { Prompt } from '~/types'
-import { formatDistance } from 'date-fns'
 import { useSupabase } from '~/app/supabase-provider'
+import { Prompt } from '~/types'
 
 export const revalidate = 0
 
@@ -19,7 +18,7 @@ export default function PromptBadge(props: { prompt: Prompt, compact?: boolean }
     if (error) {
       console.error(error)
     } else {
-      window.location.href = '/account'
+      window.location.href = '/sequences'
     }
   }
 

@@ -1,4 +1,5 @@
 "use client"
+
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import slugify from "slugify"
@@ -23,6 +24,38 @@ export default function DemoPage(props: any) {
     }
     fetchUser()
   }, [])
+
+  useEffect(() => {
+    const fetchSequence = async () => {
+      if (!props.params.id) {
+        return
+      }
+      const { data: sequences, error } = await supabase
+        .from("sequences")
+        .select("*")
+        .eq("id", props.params.id)
+        .limit(1)
+
+      if (error || !sequences) {
+        console.log("error", error, sequences)
+        setError(error?.message || "Error fetching sequence")
+        throw error
+      } 
+
+      if (sequences.length === 0) {
+        setError("Sequence not found")
+        return
+      }
+
+      const sequence = sequences[0]
+
+      setName(sequence.name)
+      setDescription(sequence.description)
+      setSteps(sequence.steps)
+    }
+
+    fetchSequence()
+  }, [props.params?.id])
 
   const saveSequence = async () => {
     setError(null)
@@ -70,6 +103,7 @@ export default function DemoPage(props: any) {
             type="text"
             className='border p-1 rounded'
             placeholder='Name sequence'
+            defaultValue={name}
             onChange={(e) => {
               setName(slugify(e.target.value))
             }}
