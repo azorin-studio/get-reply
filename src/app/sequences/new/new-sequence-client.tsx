@@ -27,7 +27,7 @@ export default function DemoPage(props: any) {
 
   useEffect(() => {
     const fetchSequence = async () => {
-      if (!props.params.id) {
+      if (!props.params || !props.params.id) {
         return
       }
       const { data: sequences, error } = await supabase

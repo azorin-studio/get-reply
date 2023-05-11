@@ -1,12 +1,12 @@
 
-import "~/styles/globals.css"
-import SupabaseProvider from "./supabase-provider"
-import { headers, cookies } from "next/headers"
-import Header from "~/components/Header"
-import Footer from "~/components/Footer"
 import { createServerComponentSupabaseClient } from "@supabase/auth-helpers-nextjs"
 import { Analytics } from '@vercel/analytics/react'
+import { cookies, headers } from "next/headers"
+import Footer from "~/components/Footer"
+import Header from "~/components/Header"
 import { Database } from "~/database.types"
+import "~/styles/globals.css"
+import SupabaseProvider from "./supabase-provider"
 
 export const metadata = {
   title: "GetReply",

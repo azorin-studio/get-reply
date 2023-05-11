@@ -37,10 +37,18 @@ export const refreshAccessToken = async (google_refresh_token: string) => {
   })
 
   const newTokens = await authResponse.json()
+
+  if (!authResponse.ok) {
+
+    // should delete the token from the user so they can re-authenticate
+    throw new Error(`Gmail ${newTokens.error_description.toLowerCase()}`)
+  }
+
   const tokens = {
     refresh_token: google_refresh_token,
     access_token: newTokens.access_token
   }
+
   return tokens
 }
 
@@ -77,7 +85,6 @@ export const findThread = async (subject: string, to: Contact[], google_refresh_
   oauth2Client.setCredentials(tokens)
   const gmail = google.gmail({ version: 'v1', auth: oauth2Client })
   const q = `${subject} to: ${to.map(t => t!.address).join(', ')}`
-  // console.log({ q })
   const threads = await gmail.users.threads.list({
     userId: 'me',
     q,

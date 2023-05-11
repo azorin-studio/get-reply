@@ -53,6 +53,13 @@ export default async function Page() {
         <h1 className="text-2xl font-bold">
           My sequences
         </h1>
+        <Link 
+          href="/sequences/new"
+          className="text-blue-500 hover:underline"  
+        >
+            Create a new sequence
+        </Link>
+
         <div className="flex flex-row justify-between">
           <div>
             <div className="font-bold">

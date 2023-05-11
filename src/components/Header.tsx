@@ -50,14 +50,14 @@ export default function Header(props: { user?: object | null }) {
               My Sequences
             </Link>
           )}
-          {/* {user && (
+          {user && (
             <Link
               href="/logout"
-              className="items-center space-x-2 flex font-bold sm:inline-block hover:underline"
+              className="items-center space-x-2 flex font-bold sm:inline-block hover:underline text-red-600"
             >
               Logout
             </Link>
-          )} */}
+          )}
           {!user && (
             <Link
               href="/login"

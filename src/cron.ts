@@ -196,11 +196,19 @@ export const createDraftAndNotify = async (log: Log): Promise<Log> => {
     return log
   }
 
-  const thread = await findThread(log.subject!, log.to as any[], profile.google_refresh_token)
-  if (!thread) {
+  try {
+    const thread = await findThread(log.subject!, log.to as any[], profile.google_refresh_token)
+    if (!thread) {
+      log = await appendToLog(log, {
+        status: 'error',
+        errorMessage: 'Could not find thread'
+      })
+      return log
+    }
+  } catch (err: any) {
     log = await appendToLog(log, {
       status: 'error',
-      errorMessage: 'Could not find thread'
+      errorMessage: err.message || 'Could not find thread'
     })
     return log
   }

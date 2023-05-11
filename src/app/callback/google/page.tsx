@@ -2,7 +2,6 @@ import 'server-only'
 
 import { createServerComponentSupabaseClient } from '@supabase/auth-helpers-nextjs'
 import { cookies, headers } from "next/headers"
-import { redirect } from 'next/navigation'
 import { Database } from '~/database.types'
 
 export const revalidate = 0
@@ -17,19 +16,19 @@ export default async function Page() {
     data: { session },
   } = await supabase.auth.getSession()
 
-  if(session) {
-    console.log('Trying to add google_refresh_token to profile')
+  // if(session) {
+  //   console.log('Trying to add google_refresh_token to profile')
 
-    const { error } = await supabase
-      .from('profiles')
-      .update({ google_refresh_token: session.provider_refresh_token })
-      .eq('id', session.user.id)
-      .select('*')
+  //   const { error } = await supabase
+  //     .from('profiles')
+  //     .update({ google_refresh_token: session.provider_refresh_token })
+  //     .eq('id', session.user.id)
+  //     .select('*')
 
-    if (error) throw new Error(error.message)
+  //   if (error) throw new Error(error.message)
 
-    return redirect('/sequences')
-  }
+  //   return redirect('/sequences')
+  // }
 
   return (
     <main className="flex-1 flex flex-col p-4 lg:px=2 gap-4">
