@@ -196,8 +196,9 @@ export const createDraftAndNotify = async (log: Log): Promise<Log> => {
     return log
   }
 
+  let thread: any = null
   try {
-    const thread = await findThread(log.subject!, log.to as any[], profile.google_refresh_token)
+    thread = await findThread(log.subject!, log.to as any[], profile.google_refresh_token)
     if (!thread) {
       log = await appendToLog(log, {
         status: 'error',
@@ -219,6 +220,8 @@ export const createDraftAndNotify = async (log: Log): Promise<Log> => {
     const dateToSend = addDays(parseISO(log!.date!), prompt.delay)
     return daysBetween(today, dateToSend) === 0
   })
+
+  console.log(log.date, sequence.steps)
 
   if (todaysPromptIndex === undefined || todaysPromptIndex === null || todaysPromptIndex === -1) {
     log = await appendToLog(log, {

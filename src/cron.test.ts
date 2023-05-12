@@ -51,7 +51,9 @@ describe('cron:dates', () => {
     // in order to have the correct sequence
 
     // three days ago
-    testEmail.date = new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString()
+    // testEmail.date = new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString()
+    // today
+    testEmail.date = new Date(Date.now()).toISOString()
 
     testLog = await handleProcessEmailEvent(testEmail as IncomingEmail)
 

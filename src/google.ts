@@ -39,7 +39,6 @@ export const refreshAccessToken = async (google_refresh_token: string) => {
   const newTokens = await authResponse.json()
 
   if (!authResponse.ok) {
-
     // should delete the token from the user so they can re-authenticate
     throw new Error(`Gmail ${newTokens.error_description.toLowerCase()}`)
   }

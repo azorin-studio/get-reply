@@ -49,9 +49,9 @@ export default function DemoPage(props: any) {
 
       const sequence = sequences[0]
 
-      setName(sequence.name)
-      setDescription(sequence.description)
-      setSteps(sequence.steps)
+      if (sequence.name) setName(sequence.name)
+      if (sequence.description) setDescription(sequence.description)
+      if (sequence.steps) setSteps(sequence.steps)
     }
 
     fetchSequence()
@@ -123,7 +123,7 @@ export default function DemoPage(props: any) {
               })
               setSteps(newSteps)
             }}
-            onRemoveStep={(e) => {
+            onRemoveStep={() => {
               const newSteps = [...steps].filter(function(s) {
                 return s.id !== step.id
               })

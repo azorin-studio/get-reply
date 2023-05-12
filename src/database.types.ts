@@ -104,6 +104,7 @@ export interface Database {
           id: string
           name: string | null
           prompt: string | null
+          user_id: string | null
         }
         Insert: {
           created_at?: string | null
@@ -111,6 +112,7 @@ export interface Database {
           id?: string
           name?: string | null
           prompt?: string | null
+          user_id?: string | null
         }
         Update: {
           created_at?: string | null
@@ -118,6 +120,7 @@ export interface Database {
           id?: string
           name?: string | null
           prompt?: string | null
+          user_id?: string | null
         }
       }
       sequences: {
@@ -127,6 +130,7 @@ export interface Database {
           id: string
           name: string | null
           steps: Json[] | null
+          user_id: string | null
         }
         Insert: {
           created_at?: string | null
@@ -134,6 +138,7 @@ export interface Database {
           id?: string
           name?: string | null
           steps?: Json[] | null
+          user_id?: string | null
         }
         Update: {
           created_at?: string | null
@@ -141,6 +146,7 @@ export interface Database {
           id?: string
           name?: string | null
           steps?: Json[] | null
+          user_id?: string | null
         }
       }
     }

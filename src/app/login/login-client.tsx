@@ -1,4 +1,5 @@
 "use client"
+import { redirect } from 'next/navigation'
 import { useState } from 'react'
 import { useSupabase } from "~/app/supabase-provider"
 
@@ -19,11 +20,11 @@ export default function LoginPage() {
       },
     })
     
-    // setRedirectURL('/callback/google')
+    setRedirectURL('/callback/google')
   }
 
   if (redirectURL) {
-    // redirect(redirectURL)
+    redirect(redirectURL)
   }
 
   return (
