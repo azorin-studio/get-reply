@@ -221,8 +221,6 @@ export const createDraftAndNotify = async (log: Log): Promise<Log> => {
     return daysBetween(today, dateToSend) === 0
   })
 
-  console.log(log.date, sequence.steps)
-
   if (todaysPromptIndex === undefined || todaysPromptIndex === null || todaysPromptIndex === -1) {
     log = await appendToLog(log, {
       status: 'error',
