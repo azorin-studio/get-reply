@@ -1,10 +1,10 @@
 'use client'
 
+import { Loader } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { useSupabase } from '~/app/supabase-provider'
 import LogBadge from '~/components/LogBadge'
 import { Log } from '~/types'
-import { useSupabase } from '~/app/supabase-provider'
-import { useEffect, useState } from 'react'
-import { Loader } from 'lucide-react'
 
 export const revalidate = 0
 
@@ -34,9 +34,6 @@ const UnpureLogsList = () => {
   return (      
     <div className="flex flex-col gap-4">
       <div className="inline-flex">
-        <div className="font-bold">
-          Logs
-        </div>
         {refreshing && <Loader className="animate-spin ml-2 text-slate-300" />}
       </div>
       {logs && logs.map((log) => (<LogBadge key={log.id} log={log} />))}
