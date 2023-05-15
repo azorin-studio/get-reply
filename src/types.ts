@@ -13,22 +13,16 @@ export interface Header {
   value: string;
 }
 
+// export type Log = Database['public']['Tables']['logs']['Insert']
 export type Log = Omit<
     Database['public']['Tables']['logs']['Row'], 
-    'id' | 'from' | 'to' | 'bcc' | 'cc' | 'user_id' | 'created_at'
+    'from' | 'to' | 'bcc' | 'cc'
   > & {
-  id?: string;
-  created_at?: string;
-  user_id?: string | null | undefined;
-
-  // // this is done to stop it being a Json type, because of this issue:
-  // // Property 'address' does not exist on type 'string | number | boolean | { [key: string]: Json; } | Json[]'.
-  // // Property 'address' does not exist on type 'string'
-  status: Status;
-  from: Contact | null;
-  to: Contact[] | null;
-  bcc: Contact[] | null;
-  cc: Contact[] | null;
+  from: any;
+  to: any[] | null;
+  bcc: any[] | null;
+  cc: any[] | null;
+  sequence?: Sequence;
 }
 
 export type IncomingEmail = Pick<Log, 'bcc' | 'cc' | 'date' | 'from' | 'headers' | 'html' | 'messageId' | 'subject' | 'text' | 'to' > & {

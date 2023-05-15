@@ -1,16 +1,14 @@
 'use client'
 
-import PromptBadge from '~/components/PromptBadge'
 import { Loader } from "lucide-react"
-import { Prompt } from '~/types'
-import { useSupabase } from '~/app/supabase-provider'
 import { useEffect, useState } from 'react'
-import PromptBody from './PromptBody'
+import { useSupabase } from '~/app/supabase-provider'
+import { Prompt } from '~/types'
 
 export const revalidate = 0
 
-const UnpurePromptItem = (props: { id: string, compact?: boolean }) => {
-  const { id, compact = false } = props
+const UnpureStep = (props: { prompt_id: string, delay: number, generation: string }) => {
+  const { prompt_id, delay, generation } = props
   const { supabase } = useSupabase()
   const [prompt, setPrompt] = useState<Prompt | null>(null)
   const [refreshing, setRefreshing] = useState<boolean>(false)
@@ -21,7 +19,7 @@ const UnpurePromptItem = (props: { id: string, compact?: boolean }) => {
       const { data } = await supabase
         .from('prompts')
         .select('*')
-        .eq('id', id)
+        .eq('id', prompt_id)
         .limit(1)
         let prompt = null
         if (data && data.length > 0) {
@@ -31,33 +29,21 @@ const UnpurePromptItem = (props: { id: string, compact?: boolean }) => {
       setPrompt(prompt)
       setRefreshing(false)
     }
-    // let interval = setInterval(fetchPrompt, 5000)
     fetchPrompt()
-    // return (() => {
-    //   clearInterval(interval)
-    // })
   }, [])
-
-  if (!prompt) return <div></div>
 
   return (      
     <div className="flex flex-col gap-4">
       {refreshing &&
         <Loader className="animate-spin ml-2" />
       }
-      <PromptBadge
-        compact={compact}
-        prompt={prompt} 
-      />
-
-      {!compact && 
-        <PromptBody
-          prompt={prompt} 
-        />
+      {prompt &&
+        <div className=''>
+          {prompt.prompt}
+        </div>
       }
-
     </div>
   )
 }
 
-export default UnpurePromptItem
+export default UnpureStep

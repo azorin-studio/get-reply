@@ -2,7 +2,6 @@ import { createServerComponentSupabaseClient } from '@supabase/auth-helpers-next
 import { cookies, headers } from 'next/headers'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
-import UnpurePromptItem from '~/components/UnpurePromptItem'
 import { Database } from '~/database.types'
 import { Sequence } from '~/types'
 export const revalidate = 0
@@ -78,11 +77,7 @@ export default async function Page() {
               </div>
               {sequence.steps?.map((prompt, index) => (
                 <>
-                  <UnpurePromptItem 
-                    key={prompt!.prompt_id}
-                    id={prompt!.prompt_id}
-                    compact={true}
-                  />
+                  promt {prompt!.prompt_id} {' '}
                   <div className="text-sm">
                     will run after {prompt!.delay} days
                   </div>

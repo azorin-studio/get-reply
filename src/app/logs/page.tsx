@@ -1,9 +1,9 @@
 import { createServerComponentSupabaseClient } from '@supabase/auth-helpers-nextjs'
 import { cookies, headers } from 'next/headers'
 import { redirect } from 'next/navigation'
-import UnpureLogsList from '~/components/UnpureLogsList'
+import LogBadge from '~/components/LogBadge'
 import { Database } from '~/database.types'
-import { Sequence } from '~/types'
+import { Log } from '~/types'
 
 export const revalidate = 0
 
@@ -17,33 +17,17 @@ export default async function Page() {
     data: { session },
   } = await supabase.auth.getSession()
 
-  const { data } = await supabase
-    .from('sequences')
-    .select('*')
-    .order('created_at', { ascending: false })
-
-  const sequences = data as Sequence[]
-
   if (!session) {
     console.log('My Account: session does not exist, redirecting to /login')
     return redirect('/login') 
   }
 
-  const { data: profiles } = await supabase
-    .from('profiles')
-    .select("*")
-    .eq('id', session.user.id)
-    .limit(1)
+  const { data } = await supabase
+    .from('logs')
+    .select('*')
+    .order('created_at', { ascending: false })
 
-  let profile = null
-  if (profiles && profiles.length > 0) {
-    profile = profiles[0]
-  }
-
-  if (!profile) {
-    console.log('My Account: profile does not exist, redirecting to /login')
-    return redirect('/login') 
-  }
+  const logs: Log[] = data || []
 
   return (
     <main className="max-w-2xl mx-auto p-4 flex flex-col font-sans text-slate-800 antialiased">
@@ -51,7 +35,11 @@ export default async function Page() {
         Logs
       </h1>
       
-      <UnpureLogsList />
+      <div className="flex flex-col gap-1">
+        <div className='divide-y border rounded'>
+          {logs && logs.map((log) => (<LogBadge key={log.id} log={log} />))}
+        </div>
+      </div>
     </main>
   )
 }
