@@ -44,7 +44,7 @@ export default function LogBadge(props: { log: Log }) {
   return (
     <Link
       ref={hoverRef} 
-      className="p-1 flex flex-row gap-4 w-full items-center hover:bg-slate-50"
+      className="p-2 flex flex-row gap-4 w-full items-center hover:bg-slate-50"
       href={`/logs/${log.id}`}
     >
         <div

@@ -34,8 +34,8 @@ export default async function Page() {
       <h1 className="text-2xl font-bold">
         Logs
       </h1>
-      
-      <div className="flex flex-col gap-1">
+
+      <div className="flex flex-col gap-1 mt-12">
         <div className='divide-y border rounded'>
           {logs && logs.map((log) => (<LogBadge key={log.id} log={log} />))}
         </div>

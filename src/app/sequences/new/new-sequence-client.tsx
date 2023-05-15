@@ -94,64 +94,69 @@ export default function DemoPage(props: any) {
   }
 
   return (
-    <main className="flex-grow h-full grid grid-cols-3 gap-4 rounded">
-      <div></div>
-      
-      <div>
-        <div>
-          <input 
-            type="text"
-            className='border p-1 rounded'
-            placeholder='Name sequence'
-            defaultValue={name}
-            onChange={(e) => {
-              setName(slugify(e.target.value))
-            }}
-          />
-          <div className="text-sm">Sequence will be available at: {name}@getreply.app</div>
-        </div>
-        {steps.map((step) => (
-          <Step
-            key={step.id}
-            step={step}
-            onChange={(changedStep: any) => {
-              const newSteps = [...steps].map(function(s) {
-                if (s.id === step.id) {
-                  return changedStep
-                }
-                return s
-              })
-              setSteps(newSteps)
-            }}
-            onRemoveStep={() => {
-              const newSteps = [...steps].filter(function(s) {
-                return s.id !== step.id
-              })
-              setSteps(newSteps)
-            }}
-          />
-        ))}
-        <button
+    <main className="max-w-2xl mx-auto p-4 flex flex-col font-sans text-slate-800 antialiased">
+      <div className="flex flex-col gap-2 rounded">      
+        <input 
+          type="text"
           className='border p-1 rounded'
-          onClick={(e) => {
-            setSteps([...steps, {
-              id: Math.random().toString(36).substring(7),
-              prompt_id: prompts && prompts[0].id,
-              delay: 0,
-            }])
+          placeholder='Name sequence'
+          defaultValue={name}
+          onChange={(e) => {
+            setName(slugify(e.target.value))
           }}
-        >
-          Add step
-        </button>
+        />
 
-        <button
-          className='border p-1 rounded'
-          onClick={(e) => {
-            saveSequence()
-          }}
-        >
-          Save sequence
-        </button>
+        <div className="text-sm">Sequence will be available at: {name}@getreply.app</div>
+
+        <div className="divide-y border rounded">
+          {steps.map((step) => (
+            <Step
+              key={step.id}
+              step={step}
+              onChange={(changedStep: any) => {
+                const newSteps = [...steps].map(function(s) {
+                  if (s.id === step.id) {
+                    return changedStep
+                  }
+                  return s
+                })
+                setSteps(newSteps)
+              }}
+              onRemoveStep={() => {
+                const newSteps = [...steps].filter(function(s) {
+                  return s.id !== step.id
+                })
+                setSteps(newSteps)
+              }}
+            />
+          ))}
+        </div>
+        
+        <div>
+          <button
+            className='border p-1 rounded text-sm'
+            onClick={(e) => {
+              setSteps([...steps, {
+                id: Math.random().toString(36).substring(7),
+                prompt_id: prompts && prompts[0].id,
+                delay: 0,
+              }])
+            }}
+          >
+            + Add step
+          </button>
+        </div>
+
+        <div>
+          <button
+            className='border p-1 rounded mt-4 text-sm'
+            onClick={(e) => {
+              saveSequence()
+            }}
+          >
+            Save sequence
+          </button>
+        </div>
         <div>{error}</div>
       </div>
     </main>

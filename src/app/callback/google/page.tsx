@@ -28,7 +28,7 @@ export default async function Page() {
 
     if (error) throw new Error(error.message)
 
-    return redirect('/sequences')
+    return redirect('/logs')
   }
 
   return (

@@ -11,7 +11,7 @@ export default function Step(props: {
   const prompts = usePrompts()
   
   return (
-    <div key={step.id} className='border p-1 rounded'>
+    <div key={step.id} className='p-1 flex flex-row gap-2 items-center'>
       <select
         id="prompt-selector"
         name="prompt-selector"
@@ -36,7 +36,7 @@ export default function Step(props: {
           </option>
         ))}
       </select>
-      after 
+      <div>after</div>
       <select
         id="prompt-selector"
         name="prompt-selector"
@@ -57,8 +57,9 @@ export default function Step(props: {
           </option>
         ))}
       </select>
+      <div>days</div>
       <button
-        className='border p-1 rounded'
+        className='border px-2 rounded'
         onClick={() => {onRemoveStep(step)}}
       >
         x

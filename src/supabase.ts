@@ -57,7 +57,7 @@ export const createLog = async(incomingEmail: IncomingEmail) => {
     generations: null,
     draftIds: null,
     sequence_id: null,
-    threadId: null,
+    threadId: null
   }
 
   const { error, data: newLogs } = await supabaseAdminClient

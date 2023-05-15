@@ -15,14 +15,14 @@ export interface Header {
 
 // export type Log = Database['public']['Tables']['logs']['Insert']
 export type Log = Omit<
-    Database['public']['Tables']['logs']['Row'], 
+    Database['public']['Tables']['logs']['Insert'], 
     'from' | 'to' | 'bcc' | 'cc'
   > & {
   from: any;
   to: any[] | null;
   bcc: any[] | null;
   cc: any[] | null;
-  sequence?: Sequence;
+  sequence?: Sequence | null;
 }
 
 export type IncomingEmail = Pick<Log, 'bcc' | 'cc' | 'date' | 'from' | 'headers' | 'html' | 'messageId' | 'subject' | 'text' | 'to' > & {
@@ -39,11 +39,12 @@ export type Profile = Database['public']['Tables']['profiles']['Row']
 export type Prompt = Database['public']['Tables']['prompts']['Insert']
 
 export type Sequence = Omit<
-  Database['public']['Tables']['sequences']['Row'],
+  Database['public']['Tables']['sequences']['Insert'],
   'steps'
 > & {
-  steps?: {
-    prompt_id: string;
-    delay:    number;
-  }[] | null
+  // steps?: {
+  //   prompt_id: string;
+  //   delay:    number;
+  // }[] | null
+  steps?: any[] | null
 }

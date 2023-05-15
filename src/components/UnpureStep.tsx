@@ -1,14 +1,20 @@
 'use client'
 
-import { Loader } from "lucide-react"
+import { add, format } from 'date-fns'
 import { useEffect, useState } from 'react'
 import { useSupabase } from '~/app/supabase-provider'
 import { Prompt } from '~/types'
 
 export const revalidate = 0
 
-const UnpureStep = (props: { prompt_id: string, delay: number, generation: string }) => {
-  const { prompt_id, delay, generation } = props
+const UnpureStep = (props: { 
+  prompt_id: string, 
+  delay: number, 
+  generation: string, 
+  created_at: string | null | undefined, 
+  status: string | null | undefined
+}) => {
+  const { prompt_id, delay, generation, created_at, status } = props
   const { supabase } = useSupabase()
   const [prompt, setPrompt] = useState<Prompt | null>(null)
   const [refreshing, setRefreshing] = useState<boolean>(false)
@@ -33,15 +39,26 @@ const UnpureStep = (props: { prompt_id: string, delay: number, generation: strin
   }, [])
 
   return (      
-    <div className="flex flex-col gap-4">
-      {refreshing &&
-        <Loader className="animate-spin ml-2" />
-      }
-      {prompt &&
-        <div className=''>
-          {prompt.prompt}
+    <div className="flex flex-col gap-2 ml-24 pl-2">
+      
+      <div className="flex flex-col gap-2">
+        <div className="flex-none text-slate-400">
+          Prompt
         </div>
-      }
+        <div className='border p-2 grow rounded whitespace-pre-wrap'>
+          {prompt && prompt.prompt}
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <div className="flex-none text-slate-400">
+          Generated draft {status === 'drafted' ? 'was' : 'will be'} placed in your drafts folder on {' '}
+          { created_at && format(add(new Date(created_at), {days: delay}), 'do MMMM yyyy') }
+        </div>
+        <div className='border p-2 grow rounded whitespace-pre-wrap'>
+          {generation}
+        </div>
+      </div>
     </div>
   )
 }

@@ -2,8 +2,10 @@ import { createServerComponentSupabaseClient } from '@supabase/auth-helpers-next
 import { cookies, headers } from 'next/headers'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
+import SequenceBadge from '~/components/SequenceBadge'
 import { Database } from '~/database.types'
 import { Sequence } from '~/types'
+
 export const revalidate = 0
 
 export default async function Page() {
@@ -16,83 +18,37 @@ export default async function Page() {
     data: { session },
   } = await supabase.auth.getSession()
 
-  const { data } = await supabase
-    .from('sequences')
-    .select('*')
-    .order('created_at', { ascending: false })
-
-  const sequences = data as Sequence[]
-
   if (!session) {
     console.log('My Account: session does not exist, redirecting to /login')
     return redirect('/login') 
   }
 
-  const { data: profiles } = await supabase
-    .from('profiles')
-    .select("*")
-    .eq('id', session.user.id)
-    .limit(1)
+  const { data } = await supabase
+    .from('sequences')
+    .select('*')
+    .order('created_at', { ascending: false })
 
-  let profile = null
-  if (profiles && profiles.length > 0) {
-    profile = profiles[0]
-  }
-
-  if (!profile) {
-    console.log('My Account: profile does not exist, redirecting to /login')
-    return redirect('/login') 
-  }
+  const sequences: Sequence[] = data || []
 
   return (
-    <div className="max-w-2xl mx-auto p-4 flex flex-row bg-white font-sans text-slate-800 antialiased">
-      <main className="flex flex-col gap-4 mx-auto">
+    <main className="max-w-2xl mx-auto p-4 flex flex-col font-sans text-slate-800 antialiased">
+      <div className='flex flex-row justify-between'>
         <h1 className="text-2xl font-bold">
           Sequences
         </h1>
-        <Link 
+        <Link
           href="/sequences/new"
-          className="text-blue-500 hover:underline"  
+          className="border rounded p-2 hover:bg-slate-50"
         >
-            Create a new sequence
+          New Sequence
         </Link>
+      </div>
 
-        <div className="flex flex-col gap-2">
-          {sequences && sequences.map((sequence) => (
-            <div 
-              key={sequence.id} 
-              className="flex flex-col gap-2 border rounded p-2"
-            >
-              <Link 
-                className='text-blue-500 hover:underline'
-                href={`/sequences/${sequence.id}`}
-              >
-                {sequence.name}
-              </Link>
-              <div className="text-sm">
-                Send an email email to {' '}
-                <span className="italic">
-                  {sequence.name}@getreply.app
-                </span> {' '}so that
-              </div>
-              {sequence.steps?.map((prompt, index) => (
-                <>
-                  promt {prompt!.prompt_id} {' '}
-                  <div className="text-sm">
-                    will run after {prompt!.delay} days
-                  </div>
-                  {(sequence.steps && index < sequence.steps.length - 1) && (
-                    <div className="text-sm">
-                      and then
-                    </div>
-                    )
-                  }
-                </>
-              ))}
-            </div>
-          )) }
+      <div className="flex flex-col gap-1 mt-12">
+        <div className='divide-y border rounded'>
+          {sequences && sequences.map((sequence) => (<SequenceBadge key={sequence.id} sequence={sequence} />))}
         </div>
-      </main>
-    </div>
+      </div>
+    </main>
   )
 }

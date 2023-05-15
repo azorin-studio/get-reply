@@ -1,13 +1,19 @@
 'use client'
+import { formatDistance } from 'date-fns'
 import Link from 'next/link'
+import { useRef } from 'react'
+import { useHover } from 'usehooks-ts'
 import { useSupabase } from '~/app/supabase-provider'
 import { Prompt } from '~/types'
 
 export const revalidate = 0
 
-export default function PromptBadge(props: { prompt: Prompt, compact?: boolean }) {
+export default function PromptBadge(props: { prompt: Prompt }) {
   const { supabase } = useSupabase()
-  const { prompt, compact = false } = props
+  const { prompt } = props
+
+  const hoverRef = useRef(null)
+  const isHovered = useHover(hoverRef)
   
   const handleDelete = async (prompt: Prompt) => {
     const { error } = await supabase
@@ -23,26 +29,27 @@ export default function PromptBadge(props: { prompt: Prompt, compact?: boolean }
   }
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className='flex justify-between'>
-        <div className="inline-flex flex-col gap-2">
-          <div className="truncate text-sm min-w-32">
-            <Link 
-              href={`/prompts/${prompt.id}`}
-              className='text-blue-500 underline '
-            >
-              {prompt.name}
-            </Link>
+    <Link
+      ref={hoverRef} 
+      className="p-2 flex flex-row gap-4 w-full items-center hover:bg-slate-50"
+      href={`/prompts/${prompt.id}`}
+    >
+        <div className="flex flex-row grow gap-2 items-center w-44 truncate">
+          <div className="w-24">
+            {prompt.name}
           </div>
-          {/* {!compact && (
-            <div className="text-sm ">
-            { prompt.prompt }
+          <div className='truncate text-slate-500'>
+            {prompt.description}
           </div>
-          )} */}
-          
         </div>
-      </div>
-      
-    </div>
+
+        <div className="flex flex-row items-center gap-2 justify-between"> 
+          <div>
+            { prompt.created_at && formatDistance(new Date(prompt.created_at), new Date(), { addSuffix: true }) }
+          </div>
+
+        </div>
+      </Link>
+
   )
 }

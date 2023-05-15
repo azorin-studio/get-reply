@@ -1,5 +1,5 @@
-import DemoPage from './demo-client'
+import NewPromptClient from './new-prompt-client'
 
 export default async function Page() {
-  return <DemoPage />
+  return <NewPromptClient />
 }
