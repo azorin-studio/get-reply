@@ -1,11 +1,12 @@
+import { callGPT35Api } from "~/chat-gpt"
+import { handleGenerateEvent, handleProcessEmailEvent, handleVerifyEvent } from "~/cron/cron"
+import createDraftAndNotify from '~/cron/draft-event'
 import testEmail from '~/data/test-email.json'
-import { callGPT35Api } from "./chat-gpt"
-import { createDraftAndNotify, handleGenerateEvent, handleProcessEmailEvent, handleVerifyEvent } from "./cron"
-import { deleteDraft } from "./google"
-import supabaseAdminClient, { appendToLog, getProfileFromEmail } from "./supabase"
-import { IncomingEmail, Log, Profile } from "./types"
+import { deleteDraft } from "~/google"
+import supabaseAdminClient, { appendToLog, getProfileFromEmail } from "~/supabase"
+import { IncomingEmail, Log, Profile } from "~/types"
 
-jest.mock('./chat-gpt')
+jest.mock('../chat-gpt')
 
 const deleteLog = async (log: Log) => {
   await supabaseAdminClient

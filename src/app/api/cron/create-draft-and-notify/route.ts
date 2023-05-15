@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { handleCreateDraftEvent } from "~/cron"
+import { handleCreateDraftEvent } from "~/cron/cron"
 
 export const revalidate = 0
 

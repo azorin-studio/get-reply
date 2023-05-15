@@ -52,12 +52,11 @@ export const createLog = async(incomingEmail: IncomingEmail) => {
   const newLog: Log = {
     ...incomingEmail,
     status: 'pending',
-    // created_at: (new Date()).toISOString(),
     provider: 'unknown',
     errorMessage: null,
     generations: null,
     draftIds: null,
-    prompts: null,
+    sequence_id: null,
     threadId: null,
   }
 

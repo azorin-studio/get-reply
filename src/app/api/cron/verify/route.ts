@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { handleVerifyEvent } from "~/cron"
+import { handleVerifyEvent } from "~/cron/cron"
 
 export const revalidate = 0
 

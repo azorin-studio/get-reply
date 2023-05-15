@@ -33,9 +33,6 @@ export default function LogBody(props: { log: Log }) {
           {log.generations?.map((generation, index) => (
             <div key={`gen${index}`}>
               <div className="font-bold">prompt {index + 1}: </div>
-              <div className="whitespace-pre-wrap">
-                {log.prompts![index]?.trim()}
-              </div>
               <div className="font-bold">generation {index + 1}: </div>
               <div className="whitespace-pre-wrap">
                 {generation?.trim()}

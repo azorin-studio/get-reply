@@ -23,8 +23,8 @@ export interface Database {
           html: string | null
           id: string
           messageId: string | null
-          prompts: string[] | null
           provider: string | null
+          sequence_id: string | null
           status: string | null
           subject: string | null
           text: string | null
@@ -45,8 +45,8 @@ export interface Database {
           html?: string | null
           id?: string
           messageId?: string | null
-          prompts?: string[] | null
           provider?: string | null
+          sequence_id?: string | null
           status?: string | null
           subject?: string | null
           text?: string | null
@@ -67,8 +67,8 @@ export interface Database {
           html?: string | null
           id?: string
           messageId?: string | null
-          prompts?: string[] | null
           provider?: string | null
+          sequence_id?: string | null
           status?: string | null
           subject?: string | null
           text?: string | null
