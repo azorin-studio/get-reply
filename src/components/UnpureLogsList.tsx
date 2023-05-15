@@ -24,19 +24,21 @@ const UnpureLogsList = () => {
       setRefreshing(false)
     }
 
-    let interval = setInterval(fetchLogs, 5000)
+    // let interval = setInterval(fetchLogs, 5000)
     fetchLogs()
     return (() => {
-      clearInterval(interval)
+      // clearInterval(interval)
     })
   }, [])
 
   return (      
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-1">
       <div className="inline-flex">
         {refreshing && <Loader className="animate-spin ml-2 text-slate-300" />}
       </div>
-      {logs && logs.map((log) => (<LogBadge key={log.id} log={log} />))}
+      <div className='divide-y border rounded'>
+        {logs && logs.map((log) => (<LogBadge key={log.id} log={log} />))}
+      </div>
     </div>
   )
 }

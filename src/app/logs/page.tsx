@@ -46,7 +46,7 @@ export default async function Page() {
   }
 
   return (
-    <main className="max-w-2xl mx-auto p-4 flex flex-col font-sans text-slate-800 antialiased bg-blue-50">
+    <main className="max-w-2xl mx-auto p-4 flex flex-col font-sans text-slate-800 antialiased">
       <h1 className="text-2xl font-bold">
         Logs
       </h1>

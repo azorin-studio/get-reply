@@ -1,4 +1,4 @@
-import { ArrowUpRight, MailPlus } from 'lucide-react'
+import { MailPlus } from 'lucide-react'
 import Link from 'next/link'
 
 export default function Header(props: { user?: object | null }) {
@@ -13,50 +13,35 @@ export default function Header(props: { user?: object | null }) {
               Get Reply
             </span>
           </Link>
-          
-          <nav className="hidden gap-6 md:flex">
-            {/* <Link
-              href={"#"}
-              className={"flex items-center text-lg font-semibold text-slate-600 sm:text-sm"}
-            >
-              Link 1
-            </Link> */}
-          </nav>
         </div>
         <nav className="flex flex-row gap-4">
-          <Link
-            href="/prompts/new"
-            className="items-center space-x-2 flex hover:underline"
-          >
-            <ArrowUpRight />
-            <span className="font-bold sm:inline-block">
-            Try the demo
-            </span>
-          </Link>
-          {/* <Link
-            href="https://github.com/azorin-studio/get-reply"
-            className="items-center space-x-2 flex hover:underline"
-          >
-            <Github />
-            <span className="font-bold sm:inline-block">
-            Github
-            </span>
-          </Link> */}
           {user && (
-            <Link
-              href="/sequences"
-              className="items-center space-x-2 flex font-bold sm:inline-block hover:underline"
-            >
-              My Sequences
-            </Link>
-          )}
-          {user && (
-            <Link
-              href="/logout"
-              className="items-center space-x-2 flex font-bold sm:inline-block hover:underline text-red-600"
-            >
-              Logout
-            </Link>
+            <>
+              <Link
+                href="/sequences"
+                className="items-center space-x-2 flex font-bold sm:inline-block hover:underline"
+              >
+                Sequences
+              </Link>
+              <Link
+                href="/prompts"
+                className="items-center space-x-2 flex font-bold sm:inline-block hover:underline"
+              >
+                Prompts
+              </Link>
+              <Link
+                href="/logs"
+                className="items-center space-x-2 flex font-bold sm:inline-block hover:underline"
+              >
+                Logs
+              </Link>
+              <Link
+                href="/logout"
+                className="items-center space-x-2 flex font-bold sm:inline-block hover:underline text-red-600"
+              >
+                Logout
+              </Link>
+            </>
           )}
           {!user && (
             <Link
