@@ -71,7 +71,7 @@ export default function DemoPage(props: any) {
       .delete()
       .match({ id: activePrompt.id })
     
-    router.refresh()
+      router.push(`/prompts/new`)
   }
 
   const saveNewPrompt = async () => {
@@ -234,7 +234,10 @@ export default function DemoPage(props: any) {
                 <div className='flex flex-row gap-2'>
                   <button 
                     className="text-sm p-1"
-                    onClick={(e) => setCreatingNew(false)}
+                    onClick={(e) => {
+                      setCreatingNew(false)
+                      setActivePrompt(prompts[0])
+                    }}
                   >
                     Cancel
                   </button>

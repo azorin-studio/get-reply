@@ -1,4 +1,4 @@
-import NewPromptClient from '~/app/prompts/new/new-prompt-client'
+import NewPromptClient from '~/app/prompts/new-prompt-client'
 
 export default async function Page(params: any) {
   return <NewPromptClient {...params} />
