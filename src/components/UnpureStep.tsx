@@ -10,7 +10,7 @@ export const revalidate = 0
 const UnpureStep = (props: { 
   prompt_id: string, 
   delay: number, 
-  generation: string, 
+  generation?: string | null | undefined, 
   created_at: string | null | undefined, 
   status: string | null | undefined
 }) => {
@@ -56,7 +56,7 @@ const UnpureStep = (props: {
           { created_at && format(add(new Date(created_at), {days: delay}), 'do MMMM yyyy') }
         </div>
         <div className='border p-2 grow rounded whitespace-pre-wrap'>
-          {generation}
+          {generation ? generation : '...'}
         </div>
       </div>
     </div>

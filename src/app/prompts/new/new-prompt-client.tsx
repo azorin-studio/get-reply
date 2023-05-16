@@ -3,6 +3,7 @@
 import fetch from 'isomorphic-fetch'
 import { Loader } from "lucide-react"
 import ms from "ms"
+import { useRouter } from 'next/navigation'
 import { useEffect, useState } from "react"
 import { useSupabase } from "~/app/supabase-provider"
 import usePrompts from "~/hooks/use-prompts"
@@ -23,6 +24,7 @@ export default function DemoPage(props: any) {
   const { supabase } = useSupabase()
   const prompts = usePrompts()  
 
+  const router = useRouter()
   const [creatingNew, setCreatingNew] = useState<boolean>(false)
   const [busy, setBusy] = useState<boolean>(false)
   const [result, setResult] = useState<null>(DEFAULT_RESULT)
@@ -30,6 +32,8 @@ export default function DemoPage(props: any) {
   const [content, setContent] = useState<string | null>(DEFAULT_EMAIL)
   const [activePrompt, setActivePrompt] = useState<Prompt | null>(null)
   const [error, setError] = useState<null | string>(null)
+
+  const [saveBusy, setSaveBusy] = useState<string>('Save')
 
   const [user, setUser] = useState<any>(null)
 
@@ -42,27 +46,41 @@ export default function DemoPage(props: any) {
   }, [])
 
   useEffect(() => {
+    if (!props.params) {
+      setActivePrompt(prompts[0])
+      return 
+    }
     const promptIndex = prompts.findIndex((p: any) => p.id === props.params.id)
     if (promptIndex > -1) {
       setActivePrompt(prompts[promptIndex])
-    }  
+    } 
   }, [prompts])
 
   const deletePrompt = async () => {
     if (!activePrompt || !activePrompt.prompt) {
-      throw new Error('No prompt chosen')
+      alert('No prompt chosen')
+      return
+    }
+
+    if (!confirm('Are you sure you want to delete this prompt?')) {
+      return
     }
 
     await supabase
       .from('prompts')
       .delete()
       .match({ id: activePrompt.id })
+    
+    router.refresh()
   }
 
   const saveNewPrompt = async () => {
     if (!activePrompt || !activePrompt.prompt) {
-      throw new Error('No prompt chosen')
+      alert('Please enter a prompt')
+      return
     }
+
+    setSaveBusy('Saving')
 
     const { data, error } = await supabase
       .from('prompts')
@@ -77,18 +95,22 @@ export default function DemoPage(props: any) {
       .select()
 
     if (error) {
-      throw new Error(error.message)
+      alert(error.message)
+      return
     }
 
     if (!data || data.length !== 1) {
-      throw new Error('Error saving prompt')
+      alert('Error saving prompt')
+      return
     }
 
     const newPrompt = data[0]
     setActivePrompt(newPrompt as Prompt)
+    setSaveBusy('Saved')
+    router.push(`/prompts/${newPrompt.id}`)
   }
 
-  async function onSubmit(event: any) {
+  async function onGenerate(event: any) {
     setBusy(false)
     setError(null)
     setTimer(null)
@@ -159,7 +181,7 @@ export default function DemoPage(props: any) {
         <div className="basis-1/3 bg-slate-50">
           {!creatingNew && (
             <div> 
-              <div className='flex w-full border-b p-2 h-12 items-center'>
+              <div className='flex flex-row w-full border-b p-2 h-12 items-center text-sm justify-between'>
                 <select
                   id="prompt-selector"
                   name="prompt-selector"
@@ -178,6 +200,16 @@ export default function DemoPage(props: any) {
                     </option>
                   ))}
                 </select>
+                <div className='flex flex-row gap-2'>
+                  {(user && activePrompt?.user_id === user.id) && (
+                    <button 
+                      className="text-sm border rounded p-1 text-red-500"
+                      onClick={deletePrompt}
+                    >
+                      Delete
+                    </button>
+                  )}
+                </div>
               </div>
               <div className="text-sm whitespace-pre-wrap p-2">
                 {activePrompt?.prompt || ""}
@@ -186,10 +218,10 @@ export default function DemoPage(props: any) {
           )}
           {creatingNew && (
             <div>
-              <div className="p-2 flex flex-row justify-between">
+              <div className='flex flex-row w-full border-b p-2 h-12 items-center text-sm justify-between'>
                 <input 
                   type="text"
-                  className='border p-1 rounded'
+                  className='border p-1 rounded text-sm'
                   placeholder='Name'
                   onChange={(e) => {
                     const newPrompt = {
@@ -199,23 +231,25 @@ export default function DemoPage(props: any) {
                     setActivePrompt(newPrompt)
                   }}
                 />
-                <button 
-                  className="text-sm text-blue-600"
-                  onClick={saveNewPrompt}
-                >
-                  Save
-                </button>
-                <button 
-                  className="text-sm text-blue-600"
-                  onClick={(e) => setCreatingNew(false)}
-                >
-                  Cancel
-                </button>
+                <div className='flex flex-row gap-2'>
+                  <button 
+                    className="text-sm p-1"
+                    onClick={(e) => setCreatingNew(false)}
+                  >
+                    Cancel
+                  </button>
+                  <button 
+                    className="text-sm border rounded p-1"
+                    onClick={saveNewPrompt}
+                  >
+                    {saveBusy}
+                  </button>
+                </div>
               </div>
               <textarea
                 rows={10}
                 placeholder={`Enter prompt for the ai`}
-                className="text-sm w-full min-h-fit whitespace-pre-wrap block border rounded-md bg-transparent text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                className="text-sm w-full min-h-fit whitespace-pre-wrap block p-2 bg-transparent text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                 value={activePrompt?.prompt || ""}
                 onChange={(event) => {
                   const newPrompt = {
@@ -251,7 +285,7 @@ export default function DemoPage(props: any) {
             <button
               type="submit" 
               value="Generate"
-              onClick={onSubmit}
+              onClick={onGenerate}
               className="rounded-md bg-slate-800 p-2 text-sm text-white "
             >
               {busy ? 'Generating' : 'Generate'}
