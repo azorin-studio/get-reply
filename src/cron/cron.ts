@@ -15,7 +15,10 @@ export const handleAllEvents = async () => {
   let l1 = await handleVerifyEvent()
   let l2 = await handleGenerateEvent()
   let l3 = await handleCreateDraftEvent()
-  return [...l1, ...l2, ...l3]
+  let l4 = await handleReplyEvent()
+  let l5 = await handleAssignActionEvent()
+
+  return [...l1, ...l2, ...l3, ...l4, ...l5]
 }
 
 export const handleProcessEmailEvent = async (incomingEmail: IncomingEmail): Promise<Log> => {
