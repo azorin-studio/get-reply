@@ -3,7 +3,6 @@ import generate from "~/cron/generate-event"
 import processEmail from "~/cron/process-event"
 import verify from "~/cron/verify-event"
 import getLogsByStatus from "~/db/get-logs-by-status"
-import supabaseAdminClient from "~/db/server-admin-client"
 import { IncomingEmail, Log } from "~/db/types"
 
 export const daysBetween = (first: Date, second: Date): number => {
@@ -11,18 +10,10 @@ export const daysBetween = (first: Date, second: Date): number => {
 }
 
 export const handleAllEvents = async () => {
-  const { error, data } = await supabaseAdminClient
-    .from('logs')
-    .select()
-
-  console.log({ data, error })
-
-  
   let l1 = await handleVerifyEvent()
   let l2 = await handleGenerateEvent()
   let l3 = await handleCreateDraftEvent()
   return [...l1, ...l2, ...l3]
-
 }
 
 export const handleProcessEmailEvent = async (incomingEmail: IncomingEmail): Promise<Log> => {

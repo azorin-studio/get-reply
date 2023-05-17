@@ -28,6 +28,15 @@ export default function LogBadge(props: { log: Log }) {
     }
   }
 
+  const handleRetry = async () => {
+    await supabase
+      .from('logs')
+      .update({ status: 'pending' })
+      .eq('id', `${log.id}`)
+    window.location.reload()
+  }
+
+
   let bgColor = 'bg-gray-200'
   if (log.status === "error") {
     bgColor = 'bg-red-400'
@@ -80,17 +89,30 @@ export default function LogBadge(props: { log: Log }) {
           }
 
           {isHovered &&
-            <button
-              className='text-red-500 rounded hover:bg-slate-50'
-              onClick={(e) => {
-                e.preventDefault()
-                if (confirm('Are you sure you want to delete this log?')) {
-                  handleDelete(log)
-                }
-              }}
-            >
-              Delete
-            </button>
+            <>
+              <button
+                className='text-red-500 rounded hover:bg-slate-50'
+                onClick={(e) => {
+                  e.preventDefault()
+                  if (confirm('Are you sure you want to delete this log?')) {
+                    handleDelete(log)
+                  }
+                }}
+              >
+                Delete
+              </button>
+              {log.status === 'error'  && 
+                <button
+                  className='text-red-500 rounded hover:bg-slate-50'
+                  onClick={(e) => {
+                    e.preventDefault()
+                    handleRetry()
+                  }}
+                >
+                  Retry
+                </button>
+              }
+            </>
           }
         </div>
       </Link>
