@@ -24,7 +24,7 @@ export default function LogBadge(props: { log: Log }) {
     if (error) {
       console.error(error)
     } else {
-      window.location.href = '/sequences'
+      window.location.href = '/logs'
     }
   }
 
@@ -84,7 +84,10 @@ export default function LogBadge(props: { log: Log }) {
         <div className="flex flex-row items-center gap-2 justify-between"> 
           {!isHovered &&
             <div>
-              { log.created_at && formatDistance(new Date(log.created_at), new Date(), { addSuffix: true }) }
+              { log.created_at && 
+                formatDistance(new Date(log.created_at), new Date(), { addSuffix: true })
+                  .replace('less than a minute ago', '0 minutes ago') 
+              }
             </div>
           }
 

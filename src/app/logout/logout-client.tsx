@@ -1,26 +1,26 @@
 "use client"
 
-import { redirect } from "next/navigation"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { useSupabase } from '~/hooks/use-supabase'
 
 export default function LogoutPage() {
   const { supabase } = useSupabase()
-  const [redirectURL, setRedirectURL] = useState('')
-
-  const handleLogout = async () => {
-    const { error } = await supabase.auth.signOut()
-    console.log(error)
-    setRedirectURL('/login')
-  }
 
   useEffect(() => {
+    const handleLogout = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession()
+      if (!session) {
+        return
+      }
+
+      const { error } = await supabase.auth.signOut()
+      if (error) alert(error?.message)
+    }
+
     handleLogout()
   })
-
-  if (redirectURL) {
-    redirect(redirectURL)
-  }
 
   return (
     <main className="flex-1 px-4 lg:px=2">
@@ -30,7 +30,6 @@ export default function LogoutPage() {
             Logging you out
           </h2>
         </div>
-
       </div>
     </main>
   )

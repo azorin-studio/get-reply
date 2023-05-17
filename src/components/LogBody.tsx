@@ -1,6 +1,8 @@
 'use client'
 
 import { formatDistance } from 'date-fns'
+import { ExternalLink } from 'lucide-react'
+import Link from 'next/link'
 import { Log } from '~/db/types'
 import { useSupabase } from '~/hooks/use-supabase'
 import UnpureStep from './UnpureStep'
@@ -31,7 +33,7 @@ export default function LogBody(props: { log: Log }) {
     if (error) {
       console.error(error)
     } else {
-      window.location.href = '/sequences'
+      window.location.href = '/logs'
     }
   }
 
@@ -116,6 +118,21 @@ export default function LogBody(props: { log: Log }) {
         </div>
         <div>
           {log.from && log.from!.address}
+        </div>
+      </div>
+      <div className="flex flex-row gap-2">
+        <div className="text-slate-400 w-24 text-right">
+          gmail
+        </div>
+        <div>
+          <Link
+            target='_blank'
+            className='text-blue-500 truncate'
+            href={`https://mail.google.com/mail/u/0/#all/${log.threadId}`}
+          >
+            https://mail.google.com/mail/u/0/#all/{log.threadId}
+            <ExternalLink className='inline-block ml-1' size={16} />
+          </Link>
         </div>
       </div>
       <div className="flex flex-row gap-2">
