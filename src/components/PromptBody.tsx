@@ -1,5 +1,7 @@
 'use client'
-import { Prompt } from '~/types'
+
+import { Prompt } from "~/db/types"
+
 
 export default function PromptBody(props: { prompt: Prompt }) {
   const { prompt } = props

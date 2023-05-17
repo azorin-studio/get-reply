@@ -2,7 +2,7 @@
 
 import { redirect } from "next/navigation"
 import { useEffect, useState } from "react"
-import { useSupabase } from "~/app/supabase-provider"
+import { useSupabase } from '~/hooks/use-supabase'
 
 export default function LogoutPage() {
   const { supabase } = useSupabase()

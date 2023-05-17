@@ -1,7 +1,7 @@
 "use client"
 import { redirect } from 'next/navigation'
 import { useState } from 'react'
-import { useSupabase } from "~/app/supabase-provider"
+import { useSupabase } from '~/hooks/use-supabase'
 
 export default function LoginPage() {
   const { supabase } = useSupabase()

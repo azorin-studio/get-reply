@@ -1,7 +1,9 @@
 import { callGPT35Api } from "~/chat-gpt"
-import getSequenceFromLog from "~/cron/get-sequence-by-id"
-import supabaseAdminClient, { appendToLog, getProfileFromEmail } from "~/supabase"
-import { Log, Profile } from "~/types"
+import appendToLog from "~/db/append-to-log"
+import getProfileFromEmail from "~/db/get-profile-from-email"
+import getSequenceFromLog from "~/db/get-sequence-by-id"
+import supabaseAdminClient from "~/db/server-admin-client"
+import { Log, Profile } from "~/db/types"
 
 export default async function generate (log: Log): Promise<Log> {
   if (!log.from) {

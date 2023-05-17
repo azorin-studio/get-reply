@@ -1,7 +1,7 @@
-import getSequenceFromLog from "~/cron/get-sequence-by-id"
 import parseSequenceName from "~/cron/parse-sequence-name"
-import { appendToLog } from "~/supabase"
-import { Log } from "~/types"
+import appendToLog from "~/db/append-to-log"
+import getSequenceFromLog from "~/db/get-sequence-by-id"
+import { Log } from "~/db/types"
 
 export default async function verify (log: Log): Promise<Log> {
   // TODO check dmarc and stuff

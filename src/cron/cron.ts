@@ -2,11 +2,18 @@ import createDraftAndNotify from "~/cron/draft-event"
 import generate from "~/cron/generate-event"
 import processEmail from "~/cron/process-event"
 import verify from "~/cron/verify-event"
-import { getLogsByStatus } from "~/supabase"
-import { IncomingEmail, Log } from "~/types"
+import getLogsByStatus from "~/db/get-logs-by-status"
+import { IncomingEmail, Log } from "~/db/types"
 
 export const daysBetween = (first: Date, second: Date): number => {
   return Math.round((second.getTime() - first.getTime()) / (1000 * 60 * 60 * 24))
+}
+
+export const handleAllEvents = async () => {
+  await handleVerifyEvent()
+  await handleGenerateEvent()
+  await handleCreateDraftEvent()
+
 }
 
 export const handleProcessEmailEvent = async (incomingEmail: IncomingEmail): Promise<Log> => {

@@ -1,6 +1,6 @@
 import parseSequenceName from "~/cron/parse-sequence-name"
-import supabaseAdminClient from "~/supabase"
-import { Log } from "~/types"
+import supabaseAdminClient from "./server-admin-client"
+import { Log } from "./types"
 
 export default async function getSequenceFromLog (log: Log) {
   const toGetReply = parseSequenceName(log)

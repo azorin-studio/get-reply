@@ -1,7 +1,7 @@
 'use client'
 
 import { formatDistance } from 'date-fns'
-import { Log } from '~/types'
+import { Log } from '~/db/types'
 import UnpureStep from './UnpureStep'
 
 export default function LogBody(props: { log: Log }) {

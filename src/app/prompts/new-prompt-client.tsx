@@ -5,9 +5,9 @@ import { Loader } from "lucide-react"
 import ms from "ms"
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from "react"
-import { useSupabase } from "~/app/supabase-provider"
+import { Prompt } from '~/db/types'
 import usePrompts from "~/hooks/use-prompts"
-import { Prompt } from "~/types"
+import { useSupabase } from '~/hooks/use-supabase'
 
 const DEFAULT_EMAIL = `Dear Hiring Manager, 
 

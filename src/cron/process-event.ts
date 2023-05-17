@@ -1,5 +1,7 @@
-import { appendToLog, createLog, getProfileFromEmail } from "~/supabase"
-import { IncomingEmail, Log, Profile } from "~/types"
+import appendToLog from "~/db/append-to-log"
+import createLog from "~/db/create-log"
+import getProfileFromEmail from "~/db/get-profile-from-email"
+import { IncomingEmail, Log, Profile } from "~/db/types"
 
 export default async function processEmail (incomingEmail: IncomingEmail): Promise<Log> {
   let log: Log | null = null

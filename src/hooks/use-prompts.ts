@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
-import { useSupabase } from "~/app/supabase-provider"
-import { Prompt } from "~/types"
+import { Prompt } from "~/db/types"
+import { useSupabase } from "~/hooks/use-supabase"
 
 export default function usePrompts() {
   const [prompts, setPrompts] = useState<Prompt[]>([])

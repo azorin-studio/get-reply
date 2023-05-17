@@ -3,9 +3,9 @@
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import slugify from "slugify"
-import { useSupabase } from "~/app/supabase-provider"
 import Step from "~/components/Step"
 import usePrompts from "~/hooks/use-prompts"
+import { useSupabase } from '~/hooks/use-supabase'
 
 export default function DemoPage(props: any) {
   const { supabase } = useSupabase()

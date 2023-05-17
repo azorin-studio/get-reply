@@ -1,7 +1,7 @@
 
 import { google } from 'googleapis'
 import fetch from 'isomorphic-fetch'
-import { Contact } from '~/types'
+import { Contact } from '~/db/types'
 
 const oauth2Client = new google.auth.OAuth2(
   process.env.GOOGLE_CLIENT_ID,

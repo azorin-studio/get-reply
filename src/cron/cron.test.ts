@@ -2,9 +2,12 @@ import { callGPT35Api } from "~/chat-gpt"
 import { handleGenerateEvent, handleProcessEmailEvent, handleVerifyEvent } from "~/cron/cron"
 import createDraftAndNotify from '~/cron/draft-event'
 import testEmail from '~/data/test-email.json'
+import appendToLog from "~/db/append-to-log"
+import getProfileFromEmail from "~/db/get-profile-from-email"
+import supabaseAdminClient from "~/db/server-admin-client"
+import { IncomingEmail, Log, Profile } from "~/db/types"
 import { deleteDraft } from "~/google"
-import supabaseAdminClient, { appendToLog, getProfileFromEmail } from "~/supabase"
-import { IncomingEmail, Log, Profile } from "~/types"
+
 
 jest.mock('../chat-gpt')
 

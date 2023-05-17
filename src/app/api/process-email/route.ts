@@ -1,7 +1,7 @@
 import { headers } from 'next/headers'
 import { NextResponse } from 'next/server'
 import { handleProcessEmailEvent } from '~/cron/cron'
-import { IncomingEmail } from '~/types'
+import { IncomingEmail } from '~/db/types'
 
 export const revalidate = 0
 
