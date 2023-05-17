@@ -1,14 +1,15 @@
 "use client"
 
-import fetch from 'isomorphic-fetch'
-import { Loader } from "lucide-react"
-import ms from "ms"
-import { useRouter } from 'next/navigation'
-import { useEffect, useState } from "react"
-import { Prompt } from '~/db/types'
-import usePrompts from "~/hooks/use-prompts"
-import { useSupabase } from '~/hooks/use-supabase'
-import useUser from '~/hooks/use-user'
+import * as Popover from '@radix-ui/react-popover';
+import fetch from 'isomorphic-fetch';
+import { ChevronDownIcon, Loader } from "lucide-react";
+import ms from "ms";
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from "react";
+import { Prompt } from '~/db/types';
+import usePrompts from "~/hooks/use-prompts";
+import { useSupabase } from '~/hooks/use-supabase';
+import useUser from '~/hooks/use-user';
 
 const DEFAULT_EMAIL = `Dear Hiring Manager, 
 
@@ -77,8 +78,9 @@ export default function DemoPage(props: any) {
 
     const { data, error } = await supabase
       .from('prompts')
-      .insert([
+      .upsert([
         { 
+          id: props.params?.id || undefined,
           prompt: activePrompt.prompt, 
           name: activePrompt.name, 
           description: activePrompt.description,
@@ -175,25 +177,44 @@ export default function DemoPage(props: any) {
           {!creatingNew && (
             <div> 
               <div className='flex flex-row w-full border-b p-2 h-12 items-center text-sm justify-between'>
-                <select
-                  id="prompt-selector"
-                  name="prompt-selector"
-                  className="rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 text-sm"
-                  value={activePrompt?.name || ""}
-                  onChange={(e) => {
-                    const prompt = prompts.find((p: any) => p.name === e.target.value)
-                    if (prompt) {
-                      setActivePrompt(prompt)
-                    }
-                  }}
-                >
-                  {prompts.map((prompt: any) => (
-                    <option key={prompt.name} value={prompt.name}>
-                      {prompt.name}
-                    </option>
-                  ))}
-                </select>
+                <Popover.Root>
+                  <Popover.Trigger 
+                    className="flex flex-row items-center gap-2 text-sm border p-2 rounded hover:bg-slate-100"
+                  >
+                    {activePrompt?.name || 'Choose a prompt'}
+                    <ChevronDownIcon className="w-4 h-4" />
+                  </Popover.Trigger>
+
+                  <Popover.Portal>
+                    <Popover.Content
+                      className="flex flex-col bg-white border rounded divide-y outline-none focus:outline-none w-44 ml-12"
+                    >
+                      {prompts.map((prompt: any) => (
+                        <a
+                          className="text-sm px-4 py-2 hover:bg-slate-50 hover:underline"
+                          href={`/prompts/${prompt.id}`}
+                          key={prompt.id}
+                        >
+                          {prompt.name}
+                        </a>
+                      ))}
+
+                      <Popover.Arrow className="fill-white" />
+                    </Popover.Content>
+                  </Popover.Portal>
+                </Popover.Root>
+
                 <div className='flex flex-row gap-2'>
+                  {(user && activePrompt?.user_id === user.id) && (
+                    <button 
+                      className="text-sm border rounded p-1"
+                      onClick={(e) => {
+                        setCreatingNew(true)
+                      }}
+                    >
+                      Edit
+                    </button>
+                  )}
                   {(user && activePrompt?.user_id === user.id) && (
                     <button 
                       className="text-sm border rounded p-1 text-red-500"
@@ -216,6 +237,7 @@ export default function DemoPage(props: any) {
                   type="text"
                   className='border p-1 rounded text-sm'
                   placeholder='Name'
+                  value={activePrompt?.name || ""}
                   onChange={(e) => {
                     const newPrompt = {
                       ...activePrompt,
@@ -245,7 +267,7 @@ export default function DemoPage(props: any) {
               <textarea
                 rows={10}
                 placeholder={`Enter prompt for the ai`}
-                className="text-sm w-full min-h-fit whitespace-pre-wrap block p-2 bg-transparent text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                className="text-sm bg-white w-full min-h-fit whitespace-pre-wrap block p-2 bg-transparent text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                 value={activePrompt?.prompt || ""}
                 onChange={(event) => {
                   const newPrompt = {
