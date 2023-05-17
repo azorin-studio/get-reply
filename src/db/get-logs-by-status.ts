@@ -8,7 +8,7 @@ export default async function getLogsByStatus (status: string) {
     .from('logs')
     .select()
     .eq('status', status)
-  console.log('getLogsByStatus', logs)
+  console.log('getLogsByStatus', logs, error)
 
   if (error) {
     throw error
