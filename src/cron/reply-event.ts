@@ -81,8 +81,8 @@ export default async function replyEvent(log: Log){
   const isLastPrompt = todaysPromptIndex === sequence.steps.length - 1
 
   const reply = await sendMail({
-    from: log.from!.address,
-    to: log.to!.map((to) => to.address).join(', '),
+    from: `${sequence.name}@getreply.app`,
+    to: log.from!.address,
     subject: log.subject!,
     textBody: log.generations![todaysPromptIndex],
   })
