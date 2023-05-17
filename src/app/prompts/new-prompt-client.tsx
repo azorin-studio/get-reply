@@ -158,20 +158,22 @@ export default function DemoPage(props: any) {
   return (
     <main className="p-4 flex flex-col">
       <div>
-        <button 
-          className="text-sm border p-2 rounded hover:bg-slate-50 my-2"
-          onClick={(e) => {
-            setCreatingNew(true)
-            setActivePrompt({
-              name: 'new',
-              prompt: '',
-              description: '',
-              user_id: user && user.id,
-            })
-          }}
-        >
-          + Create new prompt
-        </button>
+        {user && (
+          <button 
+            className="text-sm border p-2 rounded hover:bg-slate-50 my-2"
+            onClick={(e) => {
+              setCreatingNew(true)
+              setActivePrompt({
+                name: 'new',
+                prompt: '',
+                description: '',
+                user_id: user && user.id,
+              })
+            }}
+          >
+            + Create new prompt
+          </button>
+        )}
       </div>
 
       <div className="flex flex-row border rounded divide-x">
