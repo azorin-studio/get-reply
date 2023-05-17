@@ -100,7 +100,7 @@ export default async function replyEvent(log: Log){
 
   if (isLastPrompt) {
     log = await appendToLog(log, {
-      status: 'drafted'
+      status: 'replied'
     })
   }
 
