@@ -8,6 +8,6 @@ export async function POST () {
     return NextResponse.json({ error: 'Auth failed' })
   }
 
-  handleAllEvents()
+  await handleAllEvents()
   return NextResponse.json({ message: 'ok' })
 }

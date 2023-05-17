@@ -9,10 +9,12 @@ export default async function getLogsByStatus (status: string) {
     SUPABASE_SERVICE_KEY: process.env.SUPABASE_SERVICE_KEY,
     NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
   })
+
   const { error, data: logs } = await supabaseAdminClient
     .from('logs')
     .select()
     .eq('status', status)
+
   console.log('getLogsByStatus', logs, error)
 
   if (error) {
