@@ -25,20 +25,20 @@ export const handleProcessEmailEvent = async (incomingEmail: IncomingEmail): Pro
 export const handleVerifyEvent = async () => {
   const logs = await getLogsByStatus('pending')
   const processedLogs = await Promise.all(logs.map((log) => verify(log as Log)))
-  console.log('verify: ran on', logs.length)
+  if (processedLogs.length > 0) console.log('verify: ran on', processedLogs.length)
   return processedLogs
 }
 
 export const handleGenerateEvent = async () => {
   const logs = await getLogsByStatus('verified')
   const processedLogs = await Promise.all(logs.map((log) => generate(log as Log)))
-  console.log('generate: ran on', processedLogs.length)
+  if (processedLogs.length > 0) console.log('generate: ran on', processedLogs.length)
   return processedLogs
 }
 
 export const handleCreateDraftEvent = async () => {
   const logs = await getLogsByStatus('generated')
   const processedLogs = await Promise.all(logs.map((log) => createDraftAndNotify(log as Log)))
-  console.log('create-draft: ran on', processedLogs.length)
+  if (processedLogs.length > 0) console.log('create-draft: ran on', processedLogs.length)
   return processedLogs
 }
