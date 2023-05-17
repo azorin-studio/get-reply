@@ -2,7 +2,6 @@ import { createServerComponentSupabaseClient } from '@supabase/auth-helpers-next
 import { cookies, headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import LogBody from '~/components/LogBody'
-import RefreshPeriodically from '~/components/RefreshPeriodically'
 import { Database } from '~/db/database.types'
 import { Log } from '~/db/types'
 
@@ -30,18 +29,19 @@ export default async function Page(props: { params: { id: string } }) {
     .eq('id', id)
     .limit(1)
   
-  let log = null
+  let log: Log | null = null
   if (data && data.length > 0) {
     log = data[0] as Log
   }
 
   return (
     <div className="max-w-2xl mx-auto p-4 flex flex-row antialiased">
-      <RefreshPeriodically />
+      {/* <RefreshPeriodically /> */}
       <main className="flex flex-col gap-4">
         <h1 className="text-2xl font-bold">
           Log
         </h1>
+        
         {log && 
           <LogBody
             log={log} 

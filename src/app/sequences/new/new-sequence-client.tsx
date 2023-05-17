@@ -13,6 +13,10 @@ export default function DemoPage(props: any) {
   const [steps, setSteps] = useState<any[]>([])
   const [user, setUser] = useState<any>(null)
   const [error, setError] = useState<null | string>(null)
+
+  const defaultSaveButtonText = `${props.params?.id ? 'Update' : 'Save'} sequence`
+
+  const [saveButtonText, setSaveButtonText] = useState<null | string>(defaultSaveButtonText)
   const [name, setName] = useState<string>("")
   const router = useRouter()
   const [description, setDescription] = useState<string>("")
@@ -59,25 +63,30 @@ export default function DemoPage(props: any) {
 
   const saveSequence = async () => {
     setError(null)
+    setSaveButtonText(props.params?.id ? 'Updating...' : 'Saving...')
 
     if (!name) {
       setError("Name is required")
+      setSaveButtonText(defaultSaveButtonText)
       return
     }
 
     if (!user) {
       setError("User is required")
+      setSaveButtonText(defaultSaveButtonText)
       return
     }
 
     if (!steps || steps.length === 0) {
       setError("Steps are required")
+      setSaveButtonText(defaultSaveButtonText)
       return
     }
 
     const { data: sequences, error } = await supabase
       .from("sequences")
-      .insert({
+      .upsert({
+        id: props.params?.id,
         name,
         description,
         steps: steps.map(({ id, ...item }) => item),
@@ -89,6 +98,8 @@ export default function DemoPage(props: any) {
       setError(error?.message || "Error saving sequence")
       throw error
     } 
+
+    setSaveButtonText(defaultSaveButtonText)
 
     router.replace(`/sequences/${sequences[0].id}`)
   }
@@ -154,7 +165,8 @@ export default function DemoPage(props: any) {
               saveSequence()
             }}
           >
-            Save sequence
+            {/* {props.params.id ? 'Update' : 'Save'} sequence */}
+            {saveButtonText}
           </button>
         </div>
         <div>{error}</div>

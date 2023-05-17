@@ -2,10 +2,12 @@
 
 import { formatDistance } from 'date-fns'
 import { Log } from '~/db/types'
+import { useSupabase } from '~/hooks/use-supabase'
 import UnpureStep from './UnpureStep'
 
 export default function LogBody(props: { log: Log }) {
   const { log } = props
+  const { supabase } = useSupabase()
 
   let bgColor = 'bg-gray-200'
   if (log.status === "error") {
@@ -20,8 +22,53 @@ export default function LogBody(props: { log: Log }) {
     bgColor = 'bg-green-300'
   }
 
+  const handleDelete = async (log: Log) => {
+    const { error } = await supabase
+      .from('logs')
+      .delete()
+      .eq('id', `${log.id}`)
+
+    if (error) {
+      console.error(error)
+    } else {
+      window.location.href = '/sequences'
+    }
+  }
+
+  const handleRetry = async (log: Log) => {
+    await supabase
+      .from('logs')
+      .update({ status: 'pending' })
+      .eq('id', `${log.id}`)
+    window.location.reload()
+  }
+
   return (
     <div className="p-2 flex flex-col">
+      <div className="flex flex-row gap-2 justify-end">
+        <button
+          className='text-red-500 rounded border p-2 hover:bg-slate-50'
+          onClick={(e) => {
+            e.preventDefault()
+            if (confirm('Are you sure you want to delete this log?')) {
+              log && handleDelete(log)
+            }
+          }}
+        >
+          Delete
+        </button>
+        {log.status === 'error'  && 
+          <button
+            className='text-red-500 rounded border p-2 hover:bg-slate-50'
+            onClick={(e) => {
+              e.preventDefault()
+              log && handleRetry(log)
+            }}
+          >
+            Retry
+          </button>
+        }
+      </div>
       <div className="flex flex-row gap-2">
         <div className="text-slate-400 w-24 text-right">
           subject
@@ -71,39 +118,36 @@ export default function LogBody(props: { log: Log }) {
           {log.from && log.from!.address}
         </div>
       </div>
-
+      <div className="flex flex-row gap-2">
+        <div className="text-slate-400 w-24 text-right">
+          status
+        </div>
+        <div
+          className='flex flex-row gap-2 items-center w-24'
+        >
+          <div 
+            className={`mt-0 rounded-full p-1 items-center ${bgColor}`}
+          >
+          </div>
+          <div className='items-center capitalize'>
+            {log.status}
+          </div>
+        </div>
+      </div>
       {log.errorMessage &&
-        <>
-          <div className="flex flex-row gap-2 mt-12">
-            <div className="text-slate-400 w-24 text-right">
-              status
-            </div>
-            <div
-              className='flex flex-row gap-2 items-center w-24'
-            >
-              <div 
-                className={`mt-0 rounded-full p-1 items-center ${bgColor}`}
-              >
-              </div>
-              <div className='items-center capitalize'>
-                {log.status}
-              </div>
-            </div>
+        <div className="flex flex-row gap-2">
+          <div className="text-slate-400 w-24 text-right">
+            error 
           </div>
-          <div className="flex flex-row gap-2">
-            <div className="text-slate-400 w-24 text-right">
-              error 
-            </div>
-            <div className='text-red-500'>
-              {log.errorMessage}
-            </div>
+          <div className='text-red-500'>
+            {log.errorMessage}
           </div>
-        </>
+        </div>
       }
 
       {!log.errorMessage &&
         <>
-          <div className="flex flex-row gap-2 mt-12">
+          <div className="flex flex-row gap-2 mt-6">
             <div className="flex-none text-slate-400 w-24 text-right">
               email body
             </div>
@@ -112,7 +156,7 @@ export default function LogBody(props: { log: Log }) {
             </div>
           </div>
 
-          <div className="mt-12">
+          <div className="mt-6">
             {log.sequence?.steps?.map((step, index) => (
               <UnpureStep
                 status={log.status}

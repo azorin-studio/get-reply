@@ -36,19 +36,55 @@ export default async function Page() {
         <h1 className="text-2xl font-bold">
           Sequences
         </h1>
-        <Link
-          href="/sequences/new"
-          className="border rounded p-2 hover:bg-slate-50"
-        >
-          New Sequence
-        </Link>
       </div>
 
       <div className="flex flex-col gap-1 mt-12">
         <div className='divide-y border rounded'>
-          {sequences && sequences.map((sequence) => (<SequenceBadge key={sequence.id} sequence={sequence} />))}
+          {sequences && sequences
+            .filter((sequence) => !sequence.user_id)
+            .map((sequence) => 
+              <SequenceBadge key={sequence.id} sequence={sequence} />
+            )
+          }
         </div>
       </div>
+
+      <div className="flex flex-col gap-1 mt-12">
+        <div className='flex flex-row justify-between'>
+          <h2 className="text-xl font-bold">
+              My Sequences
+          </h2>
+          <Link
+            href="/sequences/new"
+            className="border rounded p-2 hover:bg-slate-50"
+          >
+            New Sequence
+          </Link>
+        </div>
+        <div className='divide-y border rounded'>
+          {sequences && sequences
+            .filter((sequence) => sequence.user_id === session.user.id)
+            .map((sequence) => 
+              <SequenceBadge key={sequence.id} sequence={sequence} />
+            )
+          }
+
+          {sequences
+            .filter((sequence) => sequence.user_id === session.user.id)
+            .length === 0 &&
+            <div className='p-4 text-center'>
+              You don&apos;t have any sequences yet. {' '}
+              <Link 
+                href="/sequences/new"
+                className='text-blue-500 hover:underline'
+              >
+                Create one!
+              </Link>
+            </div>
+          }
+        </div>
+      </div>
+
     </main>
   )
 }

@@ -28,7 +28,7 @@ export default function LogBadge(props: { log: Log }) {
     }
   }
 
-  const handleRetry = async () => {
+  const handleRetry = async (log: Log) => {
     await supabase
       .from('logs')
       .update({ status: 'pending' })
@@ -106,7 +106,7 @@ export default function LogBadge(props: { log: Log }) {
                   className='text-red-500 rounded hover:bg-slate-50'
                   onClick={(e) => {
                     e.preventDefault()
-                    handleRetry()
+                    handleRetry(log)
                   }}
                 >
                   Retry

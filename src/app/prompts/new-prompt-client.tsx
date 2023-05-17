@@ -8,6 +8,7 @@ import { useEffect, useState } from "react"
 import { Prompt } from '~/db/types'
 import usePrompts from "~/hooks/use-prompts"
 import { useSupabase } from '~/hooks/use-supabase'
+import useUser from '~/hooks/use-user'
 
 const DEFAULT_EMAIL = `Dear Hiring Manager, 
 
@@ -35,15 +36,7 @@ export default function DemoPage(props: any) {
 
   const [saveBusy, setSaveBusy] = useState<string>('Save')
 
-  const [user, setUser] = useState<any>(null)
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      const { data: { user }, error } = await supabase.auth.getUser()
-      setUser(user)
-    }
-    fetchUser()
-  }, [])
+  const user = useUser()
 
   useEffect(() => {
     if (!props.params) {

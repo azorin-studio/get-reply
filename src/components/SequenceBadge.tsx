@@ -5,6 +5,7 @@ import { useRef } from 'react'
 import { useHover } from 'usehooks-ts'
 import { Sequence } from '~/db/types'
 import { useSupabase } from "~/hooks/use-supabase"
+import useUser from '~/hooks/use-user'
 
 export const revalidate = 0
 
@@ -14,6 +15,8 @@ export default function SequenceBadge(props: { sequence: Sequence }) {
 
   const hoverRef = useRef(null)
   const isHovered = useHover(hoverRef)
+
+  const user = useUser()
   
   const handleDelete = async (sequence: Sequence) => {
     const { error } = await supabase
@@ -44,13 +47,13 @@ export default function SequenceBadge(props: { sequence: Sequence }) {
         </div>
 
         <div className="flex flex-row items-center gap-2 justify-between"> 
-          {!isHovered &&
+          {!isHovered && (user && user.id === sequence.user_id) &&
             <div>
               { sequence.created_at && formatDistance(new Date(sequence.created_at), new Date(), { addSuffix: true }) }
             </div>
           }
 
-          {isHovered &&
+          {isHovered && (user && user.id === sequence.user_id) &&
             <button
               className='text-red-500 rounded hover:bg-slate-50'
               onClick={(e) => {

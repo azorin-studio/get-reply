@@ -3,13 +3,31 @@ import Image from 'next/image';
 import Link from 'next/link';
 import hero from "../../public/hero.svg";
 
+import { createServerComponentSupabaseClient } from '@supabase/auth-helpers-nextjs';
 import { ArrowUpRight } from 'lucide-react';
+import { cookies, headers } from 'next/headers';
+import { redirect } from 'next/navigation';
 import ExampleSelector from '~/components/ExampleSelector';
 import NewsletterForm from '~/components/NewsletterForm';
+import { Database } from '~/db/database.types';
 
 export const revalidate = 0
 
 export default async function Page() {
+
+  const supabase = createServerComponentSupabaseClient<Database>({
+    headers,
+    cookies,
+  })
+
+  const {
+    data: { session },
+  } = await supabase.auth.getSession()
+
+  if (session) {
+    console.log('My Account: session does not exist, redirecting to /login')
+    return redirect('/logs') 
+  }
 
   return (
     <>
