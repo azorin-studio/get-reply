@@ -82,7 +82,7 @@ export default function DemoPage(props: any) {
           prompt: activePrompt.prompt, 
           name: activePrompt.name, 
           description: activePrompt.description,
-          user_id: user.id,
+          user_id: user && user.id,
         }
       ])
       .select()
@@ -162,7 +162,7 @@ export default function DemoPage(props: any) {
               name: 'new',
               prompt: '',
               description: '',
-              user_id: user.id,
+              user_id: user && user.id,
             })
           }}
         >
