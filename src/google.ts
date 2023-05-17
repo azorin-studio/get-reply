@@ -84,6 +84,7 @@ export const findThread = async (subject: string, to: Contact[], google_refresh_
   oauth2Client.setCredentials(tokens)
   const gmail = google.gmail({ version: 'v1', auth: oauth2Client })
   const q = `${subject} to: ${to.map(t => t!.address).join(', ')}`
+  // console.log('findThread', q)
   const threads = await gmail.users.threads.list({
     userId: 'me',
     q,

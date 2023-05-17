@@ -92,7 +92,7 @@ export default async function createDraftAndNotify (log: Log): Promise<Log> {
     log.from as any,
     log.subject || '',
     log.generations![todaysPromptIndex],
-    thread.threadId,
+    thread.id,
     profile.google_refresh_token
   )
 

@@ -37,11 +37,19 @@ export default async function Page() {
         Logs
       </h1>
 
-      <div className="flex flex-col gap-1 mt-12">
-        <div className='divide-y border rounded'>
-          {logs && logs.map((log) => (<LogBadge key={log.id} log={log} />))}
+      {logs.length === 0 && (
+        <div className="mt-4 text-slate-600">
+          No logs yet.
         </div>
-      </div>
+      )}
+
+      {logs && logs.length > 0 && (
+        <div className="flex flex-col gap-1 mt-12">
+          <div className='divide-y border rounded'>
+            {logs.map((log) => (<LogBadge key={log.id} log={log} />))}
+          </div>
+        </div>
+      )}
     </main>
   )
 }

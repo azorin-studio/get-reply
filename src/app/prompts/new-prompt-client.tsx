@@ -76,17 +76,19 @@ export default function DemoPage(props: any) {
 
     setSaveBusy('Saving')
 
+    const p: any = { 
+      prompt: activePrompt.prompt, 
+      name: activePrompt.name, 
+      description: activePrompt.description,
+      user_id: user && user.id,
+    }
+    if (props.params?.id) {
+      p.id = props.params.id
+    }
+
     const { data, error } = await supabase
       .from('prompts')
-      .upsert([
-        { 
-          id: props.params?.id || undefined,
-          prompt: activePrompt.prompt, 
-          name: activePrompt.name, 
-          description: activePrompt.description,
-          user_id: user && user.id,
-        }
-      ])
+      .upsert([p])
       .select()
 
     if (error) {

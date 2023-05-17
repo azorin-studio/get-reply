@@ -1,11 +1,6 @@
-const { colors } = require("tailwindcss/colors")
-const { fontFamily } = require("tailwindcss/defaultTheme")
-
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    "./app/**/*.{js,ts,jsx,tsx,mdx}",
-    "./components/**/*.{ts,tsx}",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   darkMode: ["class"],
@@ -17,9 +12,7 @@ module.exports = {
         "2xl": "1440px",
       },
     },
-    extend: {
-
-    },
+    extend: {},
   },
   plugins: [
     require("@tailwindcss/typography"),

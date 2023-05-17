@@ -59,9 +59,9 @@ export default function LogBody(props: { log: Log }) {
         >
           Delete
         </button>
-        {log.status === 'error'  && 
+        {/* {log.status === 'error'  &&  */}
           <button
-            className='text-red-500 rounded border p-2 hover:bg-slate-50'
+            className='rounded border p-2 hover:bg-slate-50'
             onClick={(e) => {
               e.preventDefault()
               log && handleRetry(log)
@@ -69,7 +69,7 @@ export default function LogBody(props: { log: Log }) {
           >
             Retry
           </button>
-        }
+        {/* } */}
       </div>
       <div className="flex flex-row gap-2">
         <div className="text-slate-400 w-24 text-right">

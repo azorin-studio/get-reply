@@ -33,7 +33,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                 user={session && session.user || null}
               />
               <div className="p-2 container mx-auto flex-grow"> 
-              {/* max-w-screen-lg  */}
                 {children}
               </div>
               <Footer/>

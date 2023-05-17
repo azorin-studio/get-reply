@@ -8,8 +8,6 @@ export default async function getLogsByStatus (status: string) {
     .select()
     .eq('status', status)
 
-  console.log({ getLogsByStatus: status, logs, error })
-
   if (error) {
     throw error
   }
