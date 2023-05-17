@@ -18,7 +18,9 @@ export default async function createLog (incomingEmail: IncomingEmail) {
     .insert(newLog as any)
     .select()
 
+  console.log(error, newLogs)
   if (error) {
+    console.error(error)
     throw error
   }
 
