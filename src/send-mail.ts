@@ -5,6 +5,7 @@ export default async function sendMail (props: {
   to: string,
   subject: string,
   textBody: string,
+  inReplyTo: string | undefined
   }) {
 
   const { 
@@ -12,6 +13,7 @@ export default async function sendMail (props: {
     to,
     subject,
     textBody,
+    inReplyTo
   } = props
 
   const response = await fetch('https://api.postmarkapp.com/email', {
@@ -26,6 +28,7 @@ export default async function sendMail (props: {
       To: to,
       Subject: subject,
       TextBody: textBody,
+      ReplyTo: inReplyTo || undefined,
       MessageStream: "outbound"
     })
   })
