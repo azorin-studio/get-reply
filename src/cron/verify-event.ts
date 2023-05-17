@@ -5,6 +5,10 @@ import { Log } from "~/db/types"
 
 export default async function verify (log: Log): Promise<Log> {
   // TODO check dmarc and stuff
+  log = await appendToLog(log, {
+    status: 'verifying'
+  })
+
   if (!log.text) {
     console.log('No text found in incoming email')
     log = await appendToLog(log, {

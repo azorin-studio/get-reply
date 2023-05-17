@@ -9,6 +9,9 @@ import { createGmailDraftInThread, findThread, makeUnreadInInbox } from "~/googl
 
 
 export default async function createDraftAndNotify (log: Log): Promise<Log> {
+  log = await appendToLog(log, {
+    status: 'drafting'
+  })
   if (!log.from) {
     throw new Error('No from address found in log')
   }

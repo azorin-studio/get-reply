@@ -6,6 +6,9 @@ import supabaseAdminClient from "~/db/server-admin-client"
 import { Log, Profile } from "~/db/types"
 
 export default async function generate (log: Log): Promise<Log> {
+  log = await appendToLog(log, {
+    status: 'generating'
+  })
   if (!log.from) {
     log = await appendToLog(log, {
       status: 'error',
