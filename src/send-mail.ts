@@ -1,6 +1,19 @@
 import fetch from 'isomorphic-fetch'
 
-export default async function sendMail () {
+export default async function sendMail (props: {
+  from: string,
+  to: string,
+  subject: string,
+  textBody: string,
+  }) {
+
+  const { 
+    from,
+    to,
+    subject,
+    textBody,
+  } = props
+
   const response = await fetch('https://api.postmarkapp.com/email', {
     method: "POST",
     headers: { 
@@ -9,10 +22,10 @@ export default async function sendMail () {
       'X-Postmark-Server-Token': process.env.POSTMARK_API_KEY!
     },
     body: JSON.stringify({
-      From: "reply@getreply.app",
-      To: "me+postmark@eoinmurray.eu",
-      Subject: "Hello from GetReply",
-      HtmlBody: "<strong>Hello</strong> dear GetReply user.",
+      From: from,
+      To: to,
+      Subject: subject,
+      TextBody: textBody,
       MessageStream: "outbound"
     })
   })
@@ -23,6 +36,5 @@ export default async function sendMail () {
     throw new Error(response.statusText)
   }
 
-  expect(json).toHaveProperty('Message')
-  expect(json.Message).toBe('OK')
+  return json
 }
