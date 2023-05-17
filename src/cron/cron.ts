@@ -10,9 +10,10 @@ export const daysBetween = (first: Date, second: Date): number => {
 }
 
 export const handleAllEvents = async () => {
-  await handleVerifyEvent()
-  await handleGenerateEvent()
-  await handleCreateDraftEvent()
+  let l1 = await handleVerifyEvent()
+  let l2 = await handleGenerateEvent()
+  let l3 = await handleCreateDraftEvent()
+  return [...l1, ...l2, ...l3]
 
 }
 
