@@ -1,0 +1,6 @@
+name = "email-forwarding"
+main = "email-forwarding/index.ts"
+compatibility_date = "2023-04-13"
+
+# [vars]
+# - GETREPLY_BOT_AUTH_TOKEN

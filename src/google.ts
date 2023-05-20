@@ -51,7 +51,14 @@ export const refreshAccessToken = async (google_refresh_token: string) => {
   return tokens
 }
 
-export const createGmailDraftInThread = async (to: Contact[], from: Contact, subject: string, text: string, threadId: string, google_refresh_token: string) => {
+export const createGmailDraftInThread = async (
+  to: Contact[], 
+  from: Contact, 
+  subject: string, 
+  text: string, 
+  threadId: string | null | undefined, 
+  google_refresh_token: string
+) => {
   const tokens = await refreshAccessToken(google_refresh_token)
   oauth2Client.setCredentials(tokens)
   const gmail = google.gmail({ version: 'v1', auth: oauth2Client })
@@ -109,6 +116,20 @@ export const makeUnreadInInbox = async (draftId: string, google_refresh_token: s
     requestBody: {
       addLabelIds: ['INBOX', 'UNREAD']
     }
+  })
+}
+
+export const sendDraft = async (draftId: string, google_refresh_token: string) => {
+  const tokens = await refreshAccessToken(google_refresh_token)
+  oauth2Client.setCredentials(tokens)
+  
+  const gmail = google.gmail({ version: 'v1', auth: oauth2Client })
+
+  return await gmail.users.drafts.send({
+    userId: 'me',
+    requestBody: {
+      id: draftId,
+    },
   })
 }
 

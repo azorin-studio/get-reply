@@ -83,7 +83,7 @@ export default async function replyEvent(log: Log){
   const reply = await sendMail({
     from: `${sequence.name}@getreply.app`,
     to: log.from!.address,
-    subject: log.subject!,
+    subject: `re: ${log.subject!}`,
     textBody: log.generations![todaysPromptIndex],
   })
   
