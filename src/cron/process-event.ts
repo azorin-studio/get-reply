@@ -8,8 +8,8 @@ export default async function processEmail (incomingEmail: IncomingEmail): Promi
   try {
     log = await createLog(incomingEmail)
   } catch (err: any) {
-    console.log(incomingEmail)
-    console.error(err)
+    // console.log(incomingEmail)
+    // console.error(err)
     throw err
   }
 
@@ -36,7 +36,6 @@ export default async function processEmail (incomingEmail: IncomingEmail): Promi
   }
 
   log = await appendToLog(log, {
-    status: 'pending',
     user_id: profile.id,
     provider,
   })

@@ -2,7 +2,6 @@ import { createServerComponentSupabaseClient } from '@supabase/auth-helpers-next
 import { cookies, headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import LogBadge from '~/components/LogBadge'
-import RefreshPeriodically from '~/components/RefreshPeriodically'
 import { Database } from '~/db/database.types'
 import { Log } from '~/db/types'
 
@@ -32,7 +31,6 @@ export default async function Page() {
 
   return (
     <main className="max-w-2xl mx-auto p-4 flex flex-col font-sans text-slate-800 antialiased">
-      <RefreshPeriodically />
       <h1 className="text-2xl font-bold">
         Logs
       </h1>

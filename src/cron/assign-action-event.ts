@@ -51,10 +51,10 @@ export default async function assignActionEvent(log: Log){
   })
 
   if (todaysStepIndex === undefined || todaysStepIndex === null || todaysStepIndex === -1) {
-    log = await appendToLog(log, {
-      status: 'error',
-      errorMessage: 'No prompt for today'
-    })
+    // log = await appendToLog(log, {
+    //   status: 'error',
+    //   errorMessage: 'No prompt for today'
+    // })
     return log
   }
 

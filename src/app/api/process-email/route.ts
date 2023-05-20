@@ -16,6 +16,7 @@ export async function POST (request: Request) {
   }
 
   try {
+    console.log('process email route')
     return NextResponse.json(await handleProcessEmailEvent(json as IncomingEmail))
   } catch (err: any) {
     return NextResponse.json({ error: err.message })

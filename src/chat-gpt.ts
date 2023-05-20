@@ -19,10 +19,10 @@ export async function callGPT35Api(prompt: string, retries = 3, delay = 1000): P
     const completionOptions = {
       model: "text-davinci-003",
       prompt,
-      temperature: 0.7,
-      top_p: 1,
-      frequency_penalty: 0,
-      presence_penalty: 0,
+      temperature: 0.2,
+      // top_p: 1,
+      // frequency_penalty: 0,
+      // presence_penalty: 0,
       max_tokens: 1024,
       n: 1,
     }
@@ -30,7 +30,8 @@ export async function callGPT35Api(prompt: string, retries = 3, delay = 1000): P
     
     const response = completion.data.choices[0].text?.trim()
     if (response) {
-      console.log(`GPT-3.5 response: ${response}`)
+      // console.log(`GPT-3.5 response\n==========Prompt\n${prompt}\n========\nResponse\n${response}`)
+      // console.log(JSON.stringify(completion.data, null, 2))
       return response
     } else {
       throw new Error('Empty response from GPT-3.5')

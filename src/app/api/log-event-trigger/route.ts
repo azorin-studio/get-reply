@@ -9,5 +9,7 @@ export async function POST () {
     return NextResponse.json({ error: 'Auth failed' })
   }
 
+  console.log('log-event-trigger route')
+
   return NextResponse.json(await handleAllEvents())
 }
