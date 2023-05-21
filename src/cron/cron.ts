@@ -64,6 +64,7 @@ export const handleCreateDraftEvent = async () => {
 
 export const handleReplyEvent = async () => {
   const logs = await getLogsByStatus('to-reply')
+  console.log('handle-replay: running on', logs.length)
   const processedLogs = await Promise.all(logs.map((log) => replyEvent(log as Log)))
   if (processedLogs.length > 0) console.log('handle-reply: ran on', processedLogs.length)
   return processedLogs

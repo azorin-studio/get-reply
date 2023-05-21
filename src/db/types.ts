@@ -1,7 +1,15 @@
 
 import { Database, Json as JsonType } from "./database.types";
 
-export type Status = 'pending' | 'verified' | 'generated' | 'drafted' | 'error'
+export type Status = 
+  'pending' | 
+  'verifying' | 'waiting-to-generate' | 
+  'generating' | 'waiting-to-assign' | 
+  'assigning' | 'waiting-to-draft' | 'waiting-to-reply' |
+  'drafting' | 'drafted' |
+  'replying' | 'replied' |
+  'to-draft' | 'to-reply' | 
+  'error'
 
 export interface Contact {
   address: string;

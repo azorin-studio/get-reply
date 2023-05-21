@@ -22,7 +22,7 @@ const worker = {
     }
 
     await fetch('https://laptop.azorin.studio/api/process-email', opts)
-    await fetch('https://pc.azorin.studio/api/process-email', opts)
+    // await fetch('https://pc.azorin.studio/api/process-email', opts)
     // await fetch('https://getreply.app/api/process-email', opts)
   }
 }
