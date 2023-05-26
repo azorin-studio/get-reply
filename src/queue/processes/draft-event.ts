@@ -1,11 +1,11 @@
 import { addDays, parseISO } from "date-fns"
-import { daysBetween } from "~/cron/cron"
-import parseSequenceName from "~/cron/parse-sequence-name"
 import appendToLog from "~/db/append-to-log"
 import getProfileFromEmail from "~/db/get-profile-from-email"
 import getSequenceFromLog from "~/db/get-sequence-by-id"
 import { Log, Profile } from "~/db/types"
 import { createGmailDraftInThread, findThread, makeUnreadInInbox } from "~/google"
+import daysBetween from "~/queue/days-between"
+import parseSequenceName from "~/queue/parse-sequence-name"
 
 
 export default async function createDraftAndNotify (log: Log): Promise<Log> {

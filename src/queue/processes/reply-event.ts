@@ -4,9 +4,9 @@ import getProfileFromEmail from "~/db/get-profile-from-email";
 import getSequenceFromLog from "~/db/get-sequence-by-id";
 import { Log, Profile } from "~/db/types";
 import { findThread } from "~/google";
+import daysBetween from "~/queue/days-between";
+import parseSequenceName from "~/queue/parse-sequence-name";
 import sendMail from "~/send-mail";
-import { daysBetween } from "./cron";
-import parseSequenceName from "./parse-sequence-name";
 
 export default async function replyEvent(log: Log){
   log = await appendToLog(log, {

@@ -1,12 +1,11 @@
-import { headers } from 'next/headers'
 import { NextResponse } from 'next/server'
-import { handleProcessEmailEvent } from '~/cron/cron'
 import { IncomingEmail } from '~/db/types'
+import { queue } from '~/queue/queue'
 
 export const revalidate = 0
 
 export async function POST (request: Request) {
-  if (headers().get('Authorization') !== `Bearer ${process.env.GETREPLY_BOT_AUTH_TOKEN}`) {
+  if (process.env.NODE_ENV === 'production' && 'Authorization' !== `Bearer ${process.env.GETREPLY_BOT_AUTH_TOKEN}`) {
     return NextResponse.json({ error: 'Auth failed' })
   }
 
@@ -16,8 +15,10 @@ export async function POST (request: Request) {
   }
 
   try {
-    console.log('process email route')
-    return NextResponse.json(await handleProcessEmailEvent(json as IncomingEmail))
+    
+    // await writeFile(`./src/data/test-email.json`, JSON.stringify(json, null, 2))
+
+    return NextResponse.json(await queue.add('process-incoming-mail', json as IncomingEmail))
   } catch (err: any) {
     return NextResponse.json({ error: err.message })
   }

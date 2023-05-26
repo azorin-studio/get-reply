@@ -9,21 +9,54 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
+      actions: {
+        Row: {
+          action: string | null
+          created_at: string | null
+          generation: string | null
+          id: string
+          mailId: string | null
+          prompt_id: string | null
+          run_date: string | null
+          user_id: string | null
+        }
+        Insert: {
+          action?: string | null
+          created_at?: string | null
+          generation?: string | null
+          id?: string
+          mailId?: string | null
+          prompt_id?: string | null
+          run_date?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          action?: string | null
+          created_at?: string | null
+          generation?: string | null
+          id?: string
+          mailId?: string | null
+          prompt_id?: string | null
+          run_date?: string | null
+          user_id?: string | null
+        }
+      }
       logs: {
         Row: {
+          actions_ids: string[] | null
           bcc: Json[] | null
           cc: Json[] | null
           created_at: string | null
           date: string | null
-          draftIds: string[] | null
           errorMessage: string | null
           from: Json | null
-          generations: string[] | null
           headers: Json[] | null
           html: string | null
           id: string
+          inReplyTo: string | null
           messageId: string | null
           provider: string | null
+          references: string | null
           sequence_id: string | null
           status: string | null
           subject: string | null
@@ -33,19 +66,20 @@ export interface Database {
           user_id: string | null
         }
         Insert: {
+          actions_ids?: string[] | null
           bcc?: Json[] | null
           cc?: Json[] | null
           created_at?: string | null
           date?: string | null
-          draftIds?: string[] | null
           errorMessage?: string | null
           from?: Json | null
-          generations?: string[] | null
           headers?: Json[] | null
           html?: string | null
           id?: string
+          inReplyTo?: string | null
           messageId?: string | null
           provider?: string | null
+          references?: string | null
           sequence_id?: string | null
           status?: string | null
           subject?: string | null
@@ -55,19 +89,20 @@ export interface Database {
           user_id?: string | null
         }
         Update: {
+          actions_ids?: string[] | null
           bcc?: Json[] | null
           cc?: Json[] | null
           created_at?: string | null
           date?: string | null
-          draftIds?: string[] | null
           errorMessage?: string | null
           from?: Json | null
-          generations?: string[] | null
           headers?: Json[] | null
           html?: string | null
           id?: string
+          inReplyTo?: string | null
           messageId?: string | null
           provider?: string | null
+          references?: string | null
           sequence_id?: string | null
           status?: string | null
           subject?: string | null

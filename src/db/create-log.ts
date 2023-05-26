@@ -9,13 +9,12 @@ export default async function createLog (incomingEmail: IncomingEmail) {
     .eq('messageId', incomingEmail.messageId)
 
   if (existingLogsError) {
-    console.error(existingLogsError)
     throw existingLogsError
   }
 
   if (existingLogs && existingLogs.length > 0) {
     console.log('log already exists:', existingLogs[0].id)
-    return existingLogs[0] as Log
+    throw new Error('Log already exists')
   } else {
     console.log('log does not exist creating new')
   }
@@ -26,8 +25,6 @@ export default async function createLog (incomingEmail: IncomingEmail) {
     status: 'pending',
     provider: 'unknown',
     errorMessage: null,
-    generations: null,
-    draftIds: null,
     sequence_id: null,
     threadId: null
   }

@@ -2,11 +2,11 @@
   "headers": [
     {
       "key": "received",
-      "value": "from mail-pg1-x52d.google.com (2607:f8b0:4864:20::52d) by email.cloudflare.net (unknown) id GvaHAh5DbDjD for <bot@getreply.app>; Thu, 27 Apr 2023 23:06:36 +0000"
+      "value": "from mail-pl1-x635.google.com (2607:f8b0:4864:20::635) by email.cloudflare.net (unknown) id Susk8ISOVY6D for <reply@getreply.app>; Fri, 26 May 2023 10:36:24 +0000"
     },
     {
       "key": "received-spf",
-      "value": "pass (mx.cloudflare.net: domain of amonecho1@gmail.com designates 2607:f8b0:4864:20::52d as permitted sender) helo=\"mail-pg1-x52d.google.com\"; envelope-from=\"amonecho1@gmail.com\";"
+      "value": "pass (mx.cloudflare.net: domain of amonecho1@gmail.com designates 2607:f8b0:4864:20::635 as permitted sender) helo=\"mail-pl1-x635.google.com\"; envelope-from=\"amonecho1@gmail.com\";"
     },
     {
       "key": "authentication-results",
@@ -14,43 +14,51 @@
     },
     {
       "key": "arc-seal",
-      "value": "i=1; a=rsa-sha256; s=2022; d=email.cloudflare.net; cv=none; b=bgzy6A8xX8V0rvLMs6uLrW+w8IRG7ZQPsuopddAzROiZH8OPdxzb0VbKzuJViSijOaWKjivqh tRGDD+TaZ18DEw8dnWJOgtdmj7o178qQlYcq1t1/0tv0sUN+eMfXNO8aO/g8xwVeHpMaVSQwpFm 02kbVWbU+J99E+tmVKHd+Aji8r23M0cixmMH6f+a3w8ktKsfyAHUoZwotNyAHMFED8OxgK8PQhT xgvurtpYsqpyrwmi3k4UCcPFxR636faXSCvga0LiII1MjYCEZjNdS06dAM0WH0DgTKviPygkcJl 3QbjRY8Fy85Y8aYFZ1lNZDbkWB/HZ/ucQ/x35M+r+H/g==;"
+      "value": "i=1; a=rsa-sha256; s=2022; d=email.cloudflare.net; cv=none; b=W/Bi0u7kywY45HZRVEQnnTroqPBGw3HgPiUlcDHE5zVVUdyxtKTRS7D+o5bYOZVnsFcsurWVL PKnCp6j0o8hgcR0r1jl8wNPlGm7PDbZNHKPwDB+eUuW+CuxnLGx4MU8IsPK1VfxJdSaWzMKNxZr WoUqj9jC+XrlGFrL76ErXTy6WKXiT209EVLuMbdgWDVtoC46NvqYb2xk73P6IZId0lebYjUeryC tSbQiV+WS28Vw2r4T4PpeGtZSkz5DqRyn+mEslOM0OR8rOlom0RuFLWBS1RPI5ZHqbdPABQ5syy /aTsMb1Ts7GhCaQObYzqOdbzDdXP24BixOlYNyn9aaWA==;"
     },
     {
       "key": "arc-message-signature",
-      "value": "i=1; a=rsa-sha256; s=2022; d=email.cloudflare.net; c=relaxed/relaxed; h=To:Subject:Date:From:reply-to:cc:resent-date:resent-from:resent-to :resent-cc:in-reply-to:references:list-id:list-help:list-unsubscribe :list-subscribe:list-post:list-owner:list-archive; t=1682636797; bh=6hMXyN4 iuE+hPLKYpEmp48D6qFVYu/aeplHF6pPLgqo=; b=OELKn2WJvSUhwSZDjc9IsRo+WtSPYEXRLe 1F813eDJeO7L7YjHFfv2J6jrHQ3dIBTd8m6ql7HdKkF75ub0wXxrMxXlW4J4HOUcFJM1KsD97Mj qeIaOBfwZ6ttkt+ElJMhj4z7FA3eoIET48Ourq2E6lTY+kWnfG4d/RIfnY3S/omUxuA9BXQ1h2v K5WeO3sv/IHCpNZIJfUlN9mnOS/MGLX22Qpi7VKOPFYBnSInA3Xabygj3fFd4rL5h4q1X93vlYb tUZR3fogATr9klcPgJgJE2yPiT6DZWIEx6xbli572KMvlnMB1+mOxKZA+Y3NwkYh6MelbNjrFjT PTLWBmEA==;"
+      "value": "i=1; a=rsa-sha256; s=2022; d=email.cloudflare.net; c=relaxed/relaxed; h=To:Subject:Date:from:reply-to:cc:resent-date:resent-from:resent-to :resent-cc:in-reply-to:references:list-id:list-help:list-unsubscribe :list-subscribe:list-post:list-owner:list-archive; t=1685097384; bh=abSd98f Op3iZ86vW2QUcOJLhNm4/8CCGPCLVUIQfCxg=; b=k8irLIuJsniDo4JKvSQe4frg5jBHXDp97K j6bbfGFTwNNNsgsUZTouClTILSbZ6I81I+PxUwQLbhKJw4GIxW8K9c90SZk9Rqhb7dhk1XsHCn4 IcnjsSLwVwUz8rbSeP+h8WbCBeJArwQTcDUtdIpA+mLr4FdA1sNQ3Si6I1PKhRN2FZPCckUzRWB M4tM6CPSXiNTXYOeweGAUPzD4zQO/6lMKsBuHNMitvOZZDNWew/JxpLneuwPSrxjh5wC+oN1MH7 QHfWbtV5NMD+DnOCvj9Q+lPYFp/SVsBCn8O8m71sVN3Q2Hkb86dEcCcKkj+OaZZkU1bkj6klFpt YcP2D+/Q==;"
     },
     {
       "key": "arc-authentication-results",
-      "value": "i=1; mx.cloudflare.net; dkim=pass header.d=gmail.com header.s=20221208 header.b=cmhXkvSI; dmarc=pass header.from=gmail.com policy.dmarc=none; spf=none (mx.cloudflare.net: no SPF records found for postmaster@mail-pg1-x52d.google.com) smtp.helo=mail-pg1-x52d.google.com; spf=pass (mx.cloudflare.net: domain of amonecho1@gmail.com designates 2607:f8b0:4864:20::52d as permitted sender) smtp.mailfrom=amonecho1@gmail.com; arc=none smtp.remote-ip=2607:f8b0:4864:20::52d"
+      "value": "i=1; mx.cloudflare.net; dkim=pass header.d=gmail.com header.s=20221208 header.b=sPz+Xcym; dmarc=pass header.from=gmail.com policy.dmarc=none; spf=none (mx.cloudflare.net: no SPF records found for postmaster@mail-pl1-x635.google.com) smtp.helo=mail-pl1-x635.google.com; spf=pass (mx.cloudflare.net: domain of amonecho1@gmail.com designates 2607:f8b0:4864:20::635 as permitted sender) smtp.mailfrom=amonecho1@gmail.com; arc=none smtp.remote-ip=2607:f8b0:4864:20::635"
     },
     {
       "key": "dkim-signature",
-      "value": "v=1; a=rsa-sha256; s=2022; d=email.cloudflare.net; c=relaxed/relaxed; h=To:Subject:Date:From:reply-to:cc:resent-date:resent-from:resent-to :resent-cc:in-reply-to:references:list-id:list-help:list-unsubscribe :list-subscribe:list-post:list-owner:list-archive; t=1682636797; bh=6hMXyN4 iuE+hPLKYpEmp48D6qFVYu/aeplHF6pPLgqo=; b=Rdp4ibUjwIDvWiJtWE8XTH851Ov8JNjDof 5oRu4cxlAG1lyEocKD+rkC6tBxieP0oe5fR/mhI2h/cvUaUo3sZe3wpOHeRJFN5dWXv1lfCE8GG U5oUTvy8SdO3Hm4rfMSCu/mu0VXTvepEk3P1uOIvw0Uvmv3DZuOYpzknbruj8/6BBX96tBgntsl DitFtBc3LApPvEZDBaQMOwYoflXQSCoTlyMcLntrMaHxZ0lkhG4S6gD5X5Ta31ALtdZVEsXr5Ze /mD2MqNd4EqcRB9nAN5hbUqg0ipHn3uakB0e4QP2gJacnwhNhvPVFoRaysgh4W6314dhS4S6TmY 9D+veA4g==;"
+      "value": "v=1; a=rsa-sha256; s=2022; d=email.cloudflare.net; c=relaxed/relaxed; h=To:Subject:Date:from:reply-to:cc:resent-date:resent-from:resent-to :resent-cc:in-reply-to:references:list-id:list-help:list-unsubscribe :list-subscribe:list-post:list-owner:list-archive; t=1685097384; bh=abSd98f Op3iZ86vW2QUcOJLhNm4/8CCGPCLVUIQfCxg=; b=f3ctSoQ6JqVLdZ2o2rh2r7LZlF5uCM4lzD 2P5Syllnt6OFYlSVdizNvRrEpW1yWQQeP4K3qPyyRp+kOsNAXaCCqHWZuDnxDSxnx1qc7NJxqlb CBVQcoTy42TaG2SsJNziOoc4InhvZrI6wLNgDNTq09nasaLFWtH5t5rLLkfcZH0I6Ld+l5gSBrc hs+tsL7GiCJu9fG9+4Xha18ZnNGJ7gixuWv1N9PW6T55+SuFaUoG6q2C1u4rAjQzku15bmDFHZ8 AzvwsKJu686t59Fir8OPc8fxT5G+8kthYdVpZjzWimwTBgXXcKE/FkUrOwqH1VnUaPXqQD2mQBV x1KwS9mg==;"
     },
     {
       "key": "received",
-      "value": "by mail-pg1-x52d.google.com with SMTP id 41be03b00d2f7-52867360efcso3329544a12.2 for <bot@getreply.app>; Thu, 27 Apr 2023 16:06:36 -0700 (PDT)"
+      "value": "by mail-pl1-x635.google.com with SMTP id d9443c01a7336-1b01aa5526fso1559865ad.2 for <reply@getreply.app>; Fri, 26 May 2023 03:36:24 -0700 (PDT)"
     },
     {
       "key": "dkim-signature",
-      "value": "v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20221208; t=1682636796; x=1685228796; h=to:subject:message-id:date:from:mime-version:from:to:cc:subject :date:message-id:reply-to; bh=6hMXyN4iuE+hPLKYpEmp48D6qFVYu/aeplHF6pPLgqo=; b=cmhXkvSI/n+6pbuKaSUygbnscHrKpPIbLVKUaK9dWzdv+HZ2UqfGnUY0ZJZ5uka46K sBFz6EQP9ToYaC5/zNAnWQR82wF05vRqoegumqihmvNJEjyTeBEWa548Ai6XL5JjJv88 +Jpda5kntqJxzDqulSJczBRYF3Qbn37MiLR69PZV95rGeeG2S6fhG4q88W3D+I7D7c25 j1MJRh0DUn4YpI3x/tC2W9kPsOttF/MjFpAHPEO5cotohcwmAtL/S0DzkCTX2aVt5kWg 74KwnFZJq6TC7dIbVezAc+7eeb+Wu4MkEX9D1s5Zfn6kAvSvkTNdWWMD0f8a9StgaMrM oGFw=="
+      "value": "v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20221208; t=1685097384; x=1687689384; h=to:subject:message-id:date:from:mime-version:from:to:cc:subject :date:message-id:reply-to; bh=abSd98fOp3iZ86vW2QUcOJLhNm4/8CCGPCLVUIQfCxg=; b=sPz+Xcym45gOXeCyixjSoA5SwD7cVZ7yhr/zEMHDlA2W71nv/BKez4FAbiIqG3aqpi 7nw7+DIlK4utQCmlA+1tWcj1rHwRKTMWgLjGo25rFZX/T7jUYKDQSlJLmfmtaGuKNQl/ 4prTABcEzrrQzwZHKlg9XhFzkgQFI0WlE146hsgp1IeI5WNqpddeaCenabFl/W8L1mTv n3G8RlmLlfXZbaaKkvAChaY8XcXm5WTO4Vjxwt0h5vOM57u0TonPCOGKNuAntkv+Y8LA AxyXloJQXMZ8tnaKO5Tcn1kLZVxzhXz7zY6IIzZwluG2nbYcpuOZCZDLboQ+O4Wo98qW 3TXA=="
     },
     {
       "key": "x-google-dkim-signature",
-      "value": "v=1; a=rsa-sha256; c=relaxed/relaxed; d=1e100.net; s=20221208; t=1682636796; x=1685228796; h=to:subject:message-id:date:from:mime-version:x-gm-message-state :from:to:cc:subject:date:message-id:reply-to; bh=6hMXyN4iuE+hPLKYpEmp48D6qFVYu/aeplHF6pPLgqo=; b=GPY6yTUxxh1LWFcaH0RX1fbraMYgd6r2u5mFVcUHxdyW38geqZaz2scmxZ0Xq7yO07 I+h3NJCNXzvRDCyCxr1jbIr1RXNdyUGy9JVh2MHgmVl1WlzPiuBPCBm3oA6gxW5j7oyz ybSh7DNCknIW1CsrYMIQwfU7BNfis+05P9zajDXBWhg94Zb4TRECADBhqTMNLwEyA+UQ 9G36tM5v73gI9cV2mk2Trv7bZagqYiukbZYk03IyYr1qo1MvYLgw84ljeUfZNBy3udnm Fs7Ji44dtE/W1s5DjVxXOjdq5eqDrc2YvtmtXgXnoNIvWSCv+HxgXZUGeflVNJOj7adJ YR/Q=="
+      "value": "v=1; a=rsa-sha256; c=relaxed/relaxed; d=1e100.net; s=20221208; t=1685097384; x=1687689384; h=to:subject:message-id:date:from:mime-version:x-gm-message-state :from:to:cc:subject:date:message-id:reply-to; bh=abSd98fOp3iZ86vW2QUcOJLhNm4/8CCGPCLVUIQfCxg=; b=jCcfgB4jIF5krMx1Gi4Pczin+a9TnQZP08GUJGc/KbGQVGVcnXoNVPjNRHy6WST5rZ Eu9YS6pKM/JTRCH0DjBcjGxxt21uHl3E/yblZXt0ACmruqZqDhMFyvWnOh3sC7hVUD8g sTrUtCVZs14v7fO0q3eHLkjFoPWiukm4Fazb0MdHExQpcx6jAf5zx+eBDREv88rgicFs qaWcE8061hE+hkGbWyvwefKA5S19PA+TyDeBP0h1uGindP6fG7TvOtzRvAN4qanOJPF9 31Nd8dFy0mT17lcDbTMv+TPcRpBtaNDi4HL3RfLL+BbSiBxDaaHuhkY1521f3Q2Wynw5 RlWg=="
     },
     {
       "key": "x-gm-message-state",
-      "value": "AC+VfDxMgmYAdAFjlmwGU69hQyxLPpPTBL9OdRmQkyJZWpfTZUaC7jVw p8pXfgZqb3d9aAWxj1OUqFi9VHGRM3m0ZjrZwZuu9ToK7Rs="
+      "value": "AC+VfDycoGuU+jTA1LonvZM9kAmKw0p3yfvoCSnulEHIQ7k60gmqyxsv EoMdMktS/xCqoEnmkqo/X/9W7fpHq7m8plh9YGM0NI5wNUQ="
     },
     {
       "key": "x-google-smtp-source",
-      "value": "ACHHUZ61e1yZG6yIVGacCuRSJqLqVnv2o5whQhrR0tBFW98zToH04Aw/qMLNpVAAnWUJ1qTwQmVQX+kNnDjktOAAy1c="
+      "value": "ACHHUZ7eUncTu+e3URHjNasE9AylLBJ3mlu4I3xWUVTSEhOSzM4JczQM3thMVxqaDyxvwqfOyrwBTTAxiNl4ZaTLu/g="
     },
     {
       "key": "x-received",
-      "value": "by 2002:a17:90a:690d:b0:247:1f35:3314 with SMTP id r13-20020a17090a690d00b002471f353314mr3142360pjj.48.1682636795800; Thu, 27 Apr 2023 16:06:35 -0700 (PDT)"
+      "value": "by 2002:a17:902:d346:b0:1af:ccc2:70dd with SMTP id l6-20020a170902d34600b001afccc270ddmr1955093plk.28.1685097384021; Fri, 26 May 2023 03:36:24 -0700 (PDT)"
+    },
+    {
+      "key": "received",
+      "value": "from 643874583166 named unknown by gmailapi.google.com with HTTPREST; Fri, 26 May 2023 03:36:23 -0700"
+    },
+    {
+      "key": "received",
+      "value": "from 643874583166 named unknown by gmailapi.google.com with HTTPREST; Fri, 26 May 2023 03:36:23 -0700"
     },
     {
       "key": "mime-version",
@@ -58,45 +66,41 @@
     },
     {
       "key": "from",
-      "value": "Eoin Murray <amonecho1@gmail.com>"
+      "value": "amonecho1@gmail.com"
     },
     {
       "key": "date",
-      "value": "Fri, 28 Apr 2023 01:06:24 +0200"
+      "value": "Fri, 26 May 2023 03:36:23 -0700"
     },
     {
       "key": "message-id",
-      "value": "<CAG9yPc1rZwQvuJduBaVYwJbP4g=t8fPH90yQ1eoXBKdoYcJJew@mail.gmail.com>"
+      "value": "<CAG9yPc1=DJN4Wu=ygVueikSWiXg+zmrLG7Q3O6fyB3jdjwgGZw@mail.gmail.com>"
     },
     {
       "key": "subject",
-      "value": "simpler thread"
+      "value": "Test: 4aw90"
     },
     {
       "key": "to",
-      "value": "test@getreply.app"
+      "value": "reply@getreply.app"
     },
     {
       "key": "content-type",
-      "value": "multipart/alternative; boundary=\"00000000000081cd2b05fa5968dd\""
+      "value": "text/plain; charset=\"UTF-8\""
     }
   ],
   "from": {
     "address": "amonecho1@gmail.com",
-    "name": "Eoin Murray"
+    "name": ""
   },
   "to": [
     {
-      "address": "test@getreply.app",
+      "address": "reply@getreply.app",
       "name": ""
     }
   ],
-  "cc": [],
-  "bcc": [],
-  "subject": "simpler thread",
-  "messageId": "<CAG9yPc1rZwQvuJduBaVYwJbP4g=t8fPH90yQ1eoXBKdoYcJJew@mail.gmail.com>",
-  "date": "2023-04-27T23:06:24.000Z",
-  "html": "<div dir=\"ltr\"><div>simpler thread for now</div></div>\n\n",
-  "text": "simpler thread for now\n\n",
-  "attachments": []
+  "subject": "Test: 4aw90",
+  "messageId": "<CAG9yPc1=DJN4Wu=ygVueikSWiXg+zmrLG7Q3O6fyB3jdjwgGZw@mail.gmail.com>",
+  "date": "2023-05-26T10:36:23.000Z",
+  "text": "Body: 4aw90\n"
 }
