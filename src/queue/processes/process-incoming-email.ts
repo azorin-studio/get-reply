@@ -1,10 +1,10 @@
 import { addDays, parseISO } from "date-fns"
-import appendToLog from "~/db/append-to-log"
-import createLog from "~/db/create-log"
-import getProfileFromEmail from "~/db/get-profile-from-email"
-import getSequenceFromLog from "~/db/get-sequence-by-id"
-import supabaseAdminClient from "~/db/server-admin-client"
-import { IncomingEmail, Log, Profile } from "~/db/types"
+import appendToLog from "~/db-admin/append-to-log"
+import createLog from "~/db-admin/create-log"
+import getProfileFromEmail from "~/db-admin/get-profile-from-email"
+import getSequenceFromLog from "~/db-admin/get-sequence-by-id"
+import supabaseAdminClient from "~/db-admin/server-admin-client"
+import { IncomingEmail, Log, Profile } from "~/db-admin/types"
 import parseSequenceName from "~/queue/parse-sequence-name"
 
 export default async function verifyIncomingEmail (incomingEmail: IncomingEmail): Promise<Log> {
@@ -72,9 +72,10 @@ export default async function verifyIncomingEmail (incomingEmail: IncomingEmail)
       .insert({
         run_date: addDays(parseISO(log!.date!), step.delay),
         prompt_id: step.prompt_id,
-        action: step.action || 'draft',
+        name: step.action || 'draft',
         generation: '', // placeholder
         mailId: '', // placeholder 
+        log_id: log!.id,
         user_id: profile.id,
       })
       .select()

@@ -1,6 +1,6 @@
 'use client'
 
-import { Prompt } from "~/db/types"
+import { Prompt } from "~/db-admin/types"
 
 
 export default function PromptBody(props: { prompt: Prompt }) {

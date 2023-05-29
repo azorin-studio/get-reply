@@ -9,7 +9,7 @@ import { cookies, headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import ExampleSelector from '~/components/ExampleSelector';
 import NewsletterForm from '~/components/NewsletterForm';
-import { Database } from '~/db/database.types';
+import { Database } from '~/db-admin/database.types';
 
 export const revalidate = 0
 

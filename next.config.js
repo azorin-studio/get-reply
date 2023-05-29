@@ -6,6 +6,7 @@ const nextConfig = {
   reactStrictMode: true,
   experimental: {
     appDir: true,
+    serverComponentsExternalPackages: ['bullmq']
   },
   webpack: (config) => {
     config.resolve.fallback = { fs: false };

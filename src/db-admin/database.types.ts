@@ -11,33 +11,42 @@ export interface Database {
     Tables: {
       actions: {
         Row: {
-          action: string | null
           created_at: string | null
+          errorMessage: string | null
           generation: string | null
           id: string
+          log_id: string | null
           mailId: string | null
+          name: string | null
           prompt_id: string | null
           run_date: string | null
+          status: string | null
           user_id: string | null
         }
         Insert: {
-          action?: string | null
           created_at?: string | null
+          errorMessage?: string | null
           generation?: string | null
           id?: string
+          log_id?: string | null
           mailId?: string | null
+          name?: string | null
           prompt_id?: string | null
           run_date?: string | null
+          status?: string | null
           user_id?: string | null
         }
         Update: {
-          action?: string | null
           created_at?: string | null
+          errorMessage?: string | null
           generation?: string | null
           id?: string
+          log_id?: string | null
           mailId?: string | null
+          name?: string | null
           prompt_id?: string | null
           run_date?: string | null
+          status?: string | null
           user_id?: string | null
         }
       }

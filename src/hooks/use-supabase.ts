@@ -1,5 +1,5 @@
 import { useContext } from "react"
-import { Context } from '~/db/provider'
+import { Context } from '~/db-admin/provider'
 
 export const useSupabase = () => {
   let context = useContext(Context)

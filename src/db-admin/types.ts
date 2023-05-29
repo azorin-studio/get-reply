@@ -42,6 +42,8 @@ export type IncomingEmail = Pick<Log, 'bcc' | 'cc' | 'date' | 'from' | 'headers'
 
 export type Json = JsonType
 
+export type Action = Database['public']['Tables']['actions']['Insert']
+
 export type Profile = Database['public']['Tables']['profiles']['Row']
 
 export type Prompt = Database['public']['Tables']['prompts']['Insert']

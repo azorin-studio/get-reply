@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Prompt } from "~/db/types"
+import { Prompt } from "~/db-admin/types"
 import { useSupabase } from "~/hooks/use-supabase"
 
 export default function usePrompts() {

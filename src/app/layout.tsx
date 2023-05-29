@@ -4,8 +4,8 @@ import { Analytics } from '@vercel/analytics/react'
 import { cookies, headers } from "next/headers"
 import Footer from "~/components/Footer"
 import Header from "~/components/Header"
-import { Database } from "~/db/database.types"
-import SupabaseProvider from "~/db/provider"
+import { Database } from "~/db-admin/database.types"
+import SupabaseProvider from "~/db-admin/provider"
 import "~/styles/globals.css"
 
 export const metadata = {

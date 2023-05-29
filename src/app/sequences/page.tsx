@@ -3,8 +3,8 @@ import { cookies, headers } from 'next/headers'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import SequenceBadge from '~/components/SequenceBadge'
-import { Database } from '~/db/database.types'
-import { Sequence } from '~/db/types'
+import { Database } from '~/db-admin/database.types'
+import { Sequence } from '~/db-admin/types'
 
 export const revalidate = 0
 

@@ -3,7 +3,7 @@ import { formatDistance } from 'date-fns'
 import Link from 'next/link'
 import { useRef } from 'react'
 import { useHover } from 'usehooks-ts'
-import { Log } from '~/db/types'
+import { Log } from '~/db-admin/types'
 import { useSupabase } from '~/hooks/use-supabase'
 
 export const revalidate = 0

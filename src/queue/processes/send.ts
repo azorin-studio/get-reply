@@ -1,16 +1,16 @@
-import { addDays, parseISO } from "date-fns"
-import appendToLog from "~/db/append-to-log"
-import getProfileFromEmail from "~/db/get-profile-from-email"
-import getSequenceFromLog from "~/db/get-sequence-by-id"
-import { Log, Profile } from "~/db/types"
-import { createGmailDraftInThread, findThread, makeUnreadInInbox } from "~/google"
-import daysBetween from "~/queue/days-between"
-import parseSequenceName from "~/queue/parse-sequence-name"
+import { addDays, parseISO } from "date-fns";
+import appendToLog from "~/db-admin/append-to-log";
+import getProfileFromEmail from "~/db-admin/get-profile-from-email";
+import getSequenceFromLog from "~/db-admin/get-sequence-by-id";
+import { Log, Profile } from "~/db-admin/types";
+import { findThread } from "~/google";
+import daysBetween from "~/queue/days-between";
+import parseSequenceName from "~/queue/parse-sequence-name";
+import sendMail from "~/send-mail";
 
-
-export default async function createDraftAndNotify (log: Log): Promise<Log> {
+export default async function replyEvent(actions_id: string){
   log = await appendToLog(log, {
-    status: 'drafting'
+    status: 'replying'
   })
 
   if (!log.from) {
@@ -41,14 +41,6 @@ export default async function createDraftAndNotify (log: Log): Promise<Log> {
     log = await appendToLog(log, {
       status: 'error',
       errorMessage: 'No google refresh token found for this email'
-    })
-    return log
-  }
-
-  if (!log.headers || log.headers.length === 0) {
-    log = await appendToLog(log, {
-      status: 'error',
-      errorMessage: 'No headers found in log'
     })
     return log
   }
@@ -88,17 +80,15 @@ export default async function createDraftAndNotify (log: Log): Promise<Log> {
 
   const isLastPrompt = todaysPromptIndex === sequence.steps.length - 1
 
-  const draft = await createGmailDraftInThread(
-    log.to as any[],
-    log.from as any,
-    log.subject || '',
-    log.generations![todaysPromptIndex],
-    thread.id,
-    profile.google_refresh_token
-  )
-
+  const reply = await sendMail({
+    from: `${sequence.name}@getreply.app`,
+    to: log.from!.address,
+    subject: `re: ${log.subject!}`,
+    textBody: log.generations![todaysPromptIndex],
+  })
+  
   let allDraftIds = log.draftIds || []
-  const newDraftId = draft.id
+  const newDraftId = reply.id
   if (newDraftId) {
     allDraftIds = [...allDraftIds, newDraftId]
   }
@@ -110,12 +100,8 @@ export default async function createDraftAndNotify (log: Log): Promise<Log> {
 
   if (isLastPrompt) {
     log = await appendToLog(log, {
-      status: 'drafted'
+      status: 'replied'
     })
-  }
-    
-  if (draft.message!.id) {
-    await makeUnreadInInbox(draft.message!.id, profile.google_refresh_token)
   }
 
   return log

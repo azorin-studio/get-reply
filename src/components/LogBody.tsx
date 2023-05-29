@@ -3,9 +3,9 @@
 import { formatDistance } from 'date-fns'
 import { ExternalLink } from 'lucide-react'
 import Link from 'next/link'
-import { Log } from '~/db/types'
+import { Log } from '~/db-admin/types'
 import { useSupabase } from '~/hooks/use-supabase'
-import UnpureStep from './UnpureStep'
+import UnpureAction from './UnpureAction'
 
 export default function LogBody(props: { log: Log }) {
   const { log } = props
@@ -174,14 +174,10 @@ export default function LogBody(props: { log: Log }) {
           </div>
 
           <div className="mt-6">
-            {log.sequence?.steps?.map((step, index) => (
-              <UnpureStep
-                status={log.status}
-                created_at={log.created_at}
-                key={`gen${index}`} 
-                delay={step!.delay}
-                prompt_id={step!.prompt_id}
-                generation={log.generations && log.generations[index]}
+            {log.actions_ids?.map((action_id, index) => (
+              <UnpureAction
+                key={index}
+                action_id={action_id}
               />
             ))}
           </div>      

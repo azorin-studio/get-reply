@@ -1,4 +1,4 @@
-import { Log } from "~/db/types"
+import { Log } from "~/db-admin/types"
 
 export default function parseSequenceName (log: Log) {
   let allToEmails: any[] = []
