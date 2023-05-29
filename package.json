@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "test": "jest",
-    "download-types": "supabase gen types typescript --project-id 'dwtrraqsrjkkheqloopn' --schema public > src/db/database.types.ts",
+    "download-types": "supabase gen types typescript --project-id 'dwtrraqsrjkkheqloopn' --schema public > src/db-admin/database.types.ts",
     "wrangler:dev": "wrangler dev",
     "wrangler:deploy": "wrangler deploy",
     "wrangler:logs": "wrangler tail email-forwarding"

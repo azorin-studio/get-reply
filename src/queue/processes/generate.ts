@@ -35,4 +35,5 @@ export default async function generate (action_id: string) {
     generation
   })
 
+  return action
 }

@@ -21,6 +21,7 @@ export interface Database {
           prompt_id: string | null
           run_date: string | null
           status: string | null
+          threadId: string | null
           user_id: string | null
         }
         Insert: {
@@ -34,6 +35,7 @@ export interface Database {
           prompt_id?: string | null
           run_date?: string | null
           status?: string | null
+          threadId?: string | null
           user_id?: string | null
         }
         Update: {
@@ -47,6 +49,7 @@ export interface Database {
           prompt_id?: string | null
           run_date?: string | null
           status?: string | null
+          threadId?: string | null
           user_id?: string | null
         }
       }

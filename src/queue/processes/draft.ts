@@ -1,122 +1,84 @@
-import { addDays, parseISO } from "date-fns"
-import appendToLog from "~/db-admin/append-to-log"
+import appendToAction from "~/db-admin/append-to-action"
 import getProfileFromEmail from "~/db-admin/get-profile-from-email"
-import getSequenceFromLog from "~/db-admin/get-sequence-by-id"
-import { Log, Profile } from "~/db-admin/types"
+import { Action, Profile } from "~/db-admin/types"
 import { createGmailDraftInThread, findThread, makeUnreadInInbox } from "~/google"
-import daysBetween from "~/queue/days-between"
-import parseSequenceName from "~/queue/parse-sequence-name"
+import getActionById from "~/db-admin/get-action-by-id"
+import getLogById from "~/db-admin/get-log-by-id"
+import getPromptById from "~/db-admin/get-prompt-by-id"
 
+export default async function draft(action_id: string){
+  let action: Action | null = await getActionById(action_id)
+  
+  if (!action) {
+    throw new Error(`Action ${action_id} not found`)
+  }
 
-export default async function createDraftAndNotify (actions_id: string): Promise<Log> {
-  log = await appendToLog(log, {
-    status: 'drafting'
+  const prompt = await getPromptById(action.prompt_id!)
+
+  if (!prompt) {
+    throw new Error(`Prompt ${action.prompt_id} not found`)
+  }
+
+  const log = await getLogById(action.log_id!)
+
+  if (!log) {
+    throw new Error(`Log ${action.log_id} not found`)
+  }
+
+  action = await appendToAction(action, {
+    status: 'generating'
+  })
+
+  action = await appendToAction(action, {
+    status: 'sending'
   })
 
   if (!log.from) {
-    throw new Error('No from address found in log')
-  }
-
-  const sequence = await getSequenceFromLog(log)
-  if (!sequence) {
-    const sequenceName = parseSequenceName(log)
-    log = await appendToLog(log, {
-      status: 'error',
-      errorMessage: `Could not find sequence for this address: ${sequenceName}`
-    })
-    return log
-  }
-
-  if (!sequence.steps) {
-    log = await appendToLog(log, {
-      status: 'error',
-      errorMessage: 'No prompt list found for this sequence'
-    })
-    return log
+    throw new Error('No from address found in action')
   }
 
   const profile: Profile = await getProfileFromEmail(log.from.address)
 
   if (!profile.google_refresh_token) {
-    log = await appendToLog(log, {
+    action = await appendToAction(action, {
       status: 'error',
       errorMessage: 'No google refresh token found for this email'
     })
-    return log
-  }
-
-  if (!log.headers || log.headers.length === 0) {
-    log = await appendToLog(log, {
-      status: 'error',
-      errorMessage: 'No headers found in log'
-    })
-    return log
+    return action
   }
 
   let thread: any = null
   try {
     thread = await findThread(log.subject!, log.to as any[], profile.google_refresh_token)
     if (!thread) {
-      log = await appendToLog(log, {
-        status: 'error',
-        errorMessage: 'Could not find thread'
-      })
-      return log
+      throw new Error('Could not find thread')
     }
   } catch (err: any) {
-    log = await appendToLog(log, {
+    action = await appendToAction(action, {
       status: 'error',
       errorMessage: err.message || 'Could not find thread'
     })
-    return log
+    return action
   }
-
-  // only one prompt can be placed per day
-  const todaysPromptIndex = sequence.steps.findIndex((prompt: any) => {
-    const today = new Date()
-    const dateToSend = addDays(parseISO(log!.date!), prompt.delay)
-    return daysBetween(today, dateToSend) === 0
-  })
-
-  if (todaysPromptIndex === undefined || todaysPromptIndex === null || todaysPromptIndex === -1) {
-    log = await appendToLog(log, {
-      status: 'error',
-      errorMessage: 'No prompt for today'
-    })
-    return log
-  }
-
-  const isLastPrompt = todaysPromptIndex === sequence.steps.length - 1
 
   const draft = await createGmailDraftInThread(
     log.to as any[],
     log.from as any,
     log.subject || '',
-    log.generations![todaysPromptIndex],
+    action.generation,
     thread.id,
     profile.google_refresh_token
   )
 
-  let allDraftIds = log.draftIds || []
-  const newDraftId = draft.id
-  if (newDraftId) {
-    allDraftIds = [...allDraftIds, newDraftId]
-  }
-
-  log = await appendToLog(log, {
-    threadId: thread.id,
-    draftIds: allDraftIds
-  })
-
-  if (isLastPrompt) {
-    log = await appendToLog(log, {
-      status: 'drafted'
-    })
-  }
-    
   if (draft.message!.id) {
     await makeUnreadInInbox(draft.message!.id, profile.google_refresh_token)
   }
 
-  return log
+  action = await appendToAction(action, {
+    threadId: thread.id,
+    mailId: draft.id,
+    status: 'sent',
+  })
+
+  return action
 }
