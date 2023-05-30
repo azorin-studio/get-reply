@@ -3,6 +3,7 @@ import generate from './processes/generate'
 import schedule from './processes/schedule'
 import { inngest } from './client'
 import getActionById from '~/db-admin/get-action-by-id'
+import { isAfter } from 'date-fns'
 
 const inngestProcessIncomingEmail = inngest.createFunction(
   { name: "process incoming email" },
@@ -36,7 +37,12 @@ const inngestSchedule = inngest.createFunction(
       throw new Error(`Action ${event.data.action_id} not found`)
     }
 
-    // await step.sleepUntil(action.run_date as string)
+    // const d = new Date(action.run_date as string)
+    // console.log(isAfter(d, new Date()), d, new Date())
+    // if (isAfter(d, new Date())) {
+    //   console.log(`Sleeping until ${d}`)
+    //   await step.sleepUntil(d)
+    // }
 
     action = await schedule(event.data.action_id)
     
