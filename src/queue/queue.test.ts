@@ -23,7 +23,7 @@ describe('queue', () => {
     })
 
     const data = await request.json()
-    expect(data).toHaveProperty('id')
+    expect(data).toHaveProperty('success')
   }, 10000)
 
   it('should draft follow ups after 3 and 6 days', async () => {
@@ -45,7 +45,7 @@ describe('queue', () => {
     })
 
     const data = await request.json()
-    expect(data).toHaveProperty('id')
+    expect(data).toHaveProperty('success')
   }, 10000)
 
 it.only('should draft follow immediately', async () => {
@@ -67,7 +67,7 @@ it.only('should draft follow immediately', async () => {
     })
 
     const data = await request.json()
-    expect(data).toHaveProperty('id')
+    expect(data).toHaveProperty('success')
   }, 10000)
 
 

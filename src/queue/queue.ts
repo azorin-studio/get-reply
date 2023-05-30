@@ -4,15 +4,14 @@ import schedule from './processes/schedule'
 import send from './processes/send'
 import draft from './processes/draft'
 import { Inngest } from 'inngest'
+import { inngest } from './inngest-client'
 
-export const inngest = new Inngest({ 
-  name: "get-reply-dev"
-})
 
 const inngestProcessIncomingEmail = inngest.createFunction(
   { name: "process incoming email" },
   { event: "queue/process-incoming-email" },
   async ({ event, step }) => {
+    console.log("process incoming email", event.data)
     const log = await processIncomingEmail(event.data)
     log.action_ids?.forEach(async (action_id: string) => {
       await inngest.send({ name: 'queue/generate', data: { action_id } })
