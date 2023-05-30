@@ -7,6 +7,7 @@ import getLogById from "~/db-admin/get-log-by-id"
 import getPromptById from "~/db-admin/get-prompt-by-id"
 
 import sendMail from "~/send-mail"
+import appendToLog from "~/db-admin/append-to-log"
 
 export default async function replyEvent(action_id: string){
   let action: Action | null = await getActionById(action_id)
@@ -39,7 +40,7 @@ export default async function replyEvent(action_id: string){
     throw new Error('No from address found in action')
   }
 
-  const profile: Profile = await getProfileFromEmail(log.from.address)
+  const profile: Profile = await getProfileFromEmail((log.from as any).address)
 
   if (!profile.google_refresh_token) {
     action = await appendToAction(action, {
@@ -65,9 +66,9 @@ export default async function replyEvent(action_id: string){
 
   const reply = await sendMail({
     from: `reply@getreply.app`,
-    to: log.from.address,
+    to: (log.from as any).address,
     subject: `re: ${log.subject}`,
-    textBody: action.generation,
+    textBody: action.generation as string,
   })
 
   action = await appendToAction(action, {
@@ -76,7 +77,7 @@ export default async function replyEvent(action_id: string){
     status: 'sent',
   })
 
-  log = await appendToAction(log, {
+  log = await appendToLog(log, {
     status: 'sent',
   })
 

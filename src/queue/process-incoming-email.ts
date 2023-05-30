@@ -70,7 +70,7 @@ export default async function verifyIncomingEmail (incomingEmail: IncomingEmail)
     const { error, data: action } = await supabaseAdminClient
       .from('actions')
       .insert({
-        run_date: addDays(parseISO(log!.date!), step.delay),
+        run_date: addDays(parseISO(log!.date!), step.delay).toISOString(),
         prompt_id: step.prompt_id,
         name: step.action || 'draft',
         generation: '', // placeholder
@@ -93,7 +93,7 @@ export default async function verifyIncomingEmail (incomingEmail: IncomingEmail)
 
   log = await appendToLog(log, {
     status: 'scheduling',
-    actions_ids: actions.map(action => action.id),
+    action_ids: actions.map(action => action.id),
   })
 
   return log

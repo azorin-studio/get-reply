@@ -26,7 +26,8 @@ export default async function createLog (incomingEmail: IncomingEmail) {
     provider: 'unknown',
     errorMessage: null,
     sequence_id: null,
-    threadId: null
+    threadId: null,
+    action_ids: [],
   }
 
   const { error, data: newLogs } = await supabaseAdminClient

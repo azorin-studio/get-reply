@@ -1,7 +1,7 @@
 import supabaseAdminClient from "./server-admin-client"
 import { Log } from "./types"
 
-export default async function appendToLog (log: Log, newTerms: object) {
+export default async function appendToLog (log: Log, newTerms: object): Promise<Log> {
   const { error, data: newLogs } = await supabaseAdminClient
     .from('logs')
     .update({ ...newTerms })
@@ -12,5 +12,5 @@ export default async function appendToLog (log: Log, newTerms: object) {
     throw error
   }
 
-  return newLogs[0] as Log
+  return (newLogs[0] as any) as Log
 }

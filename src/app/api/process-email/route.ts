@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { IncomingEmail } from '~/db-admin/types'
-import { queue } from '~/queue/queue'
+import { inngest } from "~/queue/queue";
 
 export const revalidate = 0
 
@@ -15,9 +15,10 @@ export async function POST (request: Request) {
   }
 
   try {
-    const job = await queue.add('process-incoming-mail', json as IncomingEmail)
+    const job = await inngest.send({ name: 'queue/process-incoming-email', data: json as IncomingEmail })
     return NextResponse.json(job)
   } catch (err: any) {
+    console.error(err)
     return NextResponse.json({ error: err.message })
   }
 }

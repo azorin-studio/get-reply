@@ -62,7 +62,7 @@ const UnpureAction = (props: {
           Status: {action.status}
         </div>
         <div>
-          Date to run: {format(new Date(action.run_date), 'yyyy-MM-dd HH:mm:ss')}
+          Date to run: {format(new Date(action.run_date!), 'yyyy-MM-dd HH:mm:ss')}
         </div>
       </div>
 

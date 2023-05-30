@@ -1,6 +1,7 @@
 import supabaseAdminClient from "./server-admin-client"
+import { Log } from "./types"
 
-export default async function getLogById (id: string) {
+export default async function getLogById (id: string): Promise<Log | null | undefined> {
   const { error, data: logs } = await supabaseAdminClient
     .from('logs')
     .select()

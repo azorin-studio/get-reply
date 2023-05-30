@@ -55,7 +55,7 @@ export interface Database {
       }
       logs: {
         Row: {
-          actions_ids: string[] | null
+          action_ids: string[] | null
           bcc: Json[] | null
           cc: Json[] | null
           created_at: string | null
@@ -78,7 +78,7 @@ export interface Database {
           user_id: string | null
         }
         Insert: {
-          actions_ids?: string[] | null
+          action_ids?: string[] | null
           bcc?: Json[] | null
           cc?: Json[] | null
           created_at?: string | null
@@ -101,7 +101,7 @@ export interface Database {
           user_id?: string | null
         }
         Update: {
-          actions_ids?: string[] | null
+          action_ids?: string[] | null
           bcc?: Json[] | null
           cc?: Json[] | null
           created_at?: string | null

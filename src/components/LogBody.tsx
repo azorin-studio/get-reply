@@ -174,7 +174,7 @@ export default function LogBody(props: { log: Log }) {
           </div>
 
           <div className="mt-6">
-            {log.actions_ids?.map((action_id, index) => (
+            {log.action_ids?.map((action_id, index) => (
               <UnpureAction
                 key={index}
                 action_id={action_id}

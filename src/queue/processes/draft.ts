@@ -37,7 +37,7 @@ export default async function draft(action_id: string){
     throw new Error('No from address found in action')
   }
 
-  const profile: Profile = await getProfileFromEmail(log.from.address)
+  const profile: Profile = await getProfileFromEmail((log.from as any).address as string)
 
   if (!profile.google_refresh_token) {
     action = await appendToAction(action, {
@@ -65,7 +65,7 @@ export default async function draft(action_id: string){
     log.to as any[],
     log.from as any,
     log.subject || '',
-    action.generation,
+    action.generation!,
     thread.id,
     profile.google_refresh_token
   )
