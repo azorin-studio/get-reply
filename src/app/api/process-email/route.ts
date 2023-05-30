@@ -6,7 +6,8 @@ export const revalidate = 0
 
 export async function POST (request: Request) {
   if (process.env.NODE_ENV === 'production' && 'Authorization' !== `Bearer ${process.env.GETREPLY_BOT_AUTH_TOKEN}`) {
-    return NextResponse.json({ error: 'Auth failed' })
+    console.error('Auth failed')
+    return NextResponse.json({ error: 'Auth failed' }, { status: 401 })
   }
 
   const json = await request.json()
