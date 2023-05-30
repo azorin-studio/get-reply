@@ -12,7 +12,8 @@
     "wrangler:dev": "wrangler dev",
     "wrangler:deploy": "wrangler deploy",
     "wrangler:logs": "wrangler tail email-forwarding",
-    "inngest": "npx inngest-cli@latest dev"
+    "inngest": "npx inngest-cli@latest dev",
+    "pull-secrets": "vercel env pull .env.development.local"
   },
   "dependencies": {
     "@google-cloud/local-auth": "^2.1.0",
