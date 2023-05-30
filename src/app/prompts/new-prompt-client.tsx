@@ -2,7 +2,7 @@
 
 import * as Popover from '@radix-ui/react-popover';
 import fetch from 'isomorphic-fetch';
-import { ChevronDownIcon, Loader } from "lucide-react";
+import { Loader } from "lucide-react";
 import ms from "ms";
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from "react";
@@ -186,7 +186,6 @@ export default function DemoPage(props: any) {
                     className="flex flex-row items-center gap-2 text-sm border p-2 rounded hover:bg-slate-100"
                   >
                     {activePrompt?.name || 'Choose a prompt'}
-                    <ChevronDownIcon className="w-4 h-4" />
                   </Popover.Trigger>
 
                   <Popover.Portal>
