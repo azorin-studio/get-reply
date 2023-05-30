@@ -14,8 +14,6 @@ export default async function sendMail (props: {
     textBody,
   } = props
 
-  console.log('sendMail', JSON.stringify({ from, to, subject, textBody }, null, 2))
-
   const response = await fetch('https://api.postmarkapp.com/email', {
     method: "POST",
     headers: { 

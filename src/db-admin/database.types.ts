@@ -21,6 +21,7 @@ export interface Database {
           prompt_id: string | null
           run_date: string | null
           status: string | null
+          threadId: string | null
           user_id: string | null
         }
         Insert: {
@@ -34,6 +35,7 @@ export interface Database {
           prompt_id?: string | null
           run_date?: string | null
           status?: string | null
+          threadId?: string | null
           user_id?: string | null
         }
         Update: {
@@ -47,12 +49,13 @@ export interface Database {
           prompt_id?: string | null
           run_date?: string | null
           status?: string | null
+          threadId?: string | null
           user_id?: string | null
         }
       }
       logs: {
         Row: {
-          actions_ids: string[] | null
+          action_ids: string[] | null
           bcc: Json[] | null
           cc: Json[] | null
           created_at: string | null
@@ -75,7 +78,7 @@ export interface Database {
           user_id: string | null
         }
         Insert: {
-          actions_ids?: string[] | null
+          action_ids?: string[] | null
           bcc?: Json[] | null
           cc?: Json[] | null
           created_at?: string | null
@@ -98,7 +101,7 @@ export interface Database {
           user_id?: string | null
         }
         Update: {
-          actions_ids?: string[] | null
+          action_ids?: string[] | null
           bcc?: Json[] | null
           cc?: Json[] | null
           created_at?: string | null

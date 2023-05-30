@@ -1,65 +1,73 @@
-import { Queue, Worker, QueueEvents } from 'bullmq'
-import ioredis from 'ioredis'
-import processIncomingEmail from '~/queue/processes/process-incoming-email'
+import processIncomingEmail from '~/queue/process-incoming-email'
 import generate from './processes/generate'
 import schedule from './processes/schedule'
+import send from './processes/send'
+import draft from './processes/draft'
+import { Inngest } from 'inngest'
+import { inngest } from './inngest-client'
 
-if (!process.env.KV_URL) throw new Error('KV_URL is not defined')
 
-const queueName = `queue-${process.env.NODE_ENV}`
-
-const redis = new ioredis(process.env.KV_URL, {
-  tls: {
-    rejectUnauthorized: false,
-  },
-  maxRetriesPerRequest: null
-})
-
-export const queue = new Queue(queueName, { connection: redis })
-const queueEvents = new QueueEvents(queueName, { connection: redis })
-
-const work = async (job: any) => {
-  if (job.name === 'process-incoming-mail') {
-    const log = await processIncomingEmail(job.data)
-    log.actions_ids?.forEach(async (actionId: string) => {
-      await queue.add('generate', { actionId })
+const inngestProcessIncomingEmail = inngest.createFunction(
+  { name: "process incoming email" },
+  { event: "queue/process-incoming-email" },
+  async ({ event, step }) => {
+    const log = await processIncomingEmail(event.data)
+    log.action_ids?.forEach(async (action_id: string) => {
+      await inngest.send({ name: 'queue/generate', data: { action_id } })
     })
-    return log
+    return { event, body: log };
   }
+);
 
-  if (job.name === 'generate') {
-    await generate(job.data.actionId)
+const inngestGenerate = inngest.createFunction(
+  { name: "generate" },
+  { event: "queue/generate" },
+  async ({ event, step }) => {
+    const action = await generate(event.data.action_id)
+    await inngest.send({ name: 'queue/schedule', data: { action_id: event.data.action_id } })
+    return { event, body: action };
   }
+);
 
-  if (job.name === 'schedule') {
-    // now we schedule the next job in this action, which is either a draft or a send
-    // need to calculate the date based on the run_date and the delay in ms
-    await schedule(job.data.actionId)
+const inngestSchedule = inngest.createFunction(
+  { name: "schedule" },
+  { event: "queue/schedule" },
+  async ({ event, step }) => {
+    const action = await schedule(event.data.action_id)
+    return { event, body: action };
   }
+);
 
-  if (job.name === 'send') {
-    await send(job.data.actionId)
+const inngestSend = inngest.createFunction(
+  { name: "send" },
+  { event: "queue/send" },
+  async ({ event, step }) => {    
+    // // turn run date into ms from now
+    // // https://stackoverflow.com/questions/14980014/how-can-i-calculate-the-time-between-2-dates-in-typescript
+    // const delay = new Date(action.run_date as string).getTime() - new Date().getTime()
+
+    const action = await send(event.data.action_id)
+    return { event, body: action };
   }
+);
 
-  if (job.name === 'draft') {
-    await draft(job.data.actionId)
+const inngestDraft = inngest.createFunction(
+  { name: "draft" },
+  { event: "queue/draft" },
+  async ({ event, step }) => {    
+    // // turn run date into ms from now
+    // // https://stackoverflow.com/questions/14980014/how-can-i-calculate-the-time-between-2-dates-in-typescript
+    // const delay = new Date(action.run_date as string).getTime() - new Date().getTime()
+
+    const action = await draft(event.data.action_id)
+    return { event, body: action };
   }
-}
+);
 
-const worker = new Worker(queueName, work, { connection: redis })
-
-worker.on('completed', job => {
-  console.log(`job-${job.id} [${job.name}] has completed!`)
-})
-
-worker.on('failed', (job, err) => {
-  console.log(`job-${job.id} has failed with ${err.message}`)
-})
-
-queueEvents.on('completed', ({ jobId }) => {
-  console.log(`queue completed ${jobId}`)
-})
-
-queueEvents.on('failed', ({ jobId, failedReason }: { jobId: string, failedReason: string }) => {
-  console.error('error', failedReason)
-})
+export const ingestFns = [
+  inngestProcessIncomingEmail,
+  inngestGenerate,
+  inngestSchedule,
+  inngestSend,
+  inngestDraft
+]

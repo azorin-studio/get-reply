@@ -1,108 +1,111 @@
-import { addDays, parseISO } from "date-fns";
-import appendToLog from "~/db-admin/append-to-log";
-import getProfileFromEmail from "~/db-admin/get-profile-from-email";
-import getSequenceFromLog from "~/db-admin/get-sequence-by-id";
-import { Log, Profile } from "~/db-admin/types";
-import { findThread } from "~/google";
-import daysBetween from "~/queue/days-between";
-import parseSequenceName from "~/queue/parse-sequence-name";
-import sendMail from "~/send-mail";
+import appendToAction from "~/db-admin/append-to-action"
+import getProfileFromEmail from "~/db-admin/get-profile-from-email"
+import { Action, Profile } from "~/db-admin/types"
+import { findThread } from "~/google"
+import getActionById from "~/db-admin/get-action-by-id"
+import getLogById from "~/db-admin/get-log-by-id"
+import getPromptById from "~/db-admin/get-prompt-by-id"
 
-export default async function replyEvent(actions_id: string){
-  log = await appendToLog(log, {
-    status: 'replying'
+import sendMail from "~/send-mail"
+import appendToLog from "~/db-admin/append-to-log"
+
+export default async function replyEvent(action_id: string){
+  let action = await getActionById(action_id)
+  
+  if (!action) {
+    throw new Error(`Action ${action_id} not found`)
+  }
+
+  let log = await getLogById(action.log_id!)
+
+  if (!log) {
+    throw new Error(`Log ${action.log_id} not found`)
+  }
+
+  const prompt = await getPromptById(action.prompt_id!)
+
+  if (!prompt) {
+    log = await appendToLog(log, {
+      status: 'error',
+      errorMessage: `Prompt ${action.prompt_id} not found`
+    })
+    action = await appendToAction(action, {
+      status: 'error',
+      errorMessage: `Prompt ${action.prompt_id} not found`
+    })
+
+    throw new Error(`Prompt ${action.prompt_id} not found`)
+  }
+
+  action = await appendToAction(action, {
+    status: 'sending'
   })
 
   if (!log.from) {
-    throw new Error('No from address found in log')
+    throw new Error('No from address found in action')
   }
 
-  const sequence = await getSequenceFromLog(log)
-  if (!sequence) {
-    const sequenceName = parseSequenceName(log)
-    log = await appendToLog(log, {
-      status: 'error',
-      errorMessage: `Could not find sequence for this address: ${sequenceName}`
-    })
-    return log
-  }
-
-  if (!sequence.steps) {
-    log = await appendToLog(log, {
-      status: 'error',
-      errorMessage: 'No prompt list found for this sequence'
-    })
-    return log
-  }
-
-  const profile: Profile = await getProfileFromEmail(log.from.address)
+  const profile: Profile = await getProfileFromEmail((log.from as any).address)
 
   if (!profile.google_refresh_token) {
+    action = await appendToAction(action, {
+      status: 'error',
+      errorMessage: 'No google refresh token found for this email'
+    })
     log = await appendToLog(log, {
       status: 'error',
       errorMessage: 'No google refresh token found for this email'
     })
-    return log
+
+    throw new Error('No google refresh token found for this email')
   }
 
   let thread: any = null
   try {
     thread = await findThread(log.subject!, log.to as any[], profile.google_refresh_token)
-    if (!thread) {
-      log = await appendToLog(log, {
-        status: 'error',
-        errorMessage: 'Could not find thread'
-      })
-      return log
+    if (!thread) {  
+      throw new Error('Could not find thread')
     }
   } catch (err: any) {
+    action = await appendToAction(action, {
+      status: 'error',
+      errorMessage: err.message || 'Could not find thread'
+    })
     log = await appendToLog(log, {
       status: 'error',
       errorMessage: err.message || 'Could not find thread'
     })
-    return log
+    throw new Error(err.message || 'Could not find thread')
   }
 
-  // only one prompt can be placed per day
-  const todaysPromptIndex = sequence.steps.findIndex((prompt: any) => {
-    const today = new Date()
-    const dateToSend = addDays(parseISO(log!.date!), prompt.delay)
-    return daysBetween(today, dateToSend) === 0
-  })
+  try {
+    const reply = await sendMail({
+      from: `reply@getreply.app`,
+      to: (log.from as any).address,
+      subject: `re: ${log.subject}`,
+      textBody: action.generation as string,
+    })
 
-  if (todaysPromptIndex === undefined || todaysPromptIndex === null || todaysPromptIndex === -1) {
+    action = await appendToAction(action, {
+      threadId: thread.id,
+      mailId: reply.id,
+      status: 'sent',
+    })
+
+    log = await appendToLog(log, {
+      status: 'sent',
+    })
+
+    return action
+  } catch (err: any) {
+    action = await appendToAction(action, {
+      status: 'error',
+      errorMessage: err.message || 'Could not send email'
+    })
     log = await appendToLog(log, {
       status: 'error',
-      errorMessage: 'No prompt for today'
+      errorMessage: err.message || 'Could not send email'
     })
-    return log
+    throw new Error(err.message || 'Could not send email')
   }
-
-  const isLastPrompt = todaysPromptIndex === sequence.steps.length - 1
-
-  const reply = await sendMail({
-    from: `${sequence.name}@getreply.app`,
-    to: log.from!.address,
-    subject: `re: ${log.subject!}`,
-    textBody: log.generations![todaysPromptIndex],
-  })
-  
-  let allDraftIds = log.draftIds || []
-  const newDraftId = reply.id
-  if (newDraftId) {
-    allDraftIds = [...allDraftIds, newDraftId]
-  }
-
-  log = await appendToLog(log, {
-    threadId: thread.id,
-    draftIds: allDraftIds
-  })
-
-  if (isLastPrompt) {
-    log = await appendToLog(log, {
-      status: 'replied'
-    })
-  }
-
-  return log
 }

@@ -1,4 +1,5 @@
 import { addDays, parseISO } from "date-fns"
+import { th } from "date-fns/locale"
 import appendToLog from "~/db-admin/append-to-log"
 import createLog from "~/db-admin/create-log"
 import getProfileFromEmail from "~/db-admin/get-profile-from-email"
@@ -8,20 +9,14 @@ import { IncomingEmail, Log, Profile } from "~/db-admin/types"
 import parseSequenceName from "~/queue/parse-sequence-name"
 
 export default async function verifyIncomingEmail (incomingEmail: IncomingEmail): Promise<Log> {
-  let log: Log | null = null
-  try {
-    log = await createLog(incomingEmail)
-  } catch (err: any) {
-    throw err
-  }
+  let log: Log | null = await createLog(incomingEmail)
 
   if (!log.from) {
     log = await appendToLog(log, {
       status: 'error',
       errorMessage: 'No from address found in log'
     })
-
-    return log
+    throw new Error('No from address found in log')
   }
 
   const profile: Profile = await getProfileFromEmail(log.from.address)
@@ -31,6 +26,7 @@ export default async function verifyIncomingEmail (incomingEmail: IncomingEmail)
       status: 'error',
       errorMessage: 'No profile found for this email'
     })
+    throw new Error('No profile found for this email')
   }
 
   log = await appendToLog(log, {
@@ -48,7 +44,7 @@ export default async function verifyIncomingEmail (incomingEmail: IncomingEmail)
       status: 'error',
       errorMesaage: 'No text found in incoming email'
     })
-    return log
+    throw new Error('No text found in incoming email')
   }
 
   const sequence = await getSequenceFromLog(log)
@@ -58,7 +54,7 @@ export default async function verifyIncomingEmail (incomingEmail: IncomingEmail)
       status: 'error',
       errorMessage: `Could not find sequence:${sequenceName}`
     })
-    return log
+    throw new Error(`Could not find sequence:${sequenceName}`)
   }
 
   log = await appendToLog(log, {
@@ -66,35 +62,43 @@ export default async function verifyIncomingEmail (incomingEmail: IncomingEmail)
     sequence_id: sequence.id
   })
 
-  const actions = await Promise.all(sequence.steps.map(async (step: any) => {
-    const { error, data: action } = await supabaseAdminClient
-      .from('actions')
-      .insert({
-        run_date: addDays(parseISO(log!.date!), step.delay),
-        prompt_id: step.prompt_id,
-        name: step.action || 'draft',
-        generation: '', // placeholder
-        mailId: '', // placeholder 
-        log_id: log!.id,
-        user_id: profile.id,
-      })
-      .select()
+  try {
+    const actions = await Promise.all(sequence.steps.map(async (step: any) => {
+      const { error, data: action } = await supabaseAdminClient
+        .from('actions')
+        .insert({
+          run_date: addDays(parseISO(log!.date!), step.delay).toISOString(),
+          prompt_id: step.prompt_id,
+          name: step.action || 'draft',
+          generation: '', // placeholder
+          mailId: '', // placeholder 
+          log_id: log!.id,
+          user_id: profile.id,
+        })
+        .select()
 
-    if (error) {
-      throw error
-    }
+      if (error) {
+        throw error
+      }
 
-    if (!action || action.length === 0) {
-      throw new Error('Could not create action')
-    }
+      if (!action || action.length === 0) {
+        throw new Error('Could not create action')
+      }
 
-    return action[0]
-  }))
+      return action[0]
+    }))
 
-  log = await appendToLog(log, {
-    status: 'scheduling',
-    actions_ids: actions.map(action => action.id),
-  })
+    log = await appendToLog(log, {
+      status: 'scheduling',
+      action_ids: actions.map(action => action.id),
+    })
 
-  return log
+    return log
+  } catch (error: any) {
+    log = await appendToLog(log, {
+      status: 'error',
+      errorMessage: error.message
+    })
+    throw error
+  }
 }

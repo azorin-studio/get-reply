@@ -31,6 +31,7 @@ export type Log = Omit<
   bcc: any[] | null;
   cc: any[] | null;
   sequence?: Sequence | null;
+  action_ids: string[] | null | undefined
 }
 
 export type IncomingEmail = Pick<Log, 'bcc' | 'cc' | 'date' | 'from' | 'headers' | 'html' | 'messageId' | 'subject' | 'text' | 'to' > & {

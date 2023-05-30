@@ -162,27 +162,26 @@ export default function LogBody(props: { log: Log }) {
         </div>
       }
 
-      {!log.errorMessage &&
-        <>
-          <div className="flex flex-row gap-2 mt-6">
-            <div className="flex-none text-slate-400 w-24 text-right">
-              email body
-            </div>
-            <div className='border p-2 grow rounded whitespace-pre-wrap'>
-              {log.text?.trim()}
-            </div>
+      <>
+        <div className="flex flex-row gap-2 mt-6">
+          <div className="flex-none text-slate-400 w-24 text-right">
+            email body
           </div>
+          <div className='border p-2 grow rounded whitespace-pre-wrap'>
+            {log.text?.trim()}
+          </div>
+        </div>
 
-          <div className="mt-6">
-            {log.actions_ids?.map((action_id, index) => (
-              <UnpureAction
-                key={index}
-                action_id={action_id}
-              />
-            ))}
-          </div>      
-        </>
-      }
+        <div className="mt-6">
+          {log.action_ids?.map((action_id, index) => (
+            <UnpureAction
+              key={index}
+              action_id={action_id}
+            />
+          ))}
+        </div>      
+      </>
+
     </div>
   )
 }
