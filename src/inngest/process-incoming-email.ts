@@ -6,7 +6,7 @@ import getProfileFromEmail from "~/db-admin/get-profile-from-email"
 import getSequenceFromLog from "~/db-admin/get-sequence-by-id"
 import supabaseAdminClient from "~/db-admin/server-admin-client"
 import { IncomingEmail, Log, Profile } from "~/db-admin/types"
-import parseSequenceName from "~/queue/parse-sequence-name"
+import parseSequenceName from "~/inngest/parse-sequence-name"
 
 export default async function verifyIncomingEmail (incomingEmail: IncomingEmail): Promise<Log> {
   let log: Log | null = await createLog(incomingEmail)

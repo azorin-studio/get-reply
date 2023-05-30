@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { inngest } from '~/queue/inngest-client'
+import { inngest } from '~/inngest/client'
 
 export const revalidate = 0
 

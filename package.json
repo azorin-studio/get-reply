@@ -12,7 +12,7 @@
     "wrangler:dev": "wrangler dev",
     "wrangler:deploy": "wrangler deploy",
     "wrangler:logs": "wrangler tail email-forwarding",
-    "inngest": "npx inngest-cli@latest dev",
+    "inngest": "npx inngest-cli@latest dev --port 8288",
     "pull-secrets": "vercel env pull .env.development.local"
   },
   "dependencies": {

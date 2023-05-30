@@ -1,7 +1,7 @@
 
 import { serve } from "inngest/next";
-import { inngest } from "~/queue/inngest-client";
-import { ingestFns } from "~/queue/queue";
+import { inngest } from "~/inngest/client";
+import { ingestFns } from "~/inngest/functions";
 
 const helloWorld = inngest.createFunction(
   { name: "Hello World" },

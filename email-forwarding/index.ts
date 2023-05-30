@@ -22,6 +22,7 @@ const worker = {
     }
 
     try {
+      console.log('Sending to https://laptop.azorin.studio/api/process-email')
       const r = await fetch('https://laptop.azorin.studio/api/process-email', opts)
       console.log(r.status)
       console.log(await r.json())
@@ -29,21 +30,21 @@ const worker = {
       console.log(e)
     }
 
-    try {
-      const r = await fetch('https://pc.azorin.studio/api/process-email', opts)
-      console.log(r.status)
-      console.log(await r.json())
-    } catch (e) {
-      console.log(e)
-    }
+    // try {
+    //   const r = await fetch('https://pc.azorin.studio/api/process-email', opts)
+    //   console.log(r.status)
+    //   console.log(await r.json())
+    // } catch (e) {
+    //   console.log(e)
+    // }
     
-    try {
-      const r = await fetch('https://getreply.app/api/process-email', opts)
-      console.log(r.status)
-      console.log(await r.json())
-    } catch (e) {
-      console.log(e)
-    }
+    // try {
+    //   const r = await fetch('https://getreply.app/api/process-email', opts)
+    //   console.log(r.status)
+    //   console.log(await r.json())
+    // } catch (e) {
+    //   console.log(e)
+    // }
   }
 }
 

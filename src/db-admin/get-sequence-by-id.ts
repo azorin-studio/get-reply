@@ -1,4 +1,4 @@
-import parseSequenceName from "~/queue/parse-sequence-name"
+import parseSequenceName from "~/inngest/parse-sequence-name"
 import supabaseAdminClient from "./server-admin-client"
 import { Log } from "./types"
 
