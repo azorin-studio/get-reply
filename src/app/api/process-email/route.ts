@@ -15,7 +15,8 @@ export async function POST (request: Request) {
   }
 
   try {
-    return NextResponse.json(await queue.add('process-incoming-mail', json as IncomingEmail))
+    const job = await queue.add('process-incoming-mail', json as IncomingEmail)
+    return NextResponse.json(job)
   } catch (err: any) {
     return NextResponse.json({ error: err.message })
   }

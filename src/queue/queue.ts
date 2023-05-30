@@ -1,6 +1,6 @@
 import { Queue, Worker, QueueEvents } from 'bullmq'
 import ioredis from 'ioredis'
-import processIncomingEmail from '~/queue/processes/process-incoming-email'
+import processIncomingEmail from '~/queue/process-incoming-email'
 import generate from './processes/generate'
 import schedule from './processes/schedule'
 import send from './processes/send'
@@ -22,6 +22,7 @@ const queueEvents = new QueueEvents(queueName, { connection: redis })
 
 const work = async (job: any) => {
   if (job.name === 'process-incoming-mail') {
+    console.log('process-incoming-mail', job.data)
     const log = await processIncomingEmail(job.data)
     log.actions_ids?.forEach(async (actionId: string) => {
       await queue.add('generate', { actionId })
@@ -32,7 +33,6 @@ const work = async (job: any) => {
   if (job.name === 'generate') {
     console.log('generate', job.data.actionId)
     const action = await generate(job.data.actionId)
-    console.log('generate done for action', job.data.actionId)
     await queue.add('schedule', { actionId: job.data.actionId })
     return action
   }
@@ -40,14 +40,17 @@ const work = async (job: any) => {
   if (job.name === 'schedule') {
     // now we schedule the next job in this action, which is either a draft or a send
     // need to calculate the date based on the run_date and the delay in ms
+    console.log('schedule', job.data.actionId)
     return await schedule(job.data.actionId)
   }
 
   if (job.name === 'send') {
+    console.log('send', job.data.actionId)
     return await send(job.data.actionId)
   }
 
   if (job.name === 'draft') {
+    console.log('draft', job.data.actionId)
     return await draft(job.data.actionId)
   }
 }
