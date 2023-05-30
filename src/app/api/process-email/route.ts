@@ -5,8 +5,7 @@ import { inngest } from '~/queue/inngest-client'
 export const revalidate = 0
 
 export async function POST (request: Request) {
-  if (process.env.NODE_ENV === 'production' && 'Authorization' !== `Bearer ${process.env.GETREPLY_BOT_AUTH_TOKEN}`) {
-    console.error('Auth failed')
+  if (process.env.NODE_ENV === 'production' && request.headers.get('Authorization') !== `Bearer ${process.env.GETREPLY_BOT_AUTH_TOKEN}`) {
     return NextResponse.json({ error: 'Auth failed' }, { status: 401 })
   }
 
