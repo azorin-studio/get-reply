@@ -11,7 +11,6 @@ const inngestProcessIncomingEmail = inngest.createFunction(
   { name: "process incoming email" },
   { event: "queue/process-incoming-email" },
   async ({ event, step }) => {
-    console.log("process incoming email", event.data)
     const log = await processIncomingEmail(event.data)
     log.action_ids?.forEach(async (action_id: string) => {
       await inngest.send({ name: 'queue/generate', data: { action_id } })
@@ -42,7 +41,11 @@ const inngestSchedule = inngest.createFunction(
 const inngestSend = inngest.createFunction(
   { name: "send" },
   { event: "queue/send" },
-  async ({ event, step }) => {
+  async ({ event, step }) => {    
+    // // turn run date into ms from now
+    // // https://stackoverflow.com/questions/14980014/how-can-i-calculate-the-time-between-2-dates-in-typescript
+    // const delay = new Date(action.run_date as string).getTime() - new Date().getTime()
+
     const action = await send(event.data.action_id)
     return { event, body: action };
   }
@@ -51,7 +54,11 @@ const inngestSend = inngest.createFunction(
 const inngestDraft = inngest.createFunction(
   { name: "draft" },
   { event: "queue/draft" },
-  async ({ event, step }) => {
+  async ({ event, step }) => {    
+    // // turn run date into ms from now
+    // // https://stackoverflow.com/questions/14980014/how-can-i-calculate-the-time-between-2-dates-in-typescript
+    // const delay = new Date(action.run_date as string).getTime() - new Date().getTime()
+
     const action = await draft(event.data.action_id)
     return { event, body: action };
   }

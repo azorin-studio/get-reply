@@ -14,11 +14,7 @@ export default async function schedule (action_id: string) {
     status: 'scheduling'
   })
 
-  // turn run date into ms from now
-  // https://stackoverflow.com/questions/14980014/how-can-i-calculate-the-time-between-2-dates-in-typescript
-  const delay = new Date(action.run_date as string).getTime() - new Date().getTime()
-  console.log('delay', delay)
-
+  // TODO: add delay to jobs
   if (action.name === 'send' || action.name === 'reply') {
     await inngest.send({ name: 'queue/send', data: { action_id: action.id } })
   }

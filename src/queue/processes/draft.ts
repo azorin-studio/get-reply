@@ -5,29 +5,35 @@ import { createGmailDraftInThread, findThread, makeUnreadInInbox } from "~/googl
 import getActionById from "~/db-admin/get-action-by-id"
 import getLogById from "~/db-admin/get-log-by-id"
 import getPromptById from "~/db-admin/get-prompt-by-id"
+import appendToLog from "~/db-admin/append-to-log"
 
 export default async function draft(action_id: string){
-  let action: Action | null = await getActionById(action_id)
+  let action = await getActionById(action_id)
   
   if (!action) {
     throw new Error(`Action ${action_id} not found`)
   }
 
-  const prompt = await getPromptById(action.prompt_id!)
-
-  if (!prompt) {
-    throw new Error(`Prompt ${action.prompt_id} not found`)
-  }
-
-  const log = await getLogById(action.log_id!)
+  let log = await getLogById(action.log_id!)
 
   if (!log) {
     throw new Error(`Log ${action.log_id} not found`)
   }
 
-  action = await appendToAction(action, {
-    status: 'generating'
-  })
+  const prompt = await getPromptById(action.prompt_id!)
+
+  if (!prompt) {
+    log = await appendToLog(log, {
+      status: 'error',
+      errorMessage: `Prompt ${action.prompt_id} not found`
+    })
+    action = await appendToAction(action, {
+      status: 'error',
+      errorMessage: `Prompt ${action.prompt_id} not found`
+    })
+
+    throw new Error(`Prompt ${action.prompt_id} not found`)
+  }
 
   action = await appendToAction(action, {
     status: 'sending'
@@ -37,20 +43,25 @@ export default async function draft(action_id: string){
     throw new Error('No from address found in action')
   }
 
-  const profile: Profile = await getProfileFromEmail((log.from as any).address as string)
+  const profile: Profile = await getProfileFromEmail((log.from as any).address)
 
   if (!profile.google_refresh_token) {
     action = await appendToAction(action, {
       status: 'error',
       errorMessage: 'No google refresh token found for this email'
     })
-    return action
+    log = await appendToLog(log, {
+      status: 'error',
+      errorMessage: 'No google refresh token found for this email'
+    })
+
+    throw new Error('No google refresh token found for this email')
   }
 
   let thread: any = null
   try {
     thread = await findThread(log.subject!, log.to as any[], profile.google_refresh_token)
-    if (!thread) {
+    if (!thread) {  
       throw new Error('Could not find thread')
     }
   } catch (err: any) {
@@ -58,27 +69,47 @@ export default async function draft(action_id: string){
       status: 'error',
       errorMessage: err.message || 'Could not find thread'
     })
+    log = await appendToLog(log, {
+      status: 'error',
+      errorMessage: err.message || 'Could not find thread'
+    })
+    throw new Error(err.message || 'Could not find thread')
+  }
+
+  try {
+    const draft = await createGmailDraftInThread(
+      log.to as any[],
+      log.from as any,
+      log.subject || '',
+      action.generation!,
+      thread.id,
+      profile.google_refresh_token
+    )
+
+    if (draft.message!.id) {
+      await makeUnreadInInbox(draft.message!.id, profile.google_refresh_token)
+    }
+
+    action = await appendToAction(action, {
+      threadId: thread.id,
+      mailId: draft.id,
+      status: 'sent',
+    })
+    
+    log = await appendToLog(log, {
+      status: 'sent',
+    })
+
     return action
+  } catch (err: any) {
+    action = await appendToAction(action, {
+      status: 'error',
+      errorMessage: err.message || 'Could not create draft'
+    })
+    log = await appendToLog(log, {
+      status: 'error',
+      errorMessage: err.message || 'Could not create draft'
+    })
+    throw new Error(err.message || 'Could not create draft')
   }
-
-  const draft = await createGmailDraftInThread(
-    log.to as any[],
-    log.from as any,
-    log.subject || '',
-    action.generation!,
-    thread.id,
-    profile.google_refresh_token
-  )
-
-  if (draft.message!.id) {
-    await makeUnreadInInbox(draft.message!.id, profile.google_refresh_token)
-  }
-
-  action = await appendToAction(action, {
-    threadId: thread.id,
-    mailId: draft.id,
-    status: 'sent',
-  })
-
-  return action
 }

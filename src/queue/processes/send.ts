@@ -10,16 +10,10 @@ import sendMail from "~/send-mail"
 import appendToLog from "~/db-admin/append-to-log"
 
 export default async function replyEvent(action_id: string){
-  let action: Action | null = await getActionById(action_id)
+  let action = await getActionById(action_id)
   
   if (!action) {
     throw new Error(`Action ${action_id} not found`)
-  }
-
-  const prompt = await getPromptById(action.prompt_id!)
-
-  if (!prompt) {
-    throw new Error(`Prompt ${action.prompt_id} not found`)
   }
 
   let log = await getLogById(action.log_id!)
@@ -28,9 +22,20 @@ export default async function replyEvent(action_id: string){
     throw new Error(`Log ${action.log_id} not found`)
   }
 
-  action = await appendToAction(action, {
-    status: 'generating'
-  })
+  const prompt = await getPromptById(action.prompt_id!)
+
+  if (!prompt) {
+    log = await appendToLog(log, {
+      status: 'error',
+      errorMessage: `Prompt ${action.prompt_id} not found`
+    })
+    action = await appendToAction(action, {
+      status: 'error',
+      errorMessage: `Prompt ${action.prompt_id} not found`
+    })
+
+    throw new Error(`Prompt ${action.prompt_id} not found`)
+  }
 
   action = await appendToAction(action, {
     status: 'sending'
@@ -47,13 +52,18 @@ export default async function replyEvent(action_id: string){
       status: 'error',
       errorMessage: 'No google refresh token found for this email'
     })
-    return action
+    log = await appendToLog(log, {
+      status: 'error',
+      errorMessage: 'No google refresh token found for this email'
+    })
+
+    throw new Error('No google refresh token found for this email')
   }
 
   let thread: any = null
   try {
     thread = await findThread(log.subject!, log.to as any[], profile.google_refresh_token)
-    if (!thread) {
+    if (!thread) {  
       throw new Error('Could not find thread')
     }
   } catch (err: any) {
@@ -61,25 +71,41 @@ export default async function replyEvent(action_id: string){
       status: 'error',
       errorMessage: err.message || 'Could not find thread'
     })
-    return action
+    log = await appendToLog(log, {
+      status: 'error',
+      errorMessage: err.message || 'Could not find thread'
+    })
+    throw new Error(err.message || 'Could not find thread')
   }
 
-  const reply = await sendMail({
-    from: `reply@getreply.app`,
-    to: (log.from as any).address,
-    subject: `re: ${log.subject}`,
-    textBody: action.generation as string,
-  })
+  try {
+    const reply = await sendMail({
+      from: `reply@getreply.app`,
+      to: (log.from as any).address,
+      subject: `re: ${log.subject}`,
+      textBody: action.generation as string,
+    })
 
-  action = await appendToAction(action, {
-    threadId: thread.id,
-    mailId: reply.id,
-    status: 'sent',
-  })
+    action = await appendToAction(action, {
+      threadId: thread.id,
+      mailId: reply.id,
+      status: 'sent',
+    })
 
-  log = await appendToLog(log, {
-    status: 'sent',
-  })
+    log = await appendToLog(log, {
+      status: 'sent',
+    })
 
-  return action
+    return action
+  } catch (err: any) {
+    action = await appendToAction(action, {
+      status: 'error',
+      errorMessage: err.message || 'Could not send email'
+    })
+    log = await appendToLog(log, {
+      status: 'error',
+      errorMessage: err.message || 'Could not send email'
+    })
+    throw new Error(err.message || 'Could not send email')
+  }
 }
