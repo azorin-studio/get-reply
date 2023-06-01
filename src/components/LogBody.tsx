@@ -1,8 +1,6 @@
 'use client'
 
 import { format, formatDistance } from 'date-fns'
-import { ExternalLink } from 'lucide-react'
-import Link from 'next/link'
 import { Log } from '~/db-admin/types'
 import { useSupabase } from '~/hooks/use-supabase'
 import StatusBadge from './StatusBadge'
