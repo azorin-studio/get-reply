@@ -36,89 +36,61 @@ export default function LogBadge(props: { log: Log }) {
     window.location.reload()
   }
 
-
-  let bgColor = 'bg-gray-200'
+  let statusColor = 'blue'
   if (log.status === "error") {
-    bgColor = 'bg-red-400'
+    statusColor = 'red'
   } else if (log.status === "pending") {
-    bgColor = 'bg-yellow-100'
+    statusColor = 'yellow'
   } else if (log.status === "verified") {
-    bgColor = 'bg-yellow-300'
+    statusColor = 'yellow'
   } else if (log.status === "generated") {
-    bgColor = 'bg-yellow-500'
-  } else if (log.status === "drafted") {
-    bgColor = 'bg-green-300'
+    statusColor = 'yellow'
+  } else if (log.status === "sent") {
+    statusColor = 'green'
   }
 
   return (
     <Link
       ref={hoverRef} 
-      className="p-2 flex flex-row gap-4 w-full items-center hover:bg-slate-50"
       href={`/logs/${log.id}`}
+      legacyBehavior
     >
-        <div
-          className='flex flex-row gap-2 items-center w-24'
-        >
-          <div 
-            className={`mt-0 rounded-full p-1 items-center ${bgColor}`}
-          >
+      <div key={log.id} className='table-row items-center hover:bg-slate-50 hover:cursor-pointer border-y'>
+        <div className="table-cell whitespace-nowrap py-3 pl-4 pr-3 text-sm sm:pl-0">
+          <div className="flex items-center">
+            <div className="ml-2">
+              <div className="font-medium text-gray-900">
+                {log.to?.map((to) => to!.address).join(', ')}
+              </div>
+              <div className="mt-1 text-gray-500">{log.from.address}</div>
+            </div>
           </div>
-          <div className='items-center capitalize'>
+        </div>
+        <div className="table-cell whitespace-nowrap px-3 py-3 text-sm text-gray-500">
+          <div className="text-gray-900 font-bold">
+            <Link
+              className="hover:underline"
+              href={`/logs/${log.id}`}
+            >
+              {log.subject}
+            </Link>
+          </div>
+          <div className="mt-1 text-gray-500 truncate">
+            {log.text}
+          </div>
+        </div>
+        <div className="table-cell items-center px-3 text-sm text-gray-500">
+          <div 
+            className={`rounded-md inline-flex bg-${statusColor}-50 px-2 py-1.5 text-xs font-medium text-${statusColor}-700 ring-1 ring-inset ring-${statusColor}-600/20`}
+          >
             {log.status}
           </div>
         </div>
-
-        <div className="flex flex-row gap-2 items-center w-40 truncate font-bold">
-          {log.to?.map((to) => to!.address).join(', ')}
+        <div className="table-cell items-center whitespace-nowrap px-3 py-3 text-sm text-gray-500">
+          {formatDistance(new Date(log.created_at), new Date(), { addSuffix: true })
+            .replace('less than a minute ago', '0 minutes ago') }
         </div>
-
-        <div className="flex flex-row grow gap-2 items-center w-44 truncate">
-          <div className="">
-            {log.subject}
-          </div>
-          <div className='truncate text-slate-500'>
-            {" - "}{log.text}
-          </div>
-        </div>
-
-        <div className="flex flex-row items-center gap-2 justify-between"> 
-          {!isHovered &&
-            <div>
-              { log.created_at && 
-                formatDistance(new Date(log.created_at), new Date(), { addSuffix: true })
-                  .replace('less than a minute ago', '0 minutes ago') 
-              }
-            </div>
-          }
-
-          {isHovered &&
-            <>
-              <button
-                className='text-red-500 rounded hover:bg-slate-50'
-                onClick={(e) => {
-                  e.preventDefault()
-                  if (confirm('Are you sure you want to delete this log?')) {
-                    handleDelete(log)
-                  }
-                }}
-              >
-                Delete
-              </button>
-              {log.status === 'error'  && 
-                <button
-                  className='text-red-500 rounded hover:bg-slate-50'
-                  onClick={(e) => {
-                    e.preventDefault()
-                    handleRetry(log)
-                  }}
-                >
-                  Retry
-                </button>
-              }
-            </>
-          }
-        </div>
-      </Link>
-
+      </div>
+    </Link>
   )
 }
