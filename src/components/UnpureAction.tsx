@@ -1,9 +1,10 @@
 'use client'
 
-import { add, format } from 'date-fns'
+import { add, format, formatDistance } from 'date-fns'
 import { useEffect, useState } from 'react'
 import { Action } from '~/db-admin/types'
 import { useSupabase } from "~/hooks/use-supabase"
+import StatusBadge from './StatusBadge'
 
 export const revalidate = 0
 
@@ -50,24 +51,32 @@ const UnpureAction = (props: {
   }
 
   return (      
-    <div className="flex flex-col gap-2 ml-24 pl-2">
-      <div className="flex flex-col gap-2">
-        <div className="flex-none text-slate-400">
-          Action
+    <div className="w-full flex flex-col border rounded divide-y">
+      <div className="w-full p-2 flex flex-row items-center justify-between bg-slate-50">
+        <div className="flex flex-col">
+          <div className="text-sm">
+            Will <span className="font-bold">{action.name}</span> on { action.created_at && 
+              <span>
+                {format(new Date(action.created_at as string), 'LLLL dd, yyyy, h:MM a')}  ({formatDistance(new Date(action.run_date as string), new Date(), { addSuffix: true })})          
+              </span>
+            }
+          </div>
         </div>
-        <div>
-          Name: {action.name}
+
+        <div className='flex flex-row gap-4 items-center'>
+          {action.status && <StatusBadge status={action.status} />}
         </div>
-        <div>
-          Status: {action.status}
-        </div>
-        <div>
-          Date to run: {format(new Date(action.run_date!), 'yyyy-MM-dd HH:mm:ss')}
-        </div>
+
       </div>
 
-      <div className="flex flex-col gap-2">
-        {action.generation}
+      {action!.errorMessage &&
+        <div className={`bg-red-50 p-2 text-xs font-medium text-red-500`}>
+          {action.errorMessage}
+        </div>
+      }
+
+      <div className="w-full p-2 flex flex-row items-center justify-between text-sm whitespace-pre-wrap">
+        {action?.generation?.trim()}
       </div>
     </div>
   )

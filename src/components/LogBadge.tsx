@@ -81,13 +81,13 @@ export default function LogBadge(props: { log: Log }) {
         </div>
         <div className="table-cell items-center px-3 text-sm text-gray-500">
           <div 
-            className={`rounded-md inline-flex bg-${statusColor}-50 px-2 py-1.5 text-xs font-medium text-${statusColor}-700 ring-1 ring-inset ring-${statusColor}-600/20`}
+            className={`rounded-md inline-flex bg-${statusColor}-50 px-2 py-1.5 text-xs font-medium text-${statusColor}-700 border border-${statusColor}-600`}
           >
             {log.status}
           </div>
         </div>
         <div className="table-cell items-center whitespace-nowrap px-3 py-3 text-sm text-gray-500">
-          {formatDistance(new Date(log.created_at), new Date(), { addSuffix: true })
+          {formatDistance(new Date(log.created_at as string), new Date(), { addSuffix: true })
             .replace('less than a minute ago', '0 minutes ago') }
         </div>
       </div>
