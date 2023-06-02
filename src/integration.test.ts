@@ -83,5 +83,4 @@ describe('queue', () => {
     )
     await sendDraft(draft.id!, profile.google_refresh_token!)
   })
-
 })

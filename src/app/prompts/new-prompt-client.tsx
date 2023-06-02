@@ -1,15 +1,15 @@
 "use client"
 
-import * as Popover from '@radix-ui/react-popover';
-import fetch from 'isomorphic-fetch';
-import { Loader } from "lucide-react";
-import ms from "ms";
-import { useRouter } from 'next/navigation';
-import { useEffect, useState } from "react";
-import { Prompt } from '~/db-admin/types';
-import usePrompts from "~/hooks/use-prompts";
-import { useSupabase } from '~/hooks/use-supabase';
-import useUser from '~/hooks/use-user';
+import * as Popover from '@radix-ui/react-popover'
+import fetch from 'isomorphic-fetch'
+import { Loader } from "lucide-react"
+import ms from "ms"
+import { useRouter } from 'next/navigation'
+import { useEffect, useState } from "react"
+import { Prompt } from '~/db-admin/types'
+import usePrompts from "~/hooks/use-prompts"
+import { useSupabase } from '~/hooks/use-supabase'
+import useUser from '~/hooks/use-user'
 
 const DEFAULT_EMAIL = `Dear Hiring Manager, 
 
