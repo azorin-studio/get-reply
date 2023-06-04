@@ -1,11 +1,11 @@
 "use client"
 
-import * as Popover from '@radix-ui/react-popover'
 import fetch from 'isomorphic-fetch'
 import { Loader } from "lucide-react"
 import ms from "ms"
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from "react"
+import PromptSelector from '~/components/PromptSelector'
 import { Prompt } from '~/db-admin/types'
 import usePrompts from "~/hooks/use-prompts"
 import { useSupabase } from '~/hooks/use-supabase'
@@ -155,181 +155,157 @@ export default function DemoPage(props: any) {
     }
   }
 
+  const handleNewPromptClick = () => {
+    setCreatingNew(true)
+    setActivePrompt({
+      name: 'new',
+      prompt: '',
+      description: '',
+      user_id: user && user.id,
+    })
+  }
+
+  const handlePromptNameChange = (event: any) => {
+    const newPrompt = {
+      ...activePrompt,
+      name: event.target.value,
+    }
+    setActivePrompt(newPrompt)
+  }
+
+  const handleCancelClick = () => {
+    setCreatingNew(false)
+    setActivePrompt(prompts[0])
+  }
+
+  const handlePromptTextChange = (event: any) => {
+    const newPrompt = {
+      ...activePrompt,
+      prompt: event.target.value,
+    }
+
+    setActivePrompt(newPrompt)
+  }
+
   return (
-    <main className="p-4 flex flex-col">
-      <div>
-        {user && (
-          <button 
-            className="text-sm border p-2 rounded hover:bg-slate-50 my-2"
-            onClick={(e) => {
-              setCreatingNew(true)
-              setActivePrompt({
-                name: 'new',
-                prompt: '',
-                description: '',
-                user_id: user && user.id,
-              })
-            }}
-          >
-            + Create new prompt
-          </button>
+    <main className="p-2 flex flex-col bg-red-50">       
+      <div className='flex flex-row w-full border-b p-2 h-12 items-center text-sm justify-between'>
+        {!creatingNew && <PromptSelector prompts={prompts} activePrompt={activePrompt} />}
+        {creatingNew && (
+          <>
+            <input 
+              type="text"
+              className='border p-1 rounded text-sm'
+              placeholder='Name'
+              value={activePrompt?.name || ""}
+              onChange={handlePromptNameChange}
+            />
+            <div className='flex flex-row gap-2'>
+              <button 
+                className="text-sm p-1"
+                onClick={handleCancelClick}
+              >
+                Cancel
+              </button>
+              <button 
+                className="text-sm border rounded p-1"
+                onClick={saveNewPrompt}
+              >
+                {saveBusy}
+              </button>
+            </div>
+          </>
         )}
+
+        <div className='flex flex-row gap-2'>
+          {(user && activePrompt?.user_id === user.id) && (
+            <button 
+              className="text-sm border rounded p-1"
+              onClick={(e) => setCreatingNew(true)}
+            >
+              Edit
+            </button>
+          )}
+          {(user && activePrompt?.user_id === user.id) && (
+            <button 
+              className="text-sm border rounded p-1 text-red-500"
+              onClick={deletePrompt}
+            >
+              Delete
+            </button>
+          )}
+          {!creatingNew && user && (
+            <button 
+              className="text-sm border p-2 rounded hover:bg-slate-50 my-2"
+              onClick={handleNewPromptClick}
+            >
+              Create new prompt +
+            </button>
+          )}
+        </div>
       </div>
 
-      <div className="flex flex-row border rounded divide-x">
-        <div className="basis-1/3 bg-slate-50">
-          {!creatingNew && (
-            <div> 
-              <div className='flex flex-row w-full border-b p-2 h-12 items-center text-sm justify-between'>
-                <Popover.Root>
-                  <Popover.Trigger 
-                    className="flex flex-row items-center gap-2 text-sm border p-2 rounded hover:bg-slate-100"
-                  >
-                    {activePrompt?.name || 'Choose a prompt'}
-                  </Popover.Trigger>
-
-                  <Popover.Portal>
-                    <Popover.Content
-                      className="flex flex-col bg-white border rounded divide-y outline-none focus:outline-none w-44 ml-12"
-                    >
-                      {prompts.map((prompt: any) => (
-                        <a
-                          className="text-sm px-4 py-2 hover:bg-slate-50 hover:underline"
-                          href={`/prompts/${prompt.id}`}
-                          key={prompt.id}
-                        >
-                          {prompt.name}
-                        </a>
-                      ))}
-
-                      <Popover.Arrow className="fill-white" />
-                    </Popover.Content>
-                  </Popover.Portal>
-                </Popover.Root>
-
-                <div className='flex flex-row gap-2'>
-                  {(user && activePrompt?.user_id === user.id) && (
-                    <button 
-                      className="text-sm border rounded p-1"
-                      onClick={(e) => {
-                        setCreatingNew(true)
-                      }}
-                    >
-                      Edit
-                    </button>
-                  )}
-                  {(user && activePrompt?.user_id === user.id) && (
-                    <button 
-                      className="text-sm border rounded p-1 text-red-500"
-                      onClick={deletePrompt}
-                    >
-                      Delete
-                    </button>
-                  )}
-                </div>
-              </div>
-              <div className="text-sm whitespace-pre-wrap p-2">
-                {activePrompt?.prompt || ""}
-              </div>
-            </div>
-          )}
-          {creatingNew && (
-            <div>
-              <div className='flex flex-row w-full border-b p-2 h-12 items-center text-sm justify-between'>
-                <input 
-                  type="text"
-                  className='border p-1 rounded text-sm'
-                  placeholder='Name'
-                  value={activePrompt?.name || ""}
-                  onChange={(e) => {
-                    const newPrompt = {
-                      ...activePrompt,
-                      name: e.target.value,
-                    }
-                    setActivePrompt(newPrompt)
-                  }}
-                />
-                <div className='flex flex-row gap-2'>
-                  <button 
-                    className="text-sm p-1"
-                    onClick={(e) => {
-                      setCreatingNew(false)
-                      setActivePrompt(prompts[0])
-                    }}
-                  >
-                    Cancel
-                  </button>
-                  <button 
-                    className="text-sm border rounded p-1"
-                    onClick={saveNewPrompt}
-                  >
-                    {saveBusy}
-                  </button>
-                </div>
-              </div>
-              <textarea
-                rows={10}
-                placeholder={`Enter prompt for the ai`}
-                className="text-sm bg-white w-full min-h-fit whitespace-pre-wrap block p-2 bg-transparent text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                value={activePrompt?.prompt || ""}
-                onChange={(event) => {
-                  const newPrompt = {
-                    ...activePrompt,
-                    prompt: event.target.value,
-                  }
-
-                  setActivePrompt(newPrompt)
-                }}
-              />
-            </div>
-          )}  
-        </div>
+      <div>
+        {!creatingNew && (
+          <div className="text-sm whitespace-pre-wrap p-2">
+            {activePrompt?.prompt || ""}
+          </div>
+        )}
+        {creatingNew && (
+          <textarea
+            rows={10}
+            placeholder={`Enter prompt for the ai`}
+            className="text-sm bg-white w-full min-h-fit whitespace-pre-wrap block p-2 bg-transparent text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+            value={activePrompt?.prompt || ""}
+            onChange={handlePromptTextChange}
+          />
+        )} 
+      </div> 
       
-        <div className="basis-1/3 flex flex-col">
-          <div className='flex w-full border-b p-2 h-12 items-center text-sm'>
-            Type your email below
-          </div>
-          <div className='flex flex-grow'>
-            <textarea
-              name="email"
-              rows={10}
-              placeholder="Enter the email you want follow ups for"
-              className="w-full h-full p-2 text-sm focus:outline-none"
-              value={content || ""}
-              onChange={(e) => setContent(e.target.value)}
-            />
-          </div>
+      <div className="flex flex-col">
+        <div className='flex w-full border-b p-2 h-12 items-center text-sm'>
+          Type your email below
         </div>
+        <div className='flex flex-grow'>
+          <textarea
+            name="email"
+            rows={10}
+            placeholder="Enter the email you want follow ups for"
+            className="w-full h-full p-2 text-sm focus:outline-none"
+            value={content || ""}
+            onChange={(e) => setContent(e.target.value)}
+          />
+        </div>
+      </div>
     
-        <div className="basis-1/3 bg-slate-50">
-          <div className='flex w-full border-b p-2 h-12 items-center text-sm'>
-            <button
-              type="submit" 
-              value="Generate"
-              onClick={onGenerate}
-              className="rounded-md bg-slate-800 p-2 text-sm text-white "
-            >
-              {busy ? 'Generating' : 'Generate'}
-            </button>
-            <div className="text-sm items-center inline ml-2">{timer && `Generated in ${timer}`}</div>
-            
+      <div className="bg-slate-50">
+        <div className='flex w-full border-b p-2 h-12 items-center text-sm'>
+          <button
+            type="submit" 
+            value="Generate"
+            onClick={onGenerate}
+            className="rounded-md bg-slate-800 p-2 text-sm text-white "
+          >
+            {busy ? 'Generating' : 'Generate'}
+          </button>
+          <div className="text-sm items-center inline ml-2">{timer && `Generated in ${timer}`}</div>           
+        </div>
+        
+        {!busy && !error && result && (
+          <div className="whitespace-pre-wrap text-sm p-2">
+            {result} 
           </div>
-          
-          {!busy && !error && result && (
-            <div className="whitespace-pre-wrap text-sm p-2">
-              {result} 
+        )}
+
+        <div className="text-red-600">{!busy && error}</div>
+
+        <div>
+          {busy && (
+            <div className="inline-flex flex-row gap-2 text-sm p-2">
+              <Loader className="animate-spin" />
+              Generating. This can take up to 10 seconds.
             </div>
           )}
-
-          <div className="text-red-600">{!busy && error}</div>
-          <div>
-            {busy && (
-              <div className="inline-flex flex-row gap-2 text-sm p-2">
-                <Loader className="animate-spin" />
-                Generating. This can take up to 10 seconds.
-              </div>
-            )}
-          </div>
         </div>
       </div>
     </main>
