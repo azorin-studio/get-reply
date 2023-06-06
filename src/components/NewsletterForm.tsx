@@ -31,7 +31,7 @@ const NewsletterForm = () => {
       >
         Or,
         <Link
-          href="/demo"
+          href="/prompts"
           className="items-center space-x-2 flex ml-2"
         > 
           <span className="underline font-bold sm:inline-block">
