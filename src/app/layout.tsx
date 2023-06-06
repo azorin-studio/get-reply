@@ -1,7 +1,7 @@
 
-import { createServerComponentSupabaseClient } from "@supabase/auth-helpers-nextjs"
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { Analytics } from '@vercel/analytics/react'
-import { cookies, headers } from "next/headers"
+import { cookies } from "next/headers"
 import Footer from "~/components/Footer"
 import Header from "~/components/Header"
 import { Database } from "~/db-admin/database.types"
@@ -14,8 +14,7 @@ export const metadata = {
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const supabase = createServerComponentSupabaseClient<Database>({
-    headers,
+  const supabase = createServerComponentClient<Database>({
     cookies,
   })
   
@@ -32,7 +31,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               <Header 
                 user={session && session.user || null}
               />
-              <div className="p-2 container mx-auto flex-grow"> 
+              <div className="p-2 w-full max-w-4xl mx-auto"> 
                 {children}
               </div>
               <Footer/>

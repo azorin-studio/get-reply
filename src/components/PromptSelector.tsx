@@ -1,3 +1,4 @@
+import classNames from 'classnames'
 import * as Popover from '@radix-ui/react-popover'
 import { ChevronDown } from "lucide-react"
 import { Prompt } from "~/db-admin/types"
@@ -7,22 +8,35 @@ export default function PromptSelector(props: { prompts: Prompt[], activePrompt:
   return (
     <Popover.Root>
       <Popover.Trigger 
-        className="flex flex-row items-center gap-2 text-sm border p-2 rounded hover:bg-slate-100"
+        className={classNames(
+          'text-sm border p-2',
+          'bg-blue-500 border-blue-600 text-white rounded border flex flex-row gap-2 items-center',
+          'hover:bg-blue-600'
+        )}
       >
         {activePrompt?.name || 'Choose a prompt'} <ChevronDown width={16} />
       </Popover.Trigger>
 
       <Popover.Portal>
         <Popover.Content
-          className="flex flex-col bg-white border rounded divide-y outline-none focus:outline-none w-44 ml-12"
+          className={classNames(
+            'flex flex-col bg-white border rounded outline-none focus:outline-none min-w-2xl ml-12 shadow'
+          )}
         >
           {prompts.map((prompt: any) => (
             <a
-              className="text-sm px-4 py-2 hover:bg-slate-50 hover:underline"
               href={`/prompts/${prompt.id}`}
               key={prompt.id}
+              className={classNames(
+                'text-sm p-2 hover:bg-slate-50',
+                'flex flex-col gap-2',
+                'hover:bg-blue-400 last:rounded-b first:rounded-t min-w-64'
+              )}
             >
-              {prompt.name}
+              <div className="font-bold text-slate-800">{prompt.name}</div>
+              <div className='text-sm text-slate-600'>
+                {prompt.description}
+              </div>
             </a>
           ))}
           <Popover.Arrow className="fill-white" />

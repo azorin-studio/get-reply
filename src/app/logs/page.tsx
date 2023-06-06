@@ -1,6 +1,5 @@
-import { createServerComponentSupabaseClient } from '@supabase/auth-helpers-nextjs'
-import { formatDistance } from 'date-fns'
-import { cookies, headers } from 'next/headers'
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
+import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import LogBadge from '~/components/LogBadge'
 import { Database } from '~/db-admin/database.types'
@@ -9,8 +8,7 @@ import { Log } from '~/db-admin/types'
 export const revalidate = 0
 
 export default async function Page() {
-  const supabase = createServerComponentSupabaseClient<Database>({
-    headers,
+  const supabase = createServerComponentClient<Database>({
     cookies,
   })
 
@@ -31,7 +29,7 @@ export default async function Page() {
   const logs: Log[] = data || []
 
   return (
-    <div className="max-w-4xl mx-auto p-4 flex flex-col antialiased">
+    <div>
       <div className="sm:flex sm:items-center">
         <div className="sm:flex-auto">
           <h1 className="text-base font-semibold leading-6 text-gray-900">Logs</h1>

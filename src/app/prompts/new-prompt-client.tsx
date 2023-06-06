@@ -1,10 +1,11 @@
 "use client"
 
 import fetch from 'isomorphic-fetch'
-import { Loader } from "lucide-react"
+import { Loader, Plus } from "lucide-react"
 import ms from "ms"
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from "react"
+import classNames from 'classnames'
 import PromptSelector from '~/components/PromptSelector'
 import { Prompt } from '~/db-admin/types'
 import usePrompts from "~/hooks/use-prompts"
@@ -69,6 +70,10 @@ export default function DemoPage(props: any) {
   }
 
   const saveNewPrompt = async () => {
+    if (!user) {
+      alert('Please login to save a prompt')
+      return
+    }
     if (!activePrompt || !activePrompt.prompt) {
       alert('Please enter a prompt')
       return
@@ -188,37 +193,28 @@ export default function DemoPage(props: any) {
   }
 
   return (
-    <main className="p-2 flex flex-col gap-4">       
-      <div className='flex flex-row items-center text-sm justify-between'>
+    <main className="p-2 flex flex-col gap-4">
+      <div 
+        className={classNames(
+            'flex flex-row w-full',
+            'items-center text-sm justify-between'
+          )}
+      >
         {!creatingNew && <PromptSelector prompts={prompts} activePrompt={activePrompt} />}
         {creatingNew && (
-          <>
-            <input 
-              type="text"
-              className='border p-1 rounded text-sm'
-              placeholder='Name'
-              value={activePrompt?.name || ""}
-              onChange={handlePromptNameChange}
-            />
-            <div className='flex flex-row gap-2'>
-              <button 
-                className="text-sm p-1"
-                onClick={handleCancelClick}
-              >
-                Cancel
-              </button>
-              <button 
-                className="text-sm border rounded p-1"
-                onClick={saveNewPrompt}
-              >
-                {saveBusy}
-              </button>
-            </div>
-          </>
+          <input 
+            type="text"
+            className={classNames(
+              'text-sm border p-2',
+              'rounded border flex flex-row gap-2 items-center outline-none focus:outline-none',
+            )}
+            placeholder='Name'
+            value={activePrompt?.name || ""}
+            onChange={handlePromptNameChange}
+          />
         )}
-
-        <div className='flex flex-row gap-2'>
-          {(user && activePrompt?.user_id === user.id) && (
+        <div className='flex flex-row gap-2 justify-end'>
+          {!creatingNew && (user && activePrompt?.user_id === user.id) && (
             <button 
               className="text-sm border rounded p-1"
               onClick={(e) => setCreatingNew(true)}
@@ -234,12 +230,43 @@ export default function DemoPage(props: any) {
               Delete
             </button>
           )}
-          {!creatingNew && user && (
+
+          {creatingNew && (
+            <>
+              <div className='flex flex-row gap-2'>
+                <button 
+                  className={classNames(
+                    'text-sm border p-2',
+                    'bg-blue-500 border-blue-600 text-white rounded border flex flex-row gap-2 items-center',
+                    'hover:bg-blue-600'
+                  )}
+                  onClick={handleCancelClick}
+                >
+                  Cancel
+                </button>
+                <button 
+                  className={classNames(
+                    'text-sm border p-2',
+                    'bg-blue-500 border-blue-600 text-white rounded border flex flex-row gap-2 items-center',
+                    'hover:bg-blue-600'
+                  )}
+                  onClick={saveNewPrompt}
+                >
+                  {saveBusy}
+                </button>
+              </div>
+            </>
+          )}
+          {!creatingNew && (
             <button 
-              className="text-sm border p-2 rounded hover:bg-slate-50 my-2"
+              className={classNames(
+                'text-sm border p-2',
+                'bg-blue-500 border-blue-600 text-white rounded border flex flex-row gap-2 items-center',
+                'hover:bg-blue-600'
+              )}
               onClick={handleNewPromptClick}
             >
-              Create new prompt +
+              Create new prompt <Plus width={16} />
             </button>
           )}
         </div>
@@ -261,7 +288,7 @@ export default function DemoPage(props: any) {
             <textarea
               rows={10}
               placeholder={`Enter prompt for the ai`}
-              className="w-full min-h-fit whitespace-pre-wrap block p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+              className="w-full h-full bg-transparent focus:outline-none"
               value={activePrompt?.prompt || ""}
               onChange={handlePromptTextChange}
             />
@@ -283,39 +310,47 @@ export default function DemoPage(props: any) {
         </div>
       </div>
 
-      {!busy && !error && result && (
+      {!error && (
         <div className="text-sm p-2 flex flex-col gap-2 bg-slate-50 rounded border">
-          <div className="text-slate-400">Response</div>
-          <div className="whitespace-pre-wrap">
-            {result}
+          <div className="text-slate-400">
+            {!busy && 'Response'}
+            {busy && (
+              <div className="inline-flex items-center flex-row gap-1">
+                <Loader className="h-[16px] animate-spin" />
+                Generating
+              </div>
+            )} 
+              
+            {timer && ` (generated in ${timer})`}
           </div>
+          {result && (<div className="whitespace-pre-wrap">
+            {result}
+          </div>)}
         </div>
       )}
 
-      <div className="bg-slate-50">
-        <div className='flex w-full border-b p-2 h-12 items-center text-sm'>
-          <button
-            type="submit" 
-            value="Generate"
-            onClick={onGenerate}
-            className="rounded-md bg-slate-800 p-2 text-sm text-white "
-          >
-            {busy ? 'Generating' : 'Generate'}
-          </button>
-          <div className="text-sm items-center inline ml-2">{timer && `Generated in ${timer}`}</div>           
-        </div>
+      <div 
+        className={classNames(
+            'flex flex-row',
+            'items-center text-sm justify-end gap-2'
+          )}
+      >
+        
       
-
         <div className="text-red-600">{!busy && error}</div>
 
-        <div>
-          {busy && (
-            <div className="inline-flex flex-row gap-2 text-sm p-2">
-              <Loader className="animate-spin" />
-              Generating. This can take up to 10 seconds.
-            </div>
+        <button
+          type="submit" 
+          value="Generate"
+          onClick={onGenerate}
+          className={classNames(
+            'text-sm border p-2',
+            'bg-blue-500 border-blue-600 text-white rounded border flex flex-row gap-2 items-center',
+            'hover:bg-blue-600'
           )}
-        </div>
+        >
+          Generate
+        </button>
       </div>
     </main>
   )

@@ -108,7 +108,7 @@ export default function DemoPage(props: any) {
   }
 
   return (
-    <main className="max-w-2xl mx-auto p-4 flex flex-col font-sans text-slate-800 antialiased">
+    <main>
       <div className="flex flex-col gap-2 rounded">      
         <input 
           type="text"
