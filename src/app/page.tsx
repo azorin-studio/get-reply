@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import hero from "../../public/hero.svg";
 
-import { createServerComponentSupabaseClient } from '@supabase/auth-helpers-nextjs';
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { ArrowUpRight } from 'lucide-react';
 import { cookies, headers } from 'next/headers';
 import { redirect } from 'next/navigation';
@@ -15,8 +15,7 @@ export const revalidate = 0
 
 export default async function Page() {
 
-  const supabase = createServerComponentSupabaseClient<Database>({
-    headers,
+  const supabase = createServerComponentClient<Database>({
     cookies,
   })
 

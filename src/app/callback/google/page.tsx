@@ -1,15 +1,14 @@
 import 'server-only'
 
-import { createServerComponentSupabaseClient } from '@supabase/auth-helpers-nextjs'
-import { cookies, headers } from "next/headers"
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
+import { cookies } from "next/headers"
 import { redirect } from 'next/navigation'
 import { Database } from '~/db-admin/database.types'
 
 export const revalidate = 0
 
 export default async function Page() {
-  const supabase = createServerComponentSupabaseClient<Database>({
-    headers,
+  const supabase = createServerComponentClient<Database>({
     cookies,
   })
   

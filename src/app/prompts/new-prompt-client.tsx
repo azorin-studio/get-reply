@@ -1,10 +1,11 @@
 "use client"
 
 import fetch from 'isomorphic-fetch'
-import { Loader } from "lucide-react"
+import { Loader, Plus } from "lucide-react"
 import ms from "ms"
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from "react"
+import classNames from 'classnames'
 import PromptSelector from '~/components/PromptSelector'
 import { Prompt } from '~/db-admin/types'
 import usePrompts from "~/hooks/use-prompts"
@@ -188,37 +189,25 @@ export default function DemoPage(props: any) {
   }
 
   return (
-    <main className="p-2 flex flex-col bg-red-50">       
-      <div className='flex flex-row w-full border-b p-2 h-12 items-center text-sm justify-between'>
+    <main className="p-2 flex flex-col bg-red-50">
+      <div 
+        className={classNames(
+            'flex bg-blue-100 flex-row w-full border-b p-2 h-12',
+            'items-center text-sm justify-between'
+          )}
+      >
         {!creatingNew && <PromptSelector prompts={prompts} activePrompt={activePrompt} />}
         {creatingNew && (
-          <>
-            <input 
-              type="text"
-              className='border p-1 rounded text-sm'
-              placeholder='Name'
-              value={activePrompt?.name || ""}
-              onChange={handlePromptNameChange}
-            />
-            <div className='flex flex-row gap-2'>
-              <button 
-                className="text-sm p-1"
-                onClick={handleCancelClick}
-              >
-                Cancel
-              </button>
-              <button 
-                className="text-sm border rounded p-1"
-                onClick={saveNewPrompt}
-              >
-                {saveBusy}
-              </button>
-            </div>
-          </>
+          <input 
+            type="text"
+            className='border p-1 rounded text-sm'
+            placeholder='Name'
+            value={activePrompt?.name || ""}
+            onChange={handlePromptNameChange}
+          />
         )}
-
-        <div className='flex flex-row gap-2'>
-          {(user && activePrompt?.user_id === user.id) && (
+        <div className='flex flex-row gap-2 bg-yellow-50 justify-end'>
+          {!creatingNew && (user && activePrompt?.user_id === user.id) && (
             <button 
               className="text-sm border rounded p-1"
               onClick={(e) => setCreatingNew(true)}
@@ -234,12 +223,43 @@ export default function DemoPage(props: any) {
               Delete
             </button>
           )}
-          {!creatingNew && user && (
+
+          {creatingNew && (
+            <>
+              <div className='flex flex-row gap-2'>
+                <button 
+                  className={classNames(
+                    'text-sm border p-2',
+                    'bg-blue-500 text-white rounded border flex flex-row gap-2 items-center',
+                    'hover:bg-blue-600'
+                  )}
+                  onClick={handleCancelClick}
+                >
+                  Cancel
+                </button>
+                <button 
+                  className={classNames(
+                    'text-sm border p-2',
+                    'bg-blue-500 text-white rounded border flex flex-row gap-2 items-center',
+                    'hover:bg-blue-600'
+                  )}
+                  onClick={saveNewPrompt}
+                >
+                  {saveBusy}
+                </button>
+              </div>
+            </>
+          )}
+          {!creatingNew && (
             <button 
-              className="text-sm border p-2 rounded hover:bg-slate-50 my-2"
+              className={classNames(
+                'text-sm border p-2',
+                'bg-blue-500 text-white rounded border flex flex-row gap-2 items-center',
+                'hover:bg-blue-600'
+              )}
               onClick={handleNewPromptClick}
             >
-              Create new prompt +
+              Create new prompt <Plus width={16} />
             </button>
           )}
         </div>
@@ -247,7 +267,7 @@ export default function DemoPage(props: any) {
 
       <div>
         {!creatingNew && (
-          <div className="text-sm whitespace-pre-wrap p-2">
+          <div className="text-sm whitespace-pre-wrap p-2 bg-slate-50">
             {activePrompt?.prompt || ""}
           </div>
         )}
@@ -255,28 +275,25 @@ export default function DemoPage(props: any) {
           <textarea
             rows={10}
             placeholder={`Enter prompt for the ai`}
-            className="text-sm bg-white w-full min-h-fit whitespace-pre-wrap block p-2 bg-transparent text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+            className={classNames(
+              'text-sm bg-white w-full min-h-fit whitespace-pre-wrap',
+              'block p-2 bg-transparent text-gray-900 placeholder:text-gray-400',
+              'focus:ring-0 sm:text-sm sm:leading-6'
+            )}
             value={activePrompt?.prompt || ""}
             onChange={handlePromptTextChange}
           />
-        )} 
+        )}
       </div> 
       
-      <div className="flex flex-col">
-        <div className='flex w-full border-b p-2 h-12 items-center text-sm'>
-          Type your email below
-        </div>
-        <div className='flex flex-grow'>
-          <textarea
-            name="email"
-            rows={10}
-            placeholder="Enter the email you want follow ups for"
-            className="w-full h-full p-2 text-sm focus:outline-none"
-            value={content || ""}
-            onChange={(e) => setContent(e.target.value)}
-          />
-        </div>
-      </div>
+      <textarea
+        name="email"
+        rows={10}
+        placeholder="Enter the email you want follow ups for"
+        className="w-full h-full p-2 text-sm focus:outline-none"
+        value={content || ""}
+        onChange={(e) => setContent(e.target.value)}
+      />
     
       <div className="bg-slate-50">
         <div className='flex w-full border-b p-2 h-12 items-center text-sm'>

@@ -34,6 +34,7 @@ export async function callGPT35Api(prompt: string, retries = 3, delay = 1000): P
       // console.log(JSON.stringify(completion.data, null, 2))
       return response
     } else {
+      console.error(completion.data)
       throw new Error('Empty response from GPT-3.5')
     }
   } catch(error: any) {
@@ -44,7 +45,8 @@ export async function callGPT35Api(prompt: string, retries = 3, delay = 1000): P
     } else {
       // Handle the error (e.g., log it, return a default value, or throw a custom error)
       console.error(`Error in callGPT35Api, 0 tries remaining. Terminating.`)
-      throw new Error('Error parsing GPT-3.5 response after multiple retries')
+      console.error(error)
+      throw error
     }
   }
 }
