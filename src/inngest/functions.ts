@@ -3,7 +3,7 @@ import generate from './processes/generate'
 import schedule from './processes/schedule'
 import { inngest } from './client'
 import getActionById from '~/db-admin/get-action-by-id'
-import { differenceInDays, intervalToDuration, isAfter } from 'date-fns'
+import { differenceInDays, differenceInMilliseconds, intervalToDuration, isAfter } from 'date-fns'
 
 const inngestProcessIncomingEmail = inngest.createFunction(
   { name: "process incoming email" },
@@ -41,12 +41,13 @@ const inngestSchedule = inngest.createFunction(
       return action
     })
     
-    const days = differenceInDays(new Date(action.run_date as string), new Date())
-
-    if (days > 0) {
-      console.log(`Sleeping ${days} days`)
-      await step.sleep(`${days} days`)
+    let ms = differenceInMilliseconds(new Date(action.run_date as string), new Date())
+    
+    if (ms < 0) {
+      ms = 5000
     }
+    console.log(`Sleeping ${ms} ms`)
+    await step.sleep(ms)
 
     action = await step.run('Schedule', async () => {
       return await schedule(event.data.action_id)

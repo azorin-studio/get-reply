@@ -1,4 +1,4 @@
-import { addDays, parseISO } from "date-fns"
+import { addDays, addMilliseconds, parseISO } from "date-fns"
 import { th } from "date-fns/locale"
 import appendToLog from "~/db-admin/append-to-log"
 import createLog from "~/db-admin/create-log"
@@ -64,10 +64,26 @@ export default async function verifyIncomingEmail (incomingEmail: IncomingEmail)
 
   try {
     const actions = await Promise.all(sequence.steps.map(async (step: any) => {
+      
+      // in days
+      let msDelay = step.delay * 1000 * 60 * 60 * 24
+      if (step.delayUnit === 'hours') {
+        msDelay = step.delay * 1000 * 60 * 60
+      }
+      if (step.delayUnit === 'minutes') {
+        msDelay = step.delay * 1000 * 60
+      }
+      if (step.delayUnit === 'seconds') {
+        msDelay = step.delay * 1000
+      }
+
+      console.log({ step, msDelay } )
+
       const { error, data: action } = await supabaseAdminClient
         .from('actions')
         .insert({
-          run_date: addDays(parseISO(log!.date!), step.delay).toISOString(),
+          // delay needs to be in ms
+          run_date: addMilliseconds(parseISO(log!.date!), msDelay).toISOString(),
           prompt_id: step.prompt_id,
           name: step.action || 'draft',
           generation: '', // placeholder

@@ -51,13 +51,32 @@ export default function Step(props: {
           onChange(newStep)
         }}
       >
-        {[0, 1,2,3,4,5,6,7,8,9,10].map((delay) => (
+        {[0, 1,2,3,4,5,6,7,8,9,10, 11, 12,13,14,15,16,17,18,19,20,21,22,23,24].map((delay) => (
           <option key={delay} value={delay}>
             {delay}
           </option>
         ))}
       </select>
-      <div>days</div>
+      <select
+        id="prompt-selector"
+        name="prompt-selector"
+        className="rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 text-sm"
+        value={step.delayUnits || 'days'}
+        onChange={(e) => {
+          const newStep = {
+            ...step,
+            delayUnit: e.target.value,
+          }
+          setStep(newStep)
+          onChange(newStep)
+        }}
+      >
+        {['seconds', 'minutes', 'hours', 'days'].map((delay) => (
+          <option key={delay} value={delay}>
+            {delay}
+          </option>
+        ))}
+      </select>
       <button
         className='border px-2 rounded'
         onClick={() => {onRemoveStep(step)}}
