@@ -188,8 +188,8 @@ export default function DemoPage(props: any) {
   }
 
   return (
-    <main className="p-2 flex flex-col bg-red-50">       
-      <div className='flex flex-row w-full border-b p-2 h-12 items-center text-sm justify-between'>
+    <main className="p-2 flex flex-col gap-4">       
+      <div className='flex flex-row items-center text-sm justify-between'>
         {!creatingNew && <PromptSelector prompts={prompts} activePrompt={activePrompt} />}
         {creatingNew && (
           <>
@@ -245,39 +245,53 @@ export default function DemoPage(props: any) {
         </div>
       </div>
 
-      <div>
-        {!creatingNew && (
-          <div className="text-sm whitespace-pre-wrap p-2">
-            {activePrompt?.prompt || ""}
+      {!creatingNew && (
+        <div className="text-sm p-2 flex flex-col gap-2 bg-slate-50 rounded border">
+          <div className="text-slate-400">Prompt</div>
+          <div className="whitespace-pre-wrap">
+          {activePrompt?.prompt || ""}
           </div>
-        )}
-        {creatingNew && (
-          <textarea
-            rows={10}
-            placeholder={`Enter prompt for the ai`}
-            className="text-sm bg-white w-full min-h-fit whitespace-pre-wrap block p-2 bg-transparent text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-            value={activePrompt?.prompt || ""}
-            onChange={handlePromptTextChange}
-          />
-        )} 
-      </div> 
-      
-      <div className="flex flex-col">
-        <div className='flex w-full border-b p-2 h-12 items-center text-sm'>
-          Type your email below
         </div>
-        <div className='flex flex-grow'>
+      )}
+      
+      {creatingNew && (
+        <div className="text-sm p-2 flex flex-col gap-2 bg-slate-50 rounded border">
+          <div className="text-slate-400">Prompt</div>
+          <div className="whitespace-pre-wrap">
+            <textarea
+              rows={10}
+              placeholder={`Enter prompt for the ai`}
+              className="w-full min-h-fit whitespace-pre-wrap block p-2 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+              value={activePrompt?.prompt || ""}
+              onChange={handlePromptTextChange}
+            />
+          </div>
+        </div>
+      )} 
+    
+      <div className="text-sm p-2 flex flex-col gap-2 bg-slate-50 rounded border">
+        <div className="text-slate-400">Email</div>
+        <div className="whitespace-pre-wrap">
           <textarea
             name="email"
             rows={10}
             placeholder="Enter the email you want follow ups for"
-            className="w-full h-full p-2 text-sm focus:outline-none"
+            className="w-full h-full bg-transparent focus:outline-none"
             value={content || ""}
             onChange={(e) => setContent(e.target.value)}
           />
         </div>
       </div>
-    
+
+      {!busy && !error && result && (
+        <div className="text-sm p-2 flex flex-col gap-2 bg-slate-50 rounded border">
+          <div className="text-slate-400">Response</div>
+          <div className="whitespace-pre-wrap">
+            {result}
+          </div>
+        </div>
+      )}
+
       <div className="bg-slate-50">
         <div className='flex w-full border-b p-2 h-12 items-center text-sm'>
           <button
@@ -290,12 +304,7 @@ export default function DemoPage(props: any) {
           </button>
           <div className="text-sm items-center inline ml-2">{timer && `Generated in ${timer}`}</div>           
         </div>
-        
-        {!busy && !error && result && (
-          <div className="whitespace-pre-wrap text-sm p-2">
-            {result} 
-          </div>
-        )}
+      
 
         <div className="text-red-600">{!busy && error}</div>
 
