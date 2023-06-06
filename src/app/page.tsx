@@ -24,7 +24,7 @@ export default async function Page() {
   } = await supabase.auth.getSession()
 
   if (session) {
-    console.log('My Account: session does not exist, redirecting to /login')
+    console.log('session exists, redirecting to /login')
     return redirect('/logs') 
   }
 
