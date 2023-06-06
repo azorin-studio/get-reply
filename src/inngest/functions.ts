@@ -43,7 +43,7 @@ const inngestSchedule = inngest.createFunction(
     
     let ms = differenceInMilliseconds(new Date(action.run_date as string), new Date())
     
-    if (ms < 0) {
+    if (ms <= 0) {
       ms = 5000
     }
     console.log(`Sleeping ${ms} ms`)
