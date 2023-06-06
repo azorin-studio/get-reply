@@ -61,7 +61,7 @@ export default function Step(props: {
         id="prompt-selector"
         name="prompt-selector"
         className="rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 text-sm"
-        value={step.delayUnits || 'days'}
+        value={step.delayUnit || 'days'}
         onChange={(e) => {
           const newStep = {
             ...step,
@@ -71,9 +71,9 @@ export default function Step(props: {
           onChange(newStep)
         }}
       >
-        {['seconds', 'minutes', 'hours', 'days'].map((delay) => (
-          <option key={delay} value={delay}>
-            {delay}
+        {['seconds', 'minutes', 'hours', 'days'].map((delayUnit) => (
+          <option key={delayUnit} value={delayUnit}>
+            {delayUnit}
           </option>
         ))}
       </select>
