@@ -24,7 +24,7 @@ export default async function Page() {
   } = await supabase.auth.getSession()
 
   if (session) {
-    console.log('My Account: session does not exist, redirecting to /login')
+    console.log('session exists, redirecting to /login')
     return redirect('/logs') 
   }
 
@@ -42,7 +42,7 @@ export default async function Page() {
           <Image src={hero} width={250} alt="Hero image" priority />
           <div className="mx-auto flex flex-col items-start gap-4 lg:w-[52rem]">
             <h1 className="text-3xl font-bold leading-[1.1] tracking-tighter sm:text-5xl md:text-6xl">
-              Streamline your email follow-ups with GetReply
+              Streamline your email follow-ups
             </h1>
             <p className="max-w-[42rem] leading-normal text-slate-700 sm:text-xl sm:leading-8">
               Say goodbye to the hassle of scheduling and writing follow-up emails. GetReply simplifies the process with one-click scheduling and tailored ultra-polite emails written by Chat GPT.
@@ -73,7 +73,7 @@ export default async function Page() {
             </h2>
             <p className="max-w-[85%] leading-normal text-slate-700 sm:text-2xl sm:leading-7">
               <Link
-                href="/demo"
+                href="/prompts"
                 className="items-center justify-center space-x-2 flex ml-2"
               > 
                 <span className="font-bold sm:inline-block underline">
@@ -83,10 +83,7 @@ export default async function Page() {
               </Link>
             </p>
           </div>
-
         </section>
-
-        {/* <hr className="border-slate-200" /> */}
 
         <section className="container grid justify-center gap-6 py-8 md:py-12 lg:py-24">
           <div className="mx-auto flex flex-col gap-4 md:max-w-[52rem]">

@@ -70,6 +70,10 @@ export default function DemoPage(props: any) {
   }
 
   const saveNewPrompt = async () => {
+    if (!user) {
+      alert('Please login to save a prompt')
+      return
+    }
     if (!activePrompt || !activePrompt.prompt) {
       alert('Please enter a prompt')
       return
@@ -189,10 +193,10 @@ export default function DemoPage(props: any) {
   }
 
   return (
-    <main className="p-2 flex flex-col bg-red-50">
+    <main className="p-2 flex flex-col gap-4">
       <div 
         className={classNames(
-            'flex bg-blue-100 flex-row w-full border-b p-2 h-12',
+            'flex flex-row w-full',
             'items-center text-sm justify-between'
           )}
       >
@@ -200,13 +204,16 @@ export default function DemoPage(props: any) {
         {creatingNew && (
           <input 
             type="text"
-            className='border p-1 rounded text-sm'
+            className={classNames(
+              'text-sm border p-2',
+              'rounded border flex flex-row gap-2 items-center outline-none focus:outline-none',
+            )}
             placeholder='Name'
             value={activePrompt?.name || ""}
             onChange={handlePromptNameChange}
           />
         )}
-        <div className='flex flex-row gap-2 bg-yellow-50 justify-end'>
+        <div className='flex flex-row gap-2 justify-end'>
           {!creatingNew && (user && activePrompt?.user_id === user.id) && (
             <button 
               className="text-sm border rounded p-1"
@@ -230,7 +237,7 @@ export default function DemoPage(props: any) {
                 <button 
                   className={classNames(
                     'text-sm border p-2',
-                    'bg-blue-500 text-white rounded border flex flex-row gap-2 items-center',
+                    'bg-blue-500 border-blue-600 text-white rounded border flex flex-row gap-2 items-center',
                     'hover:bg-blue-600'
                   )}
                   onClick={handleCancelClick}
@@ -240,7 +247,7 @@ export default function DemoPage(props: any) {
                 <button 
                   className={classNames(
                     'text-sm border p-2',
-                    'bg-blue-500 text-white rounded border flex flex-row gap-2 items-center',
+                    'bg-blue-500 border-blue-600 text-white rounded border flex flex-row gap-2 items-center',
                     'hover:bg-blue-600'
                   )}
                   onClick={saveNewPrompt}
@@ -254,7 +261,7 @@ export default function DemoPage(props: any) {
             <button 
               className={classNames(
                 'text-sm border p-2',
-                'bg-blue-500 text-white rounded border flex flex-row gap-2 items-center',
+                'bg-blue-500 border-blue-600 text-white rounded border flex flex-row gap-2 items-center',
                 'hover:bg-blue-600'
               )}
               onClick={handleNewPromptClick}
@@ -265,65 +272,85 @@ export default function DemoPage(props: any) {
         </div>
       </div>
 
-      <div>
-        {!creatingNew && (
-          <div className="text-sm whitespace-pre-wrap p-2 bg-slate-50">
-            {activePrompt?.prompt || ""}
+      {!creatingNew && (
+        <div className="text-sm p-2 flex flex-col gap-2 bg-slate-50 rounded border">
+          <div className="text-slate-400">Prompt</div>
+          <div className="whitespace-pre-wrap">
+          {activePrompt?.prompt || ""}
           </div>
-        )}
-        {creatingNew && (
-          <textarea
-            rows={10}
-            placeholder={`Enter prompt for the ai`}
-            className={classNames(
-              'text-sm bg-white w-full min-h-fit whitespace-pre-wrap',
-              'block p-2 bg-transparent text-gray-900 placeholder:text-gray-400',
-              'focus:ring-0 sm:text-sm sm:leading-6'
-            )}
-            value={activePrompt?.prompt || ""}
-            onChange={handlePromptTextChange}
-          />
-        )}
-      </div> 
-      
-      <textarea
-        name="email"
-        rows={10}
-        placeholder="Enter the email you want follow ups for"
-        className="w-full h-full p-2 text-sm focus:outline-none"
-        value={content || ""}
-        onChange={(e) => setContent(e.target.value)}
-      />
-    
-      <div className="bg-slate-50">
-        <div className='flex w-full border-b p-2 h-12 items-center text-sm'>
-          <button
-            type="submit" 
-            value="Generate"
-            onClick={onGenerate}
-            className="rounded-md bg-slate-800 p-2 text-sm text-white "
-          >
-            {busy ? 'Generating' : 'Generate'}
-          </button>
-          <div className="text-sm items-center inline ml-2">{timer && `Generated in ${timer}`}</div>           
         </div>
-        
-        {!busy && !error && result && (
-          <div className="whitespace-pre-wrap text-sm p-2">
-            {result} 
+      )}
+      
+      {creatingNew && (
+        <div className="text-sm p-2 flex flex-col gap-2 bg-slate-50 rounded border">
+          <div className="text-slate-400">Prompt</div>
+          <div className="whitespace-pre-wrap">
+            <textarea
+              rows={10}
+              placeholder={`Enter prompt for the ai`}
+              className="w-full h-full bg-transparent focus:outline-none"
+              value={activePrompt?.prompt || ""}
+              onChange={handlePromptTextChange}
+            />
           </div>
-        )}
+        </div>
+      )} 
+    
+      <div className="text-sm p-2 flex flex-col gap-2 bg-slate-50 rounded border">
+        <div className="text-slate-400">Email</div>
+        <div className="whitespace-pre-wrap">
+          <textarea
+            name="email"
+            rows={10}
+            placeholder="Enter the email you want follow ups for"
+            className="w-full h-full bg-transparent focus:outline-none"
+            value={content || ""}
+            onChange={(e) => setContent(e.target.value)}
+          />
+        </div>
+      </div>
 
+      {!error && (
+        <div className="text-sm p-2 flex flex-col gap-2 bg-slate-50 rounded border">
+          <div className="text-slate-400">
+            {!busy && 'Response'}
+            {busy && (
+              <div className="inline-flex items-center flex-row gap-1">
+                <Loader className="h-[16px] animate-spin" />
+                Generating
+              </div>
+            )} 
+              
+            {timer && ` (generated in ${timer})`}
+          </div>
+          {result && (<div className="whitespace-pre-wrap">
+            {result}
+          </div>)}
+        </div>
+      )}
+
+      <div 
+        className={classNames(
+            'flex flex-row',
+            'items-center text-sm justify-end gap-2'
+          )}
+      >
+        
+      
         <div className="text-red-600">{!busy && error}</div>
 
-        <div>
-          {busy && (
-            <div className="inline-flex flex-row gap-2 text-sm p-2">
-              <Loader className="animate-spin" />
-              Generating. This can take up to 10 seconds.
-            </div>
+        <button
+          type="submit" 
+          value="Generate"
+          onClick={onGenerate}
+          className={classNames(
+            'text-sm border p-2',
+            'bg-blue-500 border-blue-600 text-white rounded border flex flex-row gap-2 items-center',
+            'hover:bg-blue-600'
           )}
-        </div>
+        >
+          Generate
+        </button>
       </div>
     </main>
   )

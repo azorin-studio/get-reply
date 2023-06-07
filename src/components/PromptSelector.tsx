@@ -10,7 +10,7 @@ export default function PromptSelector(props: { prompts: Prompt[], activePrompt:
       <Popover.Trigger 
         className={classNames(
           'text-sm border p-2',
-          'bg-blue-500 text-white rounded border flex flex-row gap-2 items-center',
+          'bg-blue-500 border-blue-600 text-white rounded border flex flex-row gap-2 items-center',
           'hover:bg-blue-600'
         )}
       >
@@ -33,8 +33,8 @@ export default function PromptSelector(props: { prompts: Prompt[], activePrompt:
                 'hover:bg-blue-400 last:rounded-b first:rounded-t min-w-64'
               )}
             >
-              <div className="font-bold">{prompt.name}</div>
-              <div className='text-sm'>
+              <div className="font-bold text-slate-800">{prompt.name}</div>
+              <div className='text-sm text-slate-600'>
                 {prompt.description}
               </div>
             </a>

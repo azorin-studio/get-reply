@@ -11,12 +11,13 @@ export default function LogoutPage() {
       const {
         data: { session },
       } = await supabase.auth.getSession()
-      if (!session) {
-        return
+      if (session) {
+        const { error } = await supabase.auth.signOut()
+        if (error) alert(error?.message)  
       }
 
-      const { error } = await supabase.auth.signOut()
-      if (error) alert(error?.message)
+      window.location.href = '/'
+      return 
     }
 
     handleLogout()
