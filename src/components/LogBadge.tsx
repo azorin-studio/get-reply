@@ -4,6 +4,7 @@ import { format, formatDistance } from 'date-fns'
 import Link from 'next/link'
 import { Log } from '~/db-admin/types'
 import StatusBadge from './StatusBadge'
+import classNames from 'classnames'
 
 export const revalidate = 0
 
@@ -44,9 +45,14 @@ export default function LogBadge(props: { log: Log }) {
           </div>
         }
 
-        <div className="w-full p-2 flex flex-row items-center justify-between text-sm whitespace-pre-wrap">
+        <p 
+          className={classNames(
+            "line-clamp-3 whitespace-pre-wrap",
+            "text-sm"
+          )}
+        >
           {log.text?.trim()}
-        </div>
+        </p>
 
       </div>
 
