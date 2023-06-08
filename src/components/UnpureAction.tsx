@@ -51,6 +51,8 @@ const UnpureAction = (props: {
       })
     })
     setRefreshing(false)
+    // refresh the page
+    window.location.reload()
   }
 
   if (!action) {
@@ -135,7 +137,14 @@ const UnpureAction = (props: {
       }
 
       <div className="w-full p-2 flex flex-row items-center justify-between text-sm whitespace-pre-wrap">
-        {action?.generation?.trim()}
+        {action?.generation && action?.generation?.trim()}
+
+        {!action?.generation && action?.status === 'generating' && (
+          <span 
+            className="text-slate-500"
+          >
+            Generating, this can take a minute or two...
+          </span>)}
       </div>
     </div>
   )

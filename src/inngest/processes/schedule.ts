@@ -105,6 +105,8 @@ export default async function schedule(action_id: string): Promise<Action>{
     }
   
     if (action.name === 'draft') {
+      // TODO: add check for if email already received a reply
+
       const draft = await createGmailDraftInThread(
         log.to as any[],
         log.from as any,

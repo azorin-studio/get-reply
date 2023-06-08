@@ -24,8 +24,8 @@ export default function SupabaseProvider({
   useEffect(() => {
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(() => {
-      console.log('SupabaseProvider: auth state changed, refreshing router')
+    } = supabase.auth.onAuthStateChange((event: any, session: any) => {
+      console.log('SupabaseProvider: auth state changed, refreshing router', event)
       router.refresh()
     })
 

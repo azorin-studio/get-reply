@@ -30,9 +30,10 @@ export default async function Page() {
 
   return (
     <main className='flex flex-col gap-4'>
-      <div>
-        <h1 className="text-base font-semibold leading-6 text-gray-900">Logs</h1>
-      </div>
+      <h1 className="text-2xl font-bold">
+        Logs
+      </h1>
+
 
       <div>
         {logs.length === 0 && (

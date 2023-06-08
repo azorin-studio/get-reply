@@ -15,13 +15,6 @@ export default function LogBody(props: { log: Log, sequence: Sequence }) {
 
   const [showAll, setShowAll] = useState(false)
 
-  const allToAdresses = [
-    ...(log.to?.map((to) => to!.address) || []),
-    ...(log.cc?.map((cc) => cc!.address) || []),
-    ...(log.bcc?.map((bcc) => bcc!.address) || []),
-  ]
-  
-
   return (
     <div className="w-full p-2 flex flex-col gap-4">
       
@@ -33,7 +26,12 @@ export default function LogBody(props: { log: Log, sequence: Sequence }) {
                 {log.subject}
               </div>
               <div className="text-gray-600">
-                to {' '}{allToAdresses.join(', ')}{}
+                to{' '}{log.to?.map((to) => to.address).join(', ')}
+                {/* Dont tidy this, otherwise it causes a weird hydration bug  */}
+                {log.cc && ', '}
+                {log.cc && `, ${log.cc.map((cc) => cc.address).join(', ')}`}
+                {log.bcc && ', '}
+                {log.bcc && log.bcc.map((bcc) => bcc.address).join(', ')}
               </div>
             </div>
           </div>
@@ -96,7 +94,7 @@ export default function LogBody(props: { log: Log, sequence: Sequence }) {
           <div
             className={classNames(
               "whitespace-pre-wrap text-sm max-w-full truncate",
-              showAll ? 'line-clamp-none' : 'line-clamp-3',
+              showAll ? 'line-clamp-none' : 'line-clamp-[16]',
             )}
           >
             {log.text?.trim()}

@@ -194,6 +194,10 @@ export default function DemoPage(props: any) {
 
   return (
     <main className="p-2 flex flex-col gap-4">
+      <h1 className="text-2xl font-bold">
+        Prompts
+      </h1>
+
       <div 
         className={classNames(
             'flex flex-row w-full',

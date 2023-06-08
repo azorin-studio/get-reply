@@ -31,11 +31,9 @@ export default async function Page() {
 
   return (
     <main>
-      <div className='flex flex-row justify-between'>
-        <h1 className="text-2xl font-bold">
-          Sequences
-        </h1>
-      </div>
+      <h1 className="text-2xl font-bold">
+        Sequences
+      </h1>
 
       <div className="flex flex-col gap-1 mt-12">
         <div className='divide-y border rounded'>
