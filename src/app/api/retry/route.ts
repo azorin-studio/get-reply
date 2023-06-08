@@ -49,7 +49,7 @@ export async function POST (request: Request) {
     // set action status to retrying
     await supabase
       .from('actions')
-      .update({ status: 'retrying' })
+      .update({ status: 'retrying', generation: null })
       .eq('id', json.action_id)
 
     await inngest.send({ 

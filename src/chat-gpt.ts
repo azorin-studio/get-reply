@@ -17,18 +17,26 @@ export async function callGPT35Api(prompt: string, retries = 3, delay = 1000): P
 
   try {
     const completionOptions = {
-      model: "text-davinci-003",
-      prompt,
-      temperature: 0.5,
+      model: "gpt-4",
+      // prompt,
+      messages: [{ role:"user", content: prompt }],
+      // messages: [{role: "user", content: "Hello world"}],
+      
       // top_p: 1,
       // frequency_penalty: 0,
       // presence_penalty: 0,
-      max_tokens: 1024,
-      n: 1,
+      // max_tokens: 1024,
+      // n: 1,
     }
-    const completion = await openai.createCompletion(completionOptions)
+    const completion = await openai.createChatCompletion({
+      model: "gpt-4",
+      temperature: 0.5,
+      max_tokens: 1024,
+      n:1,
+      messages: [{ role:"user", content: prompt }]
+    })
     
-    const response = completion.data.choices[0].text?.trim()
+    const response = completion.data.choices[0].message?.content.trim()
     if (response) {
       return response
     } else {

@@ -16,6 +16,10 @@ export default async function schedule(action_id: string): Promise<Action>{
     throw new Error(`Action ${action_id} not found`)
   }
 
+  if (action.status === 'complete') {
+    return action
+  }
+
   let log = await getLogById(action.log_id!)
 
   if (!log) {
@@ -94,7 +98,7 @@ export default async function schedule(action_id: string): Promise<Action>{
       })
   
       log = await appendToLog(log, {
-        status: 'sent',
+        status: 'complete',
       })
   
       return action
@@ -121,7 +125,7 @@ export default async function schedule(action_id: string): Promise<Action>{
       })
       
       log = await appendToLog(log, {
-        status: 'sent',
+        status: 'complete',
       })
   
       return action

@@ -3,7 +3,7 @@ import generate from './processes/generate'
 import schedule from './processes/schedule'
 import { inngest } from './client'
 import getActionById from '~/db-admin/get-action-by-id'
-import { differenceInDays, differenceInMilliseconds, intervalToDuration, isAfter } from 'date-fns'
+import { differenceInMilliseconds } from 'date-fns'
 
 const inngestProcessIncomingEmail = inngest.createFunction(
   { name: "process incoming email" },
