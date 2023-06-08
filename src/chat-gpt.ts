@@ -17,7 +17,7 @@ export async function callGPT35Api(prompt: string, retries = 3, delay = 1000): P
 
   try {
     const completionOptions = {
-      model: "text-davinci-003",
+      model: "gpt-4-0314",
       prompt,
       temperature: 0.2,
       // top_p: 1,
