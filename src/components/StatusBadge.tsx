@@ -9,7 +9,7 @@ export default function StatusBadge(props: { status: string }) {
     statusColor = 'yellow'
   } else if (status === "verified") {
     statusColor = 'yellow'
-  } else if (status === "generated") {
+  } else if (status === "generated" || status === "generating" || status === "scheduling") {
     statusColor = 'yellow'
   } else if (status === "sent") {
     statusColor = 'green'

@@ -55,14 +55,12 @@ const UnpureAction = (props: {
 
   if (!action) {
     return (
-      <div className="flex flex-col gap-2 ml-24 pl-2">
-        <div className="flex flex-col gap-2">
-          <div className="flex-none text-slate-400">
-            Action
-          </div>
-          <div className='border p-2 grow rounded whitespace-pre-wrap'>
-            Loading...
-          </div>
+      <div className="w-full flex flex-col gap-2">
+        <div className="flex-none text-slate-400">
+          Action
+        </div>
+        <div className='border p-2 grow rounded whitespace-pre-wrap text-sm'>
+          Loading...
         </div>
       </div>
     )
@@ -82,14 +80,7 @@ const UnpureAction = (props: {
         </div>
         <div className='flex flex-row gap-4 items-center'>
           {action.status && <StatusBadge status={action.status} />}
-          {action!.errorMessage && (
-            <button
-              className={`flex-none text-slate-400 hover:text-slate-500 text-sm`}
-              onClick={() => retryAction(action.id!)}
-            >
-              {refreshing ? 'Refreshing...' : 'Retry'}
-            </button>
-          )}
+
           <Popover.Root>
             <Popover.Trigger 
               className={classNames(
@@ -104,7 +95,7 @@ const UnpureAction = (props: {
                 className={classNames(
                   'flex flex-col bg-white border rounded',
                   'outline-none focus:outline-none  shadow',
-                  'divide-y divide-gray-100 py-2'
+                  'divide-y divide-gray-100 w-64 min-w-64'
                 )}
               >
                 <Link
@@ -114,13 +105,21 @@ const UnpureAction = (props: {
                   <div
                     className={classNames(
                       "cursor-pointer text-sm",
-                      "px-3 py-1 inline-flex hover:bg-slate-100"
+                      "px-3 py-2 inline-flex hover:bg-slate-100"
                     )}
                   >
                     Open prompt
                   </div>
                 </Link>
-
+                <button
+                  className={classNames(
+                    "cursor-pointer text-sm",
+                    "px-3 py-2 inline-flex hover:bg-slate-100"
+                  )}
+                  onClick={() => retryAction(action.id!)}
+                >
+                  {refreshing ? 'Re-running...' : 'Re-run'}
+                </button>
                 <Popover.Arrow className="fill-white" />
               </Popover.Content>
             </Popover.Portal>
