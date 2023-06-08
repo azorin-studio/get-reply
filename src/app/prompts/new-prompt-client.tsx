@@ -209,7 +209,7 @@ export default function DemoPage(props: any) {
           <input 
             type="text"
             className={classNames(
-              'text-sm border p-2',
+              'text-sm border px-2.5 py-1.5',
               'rounded border flex flex-row gap-2 items-center outline-none focus:outline-none',
             )}
             placeholder='Name'
@@ -240,7 +240,7 @@ export default function DemoPage(props: any) {
               <div className='flex flex-row gap-2'>
                 <button 
                   className={classNames(
-                    'text-sm border p-2',
+                    'text-sm border px-2.5 py-1.5',
                     'bg-blue-500 border-blue-600 text-white rounded border flex flex-row gap-2 items-center',
                     'hover:bg-blue-600'
                   )}
@@ -250,7 +250,7 @@ export default function DemoPage(props: any) {
                 </button>
                 <button 
                   className={classNames(
-                    'text-sm border p-2',
+                    'text-sm border px-2.5 py-1.5',
                     'bg-blue-500 border-blue-600 text-white rounded border flex flex-row gap-2 items-center',
                     'hover:bg-blue-600'
                   )}
@@ -264,7 +264,7 @@ export default function DemoPage(props: any) {
           {!creatingNew && (
             <button 
               className={classNames(
-                'text-sm border p-2',
+                'text-sm border px-2.5 py-1.5',
                 'bg-blue-500 border-blue-600 text-white rounded border flex flex-row gap-2 items-center',
                 'hover:bg-blue-600'
               )}
@@ -278,7 +278,7 @@ export default function DemoPage(props: any) {
 
       {!creatingNew && (
         <div className="text-sm p-2 flex flex-col gap-2 bg-slate-50 rounded border">
-          <div className="text-slate-400">Prompt</div>
+          <div className="text-slate-500">Prompt</div>
           <div className="whitespace-pre-wrap">
           {activePrompt?.prompt || ""}
           </div>
@@ -286,9 +286,9 @@ export default function DemoPage(props: any) {
       )}
       
       {creatingNew && (
-        <div className="text-sm p-2 flex flex-col gap-2 bg-slate-50 rounded border">
-          <div className="text-slate-400">Prompt</div>
-          <div className="whitespace-pre-wrap">
+        <div className="text-sm flex flex-col bg-slate-50 rounded border">
+          <div className="p-2 text-slate-500 border-b">Prompt</div>
+          <div className="whitespace-pre-wrap p-2 bg-white rounded-b">
             <textarea
               rows={10}
               placeholder={`Enter prompt for the ai`}
@@ -300,9 +300,9 @@ export default function DemoPage(props: any) {
         </div>
       )} 
     
-      <div className="text-sm p-2 flex flex-col gap-2 bg-slate-50 rounded border">
-        <div className="text-slate-400">Email</div>
-        <div className="whitespace-pre-wrap">
+      <div className="text-sm flex flex-col bg-slate-50 rounded border">
+        <div className="p-2 text-slate-500 border-b">Email</div>
+        <div className="whitespace-pre-wrap p-2 bg-white rounded-b">
           <textarea
             name="email"
             rows={10}
@@ -316,20 +316,28 @@ export default function DemoPage(props: any) {
 
       {!error && (
         <div className="text-sm p-2 flex flex-col gap-2 bg-slate-50 rounded border">
-          <div className="text-slate-400">
+          <div className="text-slate-500">
             {!busy && 'Response'}
             {busy && (
               <div className="inline-flex items-center flex-row gap-1">
                 <Loader className="h-[16px] animate-spin" />
-                Generating
+                Generating, this can take a few seconds...
               </div>
             )} 
               
             {timer && ` (generated in ${timer})`}
           </div>
-          {result && (<div className="whitespace-pre-wrap">
-            {result}
-          </div>)}
+          {result && (
+            <div className="whitespace-pre-wrap">
+              {result}
+            </div>
+          )}
+          {!result && (
+            <div className="text-slate-400">
+              Click generate to see a response
+            </div>
+          )}
+
         </div>
       )}
 
@@ -348,7 +356,7 @@ export default function DemoPage(props: any) {
           value="Generate"
           onClick={onGenerate}
           className={classNames(
-            'text-sm border p-2',
+            'text-sm border px-2.5 py-1.5',
             'bg-blue-500 border-blue-600 text-white rounded border flex flex-row gap-2 items-center',
             'hover:bg-blue-600'
           )}

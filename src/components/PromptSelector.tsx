@@ -9,9 +9,9 @@ export default function PromptSelector(props: { prompts: Prompt[], activePrompt:
     <Popover.Root>
       <Popover.Trigger 
         className={classNames(
-          'text-sm border p-2',
-          'bg-blue-500 border-blue-600 text-white rounded border flex flex-row gap-2 items-center',
-          'hover:bg-blue-600'
+          'border px-2.5 py-1.5',
+          'bg-slate-100 border-slate-200 text-slate-800 rounded border flex flex-row gap-2 items-center',
+          'hover:bg-slate-200 hover:border-slate-300'
         )}
       >
         {activePrompt?.name || 'Choose a prompt'} <ChevronDown width={16} />
@@ -30,7 +30,7 @@ export default function PromptSelector(props: { prompts: Prompt[], activePrompt:
               className={classNames(
                 'text-sm p-2 hover:bg-slate-50',
                 'flex flex-col gap-2',
-                'hover:bg-blue-400 last:rounded-b first:rounded-t min-w-64'
+                'hover:bg-slate-100 last:rounded-b first:rounded-t min-w-64'
               )}
             >
               <div className="font-bold text-slate-800">{prompt.name}</div>
