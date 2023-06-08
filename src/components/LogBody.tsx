@@ -5,35 +5,27 @@ import { Log } from '~/db-admin/types'
 import { useSupabase } from '~/hooks/use-supabase'
 import StatusBadge from './StatusBadge'
 import UnpureAction from './UnpureAction'
+import classNames from 'classnames'
+import { useState } from 'react'
 
 export default function LogBody(props: { log: Log }) {
   const { log } = props
-  const { supabase } = useSupabase()
 
-  let bgColor = 'bg-gray-200'
-  if (log.status === "error") {
-    bgColor = 'bg-red-400'
-  } else if (log.status === "pending") {
-    bgColor = 'bg-yellow-100'
-  } else if (log.status === "verified") {
-    bgColor = 'bg-yellow-300'
-  } else if (log.status === "generated") {
-    bgColor = 'bg-yellow-500'
-  } else if (log.status === "drafted") {
-    bgColor = 'bg-green-300'
-  }
+  const [showAll, setShowAll] = useState(false)
 
   return (
     <div className="w-full p-2 flex flex-col gap-4">
       
       <div className='border rounded-sm divide-y'>
-        <div className="w-full p-2 flex flex-row items-center justify-between bg-slate-50">
-          <div className="flex flex-col">
-            <div className="text-sm font-bold">
-              {log.from.address}
-            </div>
-            <div className="text-gray-600 text-sm">
-              to{' '}{log.to?.map((to) => to!.address).join(', ')}
+        <div className="w-full p-2 flex flex-row items-center justify-between bg-slate-50 group-hover:bg-slate-100">
+          <div className="flex flex-row gap-4 items-center">
+            <div className="flex flex-col text-sm">
+              <div className="font-bold">
+                {log.subject}
+              </div>
+              <div className="text-gray-600">
+                to {' '}{log.to?.map((to) => to!.address).join(', ')}
+              </div>
             </div>
           </div>
 
@@ -42,7 +34,7 @@ export default function LogBody(props: { log: Log }) {
             <div className="text-gray-600 text-sm">
               { log.created_at && 
                 <span>
-                  {format(new Date(log.created_at), 'LLLL dd, yyyy, h:MM a')}  ({formatDistance(new Date(log.created_at), new Date(), { addSuffix: true })})
+                  {format(new Date(log.created_at), 'dd LLL, h:MM a')}
                 </span>
               }
             </div>
@@ -55,8 +47,24 @@ export default function LogBody(props: { log: Log }) {
           </div>
         }
 
-        <div className="w-full p-2 flex flex-row items-center justify-between text-sm whitespace-pre-wrap">
-          {log.text?.trim()}
+
+        <div className="flex flex-col gap-2 p-2">
+          <div
+            className={classNames(
+              "whitespace-pre-wrap text-sm max-w-full truncate",
+              showAll ? 'line-clamp-none' : 'line-clamp-3',
+            )}
+          >
+            {log.text?.trim()}
+          </div>
+          <button
+            className="text-sm font-medium text-blue-500 hover:text-blue-600"
+            onClick={() => {
+              setShowAll(!showAll)
+            }}
+          >
+            {showAll ? '-' : '+'} Show {showAll ? 'less' : 'all'}
+          </button>
         </div>
 
       </div>

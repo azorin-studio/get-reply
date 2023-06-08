@@ -105,7 +105,7 @@ export default async function verifyIncomingEmail (incomingEmail: IncomingEmail)
     }))
 
     log = await appendToLog(log, {
-      status: 'scheduling',
+      status: 'generating',
       action_ids: actions.map(action => action.id),
     })
 

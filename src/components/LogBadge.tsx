@@ -18,12 +18,14 @@ export default function LogBadge(props: { log: Log }) {
     >
       <div className='border rounded-sm divide-y hover:cursor-pointer group'>
         <div className="w-full p-2 flex flex-row items-center justify-between bg-slate-50 group-hover:bg-slate-100">
-          <div className="flex flex-col">
-            <div className="text-sm font-bold">
-              {log.from.address}
-            </div>
-            <div className="text-gray-600 text-sm">
-              to{' '}{log.to?.map((to) => to!.address).join(', ')}
+          <div className="flex flex-row gap-4 items-center">
+            <div className="flex flex-col text-sm">
+              <div className="font-bold">
+                {log.subject}
+              </div>
+              <div className="text-gray-600">
+                to {' '}{log.to?.map((to) => to!.address).join(', ')}
+              </div>
             </div>
           </div>
 
@@ -32,7 +34,7 @@ export default function LogBadge(props: { log: Log }) {
             <div className="text-gray-600 text-sm">
               { log.created_at && 
                 <span>
-                  {format(new Date(log.created_at), 'LLLL dd, yyyy, h:MM a')}  ({formatDistance(new Date(log.created_at), new Date(), { addSuffix: true })})
+                  {format(new Date(log.created_at), 'dd LLL, h:MM a')}
                 </span>
               }
             </div>
@@ -45,14 +47,15 @@ export default function LogBadge(props: { log: Log }) {
           </div>
         }
 
-        <p 
-          className={classNames(
-            "line-clamp-3 whitespace-pre-wrap",
-            "text-sm"
-          )}
-        >
-          {log.text?.trim()}
-        </p>
+        <div className="flex flex-row gap-4 p-2">
+          <div
+            className={classNames(
+              "line-clamp-3 whitespace-pre-wrap text-sm max-w-full truncate",
+            )}
+          >
+            {log.text?.trim()}
+          </div>
+        </div>
 
       </div>
 

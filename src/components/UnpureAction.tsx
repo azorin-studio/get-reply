@@ -35,6 +35,20 @@ const UnpureAction = (props: {
     fetchAction()
   }, [])
 
+  const retryAction = async (action_id: string) => {
+    setRefreshing(true)
+    await fetch(`/api/retry`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        action_id
+      })
+    })
+    setRefreshing(false)
+  }
+
   if (!action) {
     return (
       <div className="flex flex-col gap-2 ml-24 pl-2">
@@ -62,9 +76,16 @@ const UnpureAction = (props: {
             }
           </div>
         </div>
-
         <div className='flex flex-row gap-4 items-center'>
           {action.status && <StatusBadge status={action.status} />}
+          {action!.errorMessage && (
+            <button
+              className={`flex-none text-slate-400 hover:text-slate-500 text-sm`}
+              onClick={() => retryAction(action.id!)}
+            >
+              {refreshing ? 'Refreshing...' : 'Retry'}
+            </button>
+          )}
         </div>
 
       </div>

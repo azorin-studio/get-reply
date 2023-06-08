@@ -34,7 +34,13 @@ export default async function generate (action_id: string) {
   }
 
   action = await appendToAction(action, {
-    status: 'generating'
+    status: 'generating',
+    errorMessage: null
+  })
+
+  log = await appendToLog(log, {
+    status: 'generating',
+    errorMessage: null
   })
 
   const fullPrompt = (prompt.prompt as string).replace('{email}', log.text!)
@@ -51,8 +57,9 @@ export default async function generate (action_id: string) {
   } catch (error: any) {
     log = await appendToLog(log, {
       status: 'error',
-      errorMessage: error.message
+      errorMessage: `Error while generating: ${error.message}`
     })
+
     action = await appendToAction(action, {
       status: 'error',
       errorMessage: error.message

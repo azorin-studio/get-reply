@@ -5,7 +5,7 @@ import { Profile } from '~/db-admin/types'
 import { createGmailDraftInThread, sendDraft } from '~/google'
 
 describe('queue', () => {
-  it('should directly reply to the email', async () => {
+  it.only('should directly reply to the email', async () => {
     testEmail.messageId = `test-${Math.random().toString(36).slice(2, 14)}@getreply.app` 
     testEmail.date = new Date(Date.now()).toISOString()
     testEmail.to = [
@@ -70,7 +70,7 @@ describe('queue', () => {
     expect(data).toHaveProperty('success')
   }, 10000)
 
-  it.only('should send an email using gmail', async () => {
+  it('should send an email using gmail', async () => {
     const profile: Profile = await getProfileFromEmail('amonecho1@gmail.com')
     const r = Math.random().toString(36).slice(2, 7)
     const draft = await createGmailDraftInThread(
