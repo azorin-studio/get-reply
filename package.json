@@ -3,17 +3,18 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "concurrently \"next dev\" \"npm run inngest\"",
+    "dev": "concurrently \"npm run dev:next\" \"npm run dev:inngest\"",
+    "dev:next": "next dev",
+    "dev:inngest": "npx inngest-cli@latest dev --port 8288",
+    "dev:download-types": "supabase gen types typescript --project-id 'dwtrraqsrjkkheqloopn' --schema public > src/db-admin/database.types.ts",
+    "dev:pull-secrets": "vercel env pull .env.vercel.local",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "test": "jest",
-    "download-types": "supabase gen types typescript --project-id 'dwtrraqsrjkkheqloopn' --schema public > src/db-admin/database.types.ts",
     "wrangler:dev": "wrangler dev",
     "wrangler:deploy": "wrangler deploy",
-    "wrangler:logs": "wrangler tail email-forwarding",
-    "inngest": "npx inngest-cli@latest dev --port 8288",
-    "pull-secrets": "vercel env pull .env.development.local"
+    "wrangler:logs": "wrangler tail email-forwarding"
   },
   "dependencies": {
     "@google-cloud/local-auth": "^2.1.0",
@@ -57,6 +58,7 @@
     "jest-environment-jsdom": "^29.5.0",
     "ms": "^2.1.3",
     "nock": "^13.3.0",
+    "node-email-reply-parser": "0.1.4",
     "node-fetch": "2.6.11",
     "openai": "^3.2.1",
     "postal-mime": "1.0.16",

@@ -1,9 +1,11 @@
+import replyParser from "node-email-reply-parser"
 import { callGPT35Api } from "~/chat-gpt"
 import appendToAction from "~/db-admin/append-to-action"
 import appendToLog from "~/db-admin/append-to-log"
 import getActionById from "~/db-admin/get-action-by-id"
 import getLogById from "~/db-admin/get-log-by-id"
 import getPromptById from "~/db-admin/get-prompt-by-id"
+
 
 export default async function generate (action_id: string) {
   let action = await getActionById(action_id)
@@ -43,7 +45,10 @@ export default async function generate (action_id: string) {
     errorMessage: null
   })
 
-  const fullPrompt = (prompt.prompt as string).replace('{email}', log.text!)
+  // const emailBody = log.text!
+  // need to parse only the most recent email in the thread
+  const emailBody = replyParser(log.text!).getVisibleText()
+  const fullPrompt = (prompt.prompt as string).replace('{email}', emailBody)
 
   try {
     const generation: string = await callGPT35Api(fullPrompt, 3)

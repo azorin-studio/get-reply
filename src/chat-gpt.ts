@@ -30,14 +30,12 @@ export async function callGPT35Api(prompt: string, retries = 3, delay = 1000): P
     
     const response = completion.data.choices[0].text?.trim()
     if (response) {
-      // console.log(`GPT-3.5 response\n==========Prompt\n${prompt}\n========\nResponse\n${response}`)
-      // console.log(JSON.stringify(completion.data, null, 2))
       return response
     } else {
-      console.error(completion.data)
       throw new Error('Empty response from GPT-3.5')
     }
   } catch(error: any) {
+    const errMsg = error.response?.data?.error.message || error.message
     if (retries > 0) {
       console.warn(`Error in callGPT35Api, ${retries-1} tries remaining. Trying again.`)
       await sleep(delay)
@@ -45,8 +43,8 @@ export async function callGPT35Api(prompt: string, retries = 3, delay = 1000): P
     } else {
       // Handle the error (e.g., log it, return a default value, or throw a custom error)
       console.error(`Error in callGPT35Api, 0 tries remaining. Terminating.`)
-      console.error(error)
-      throw error
+      console.error(errMsg)
+      throw new Error(errMsg)
     }
   }
 }

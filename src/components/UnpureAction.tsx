@@ -5,6 +5,10 @@ import { useEffect, useState } from 'react'
 import { Action } from '~/db-admin/types'
 import { useSupabase } from "~/hooks/use-supabase"
 import StatusBadge from './StatusBadge'
+import * as Popover from '@radix-ui/react-popover'
+import classNames from 'classnames'
+import { MoreVertical } from 'lucide-react'
+import Link from 'next/link'
 
 export const revalidate = 0
 
@@ -86,6 +90,41 @@ const UnpureAction = (props: {
               {refreshing ? 'Refreshing...' : 'Retry'}
             </button>
           )}
+          <Popover.Root>
+            <Popover.Trigger 
+              className={classNames(
+                'text-slate-700 hover:text-slate-500'
+              )}
+            >
+              <MoreVertical />
+            </Popover.Trigger>
+
+            <Popover.Portal>
+              <Popover.Content
+                className={classNames(
+                  'flex flex-col bg-white border rounded',
+                  'outline-none focus:outline-none  shadow',
+                  'divide-y divide-gray-100 py-2'
+                )}
+              >
+                <Link
+                  href={`/prompts/${action.prompt_id}`}
+                  legacyBehavior
+                >
+                  <div
+                    className={classNames(
+                      "cursor-pointer text-sm",
+                      "px-3 py-1 inline-flex hover:bg-slate-100"
+                    )}
+                  >
+                    Open prompt
+                  </div>
+                </Link>
+
+                <Popover.Arrow className="fill-white" />
+              </Popover.Content>
+            </Popover.Portal>
+          </Popover.Root>
         </div>
 
       </div>

@@ -1,17 +1,26 @@
 'use client'
 
-import { format, formatDistance } from 'date-fns'
-import { Log } from '~/db-admin/types'
-import { useSupabase } from '~/hooks/use-supabase'
+import { format } from 'date-fns'
+import { Log, Sequence } from '~/db-admin/types'
 import StatusBadge from './StatusBadge'
 import UnpureAction from './UnpureAction'
 import classNames from 'classnames'
 import { useState } from 'react'
+import Link from 'next/link'
+import * as Popover from '@radix-ui/react-popover'
+import { MoreVertical } from 'lucide-react'
 
-export default function LogBody(props: { log: Log }) {
-  const { log } = props
+export default function LogBody(props: { log: Log, sequence: Sequence }) {
+  const { log, sequence } = props
 
   const [showAll, setShowAll] = useState(false)
+
+  const allToAdresses = [
+    ...(log.to?.map((to) => to!.address) || []),
+    ...(log.cc?.map((cc) => cc!.address) || []),
+    ...(log.bcc?.map((bcc) => bcc!.address) || []),
+  ]
+  
 
   return (
     <div className="w-full p-2 flex flex-col gap-4">
@@ -24,7 +33,7 @@ export default function LogBody(props: { log: Log }) {
                 {log.subject}
               </div>
               <div className="text-gray-600">
-                to {' '}{log.to?.map((to) => to!.address).join(', ')}
+                to {' '}{allToAdresses.join(', ')}{}
               </div>
             </div>
           </div>
@@ -38,6 +47,41 @@ export default function LogBody(props: { log: Log }) {
                 </span>
               }
             </div>
+            <Popover.Root>
+              <Popover.Trigger 
+                className={classNames(
+                  'text-slate-700 hover:text-slate-500'
+                )}
+              >
+                <MoreVertical />
+              </Popover.Trigger>
+
+              <Popover.Portal>
+                <Popover.Content
+                  className={classNames(
+                    'flex flex-col bg-white border rounded',
+                    'outline-none focus:outline-none  shadow',
+                    'divide-y divide-gray-100 py-2'
+                  )}
+                >
+                  <Link
+                    href={`/sequences/${sequence.id}`}
+                    legacyBehavior
+                  >
+                    <div
+                      className={classNames(
+                        "cursor-pointer text-sm",
+                        "px-3 py-1 inline-flex hover:bg-slate-100"
+                      )}
+                    >
+                      Open sequence (followup)
+                    </div>
+                  </Link>
+
+                  <Popover.Arrow className="fill-white" />
+                </Popover.Content>
+              </Popover.Portal>
+            </Popover.Root>
           </div>
         </div>
 
