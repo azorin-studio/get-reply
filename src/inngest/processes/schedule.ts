@@ -1,6 +1,7 @@
 import appendToAction from "~/db-admin/append-to-action"
 import getProfileFromEmail from "~/db-admin/get-profile-from-email"
-import { Action, Profile } from "~/db-admin/types"
+import getSequenceFromLog from "~/db-admin/get-sequence-by-id"
+import { Action, Log, Profile } from "~/db-admin/types"
 import { createGmailDraftInThread, findThread, makeUnreadInInbox } from "~/google"
 import getActionById from "~/db-admin/get-action-by-id"
 import getLogById from "~/db-admin/get-log-by-id"
@@ -84,8 +85,14 @@ export default async function schedule(action_id: string): Promise<Action>{
 
   try {
     if (action.type === 'send') {
+      const sequence = await getSequenceFromLog(log)
+
+      if (!sequence) {
+        throw new Error('Could not find sequence')
+      }
+
       const reply = await sendMail({
-        from: `reply@getreply.app`,
+        from: `${sequence.name}@getreply.app`,
         to: (log.from as any).address,
         subject: `re: ${log.subject}`,
         textBody: action.generation as string,
