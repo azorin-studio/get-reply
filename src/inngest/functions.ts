@@ -14,7 +14,7 @@ const inngestProcessIncomingEmail = inngest.createFunction(
     log.action_ids?.forEach(async (action_id: string) => {
       console.log(`[action_id: ${action_id}]: sending to queue/generate`)
       await inngest.send({ 
-        id: `queue/generate-${event.data.action_id}`,
+        id: `queue/generate-${action_id}`,
         name: 'queue/generate', 
         data: { action_id } 
       })
@@ -44,18 +44,17 @@ const inngestSchedule = inngest.createFunction(
   { event: "queue/schedule" },
   async ({ event, step }: { event: any, step: any }) => {
     console.log(`[action_id: ${event.data.action_id}]: in queue/schedule`)
+    
     let action = await step.run('Get action', async () => {
+      console.log(`[action_id: ${event.data.action_id}]: in queue/schedule - get action`)
       let action = await getActionById(event.data.action_id)
-  
       if (!action) {
         throw new Error(`Action ${event.data.action_id} not found`)
       }
-
       return action
     })
     
     let ms = differenceInMilliseconds(new Date(action.run_date as string), new Date())
-    
     if (ms <= 0) {
       ms = 5000
     }
@@ -63,6 +62,7 @@ const inngestSchedule = inngest.createFunction(
     await step.sleep(ms)
 
     action = await step.run('Schedule', async () => {
+      console.log(`[action_id: ${event.data.action_id}]: in queue/schedule - schedule`)
       return await schedule(event.data.action_id)
     })
     console.log(`[action_id: ${event.data.action_id}]: finished queue/schedule`)
