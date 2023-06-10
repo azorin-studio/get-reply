@@ -9,9 +9,15 @@ const inngestProcessIncomingEmail = inngest.createFunction(
   { name: "process incoming email" },
   { event: "queue/process-incoming-email" },
   async ({ event, step }: { event: any, step: any }) => {
+    console.log(`[messageId: ${event.data.messageId}]: runnng process email`)
     const log = await processIncomingEmail(event.data)
     log.action_ids?.forEach(async (action_id: string) => {
-      await inngest.send({ name: 'queue/generate', data: { action_id } })
+      console.log(`[action_id: ${action_id}]: sending to queue/generate`)
+      await inngest.send({ 
+        id: `queue/generate-${event.data.action_id}`,
+        name: 'queue/generate', 
+        data: { action_id } 
+      })
     })
     return { event, body: log }
   }
@@ -21,8 +27,14 @@ const inngestGenerate = inngest.createFunction(
   { name: "generate" },
   { event: "queue/generate" },
   async ({ event, step }: { event: any, step: any }) => {
+    console.log(`[action_id: ${event.data.action_id}]: in queue/generate`)
     const action = await generate(event.data.action_id)
-    await inngest.send({ name: 'queue/schedule', data: { action_id: event.data.action_id } })
+    console.log(`[action_id: ${event.data.action_id}]: Sending to queue/schedule`)
+    await inngest.send({ 
+      id: `queue/schedule-${event.data.action_id}`,
+      name: 'queue/schedule', 
+      data: { action_id: event.data.action_id }
+    })
     return { event, body: action }
   }
 )
@@ -31,6 +43,7 @@ const inngestSchedule = inngest.createFunction(
   { name: "schedule" },
   { event: "queue/schedule" },
   async ({ event, step }: { event: any, step: any }) => {
+    console.log(`[action_id: ${event.data.action_id}]: in queue/schedule`)
     let action = await step.run('Get action', async () => {
       let action = await getActionById(event.data.action_id)
   
@@ -46,13 +59,13 @@ const inngestSchedule = inngest.createFunction(
     if (ms <= 0) {
       ms = 5000
     }
-    console.log(`Sleeping ${ms} ms`)
+    console.log(`[action_id: ${event.data.action_id}]: sleeping ${ms} ms`)
     await step.sleep(ms)
 
     action = await step.run('Schedule', async () => {
       return await schedule(event.data.action_id)
     })
-    
+    console.log(`[action_id: ${event.data.action_id}]: finished queue/schedule`)
     return { event, body: action }
   }
 )

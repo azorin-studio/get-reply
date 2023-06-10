@@ -30,12 +30,12 @@ export default async function Page() {
   const sequences: Sequence[] = data || []
 
   return (
-    <main>
+    <main className="p-2 flex flex-col gap-4">
       <h1 className="text-2xl font-bold">
         Sequences
       </h1>
 
-      <div className="flex flex-col gap-1 mt-12">
+      <div className="flex flex-col gap-1">
         <div className='divide-y border rounded'>
           {sequences && sequences
             .filter((sequence) => !sequence.user_id)

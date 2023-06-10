@@ -12,7 +12,11 @@ module.exports = {
         "2xl": "1440px",
       },
     },
-    extend: {},
+    extend: {
+      colors: {
+        googleBlue: "#4285f4",
+      }
+    },
   },
   plugins: [
     require("@tailwindcss/typography"),

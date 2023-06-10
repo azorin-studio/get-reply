@@ -17,11 +17,11 @@ export interface Database {
           id: string
           log_id: string | null
           mailId: string | null
-          name: string | null
           prompt_id: string | null
           run_date: string | null
           status: string | null
           threadId: string | null
+          type: string | null
           user_id: string | null
         }
         Insert: {
@@ -31,11 +31,11 @@ export interface Database {
           id?: string
           log_id?: string | null
           mailId?: string | null
-          name?: string | null
           prompt_id?: string | null
           run_date?: string | null
           status?: string | null
           threadId?: string | null
+          type?: string | null
           user_id?: string | null
         }
         Update: {
@@ -45,13 +45,21 @@ export interface Database {
           id?: string
           log_id?: string | null
           mailId?: string | null
-          name?: string | null
           prompt_id?: string | null
           run_date?: string | null
           status?: string | null
           threadId?: string | null
+          type?: string | null
           user_id?: string | null
         }
+        Relationships: [
+          {
+            foreignKeyName: "actions_log_id_fkey"
+            columns: ["log_id"]
+            referencedRelation: "logs"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       logs: {
         Row: {
@@ -123,6 +131,20 @@ export interface Database {
           to?: Json[] | null
           user_id?: string | null
         }
+        Relationships: [
+          {
+            foreignKeyName: "logs_sequence_id_fkey"
+            columns: ["sequence_id"]
+            referencedRelation: "sequences"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "logs_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       profiles: {
         Row: {
@@ -143,6 +165,14 @@ export interface Database {
           id?: string
           user_constraints?: string[] | null
         }
+        Relationships: [
+          {
+            foreignKeyName: "profiles_id_fkey"
+            columns: ["id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       prompts: {
         Row: {
@@ -169,6 +199,14 @@ export interface Database {
           prompt?: string | null
           user_id?: string | null
         }
+        Relationships: [
+          {
+            foreignKeyName: "prompts_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       sequences: {
         Row: {
@@ -195,6 +233,14 @@ export interface Database {
           steps?: Json[] | null
           user_id?: string | null
         }
+        Relationships: [
+          {
+            foreignKeyName: "sequences_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          }
+        ]
       }
     }
     Views: {

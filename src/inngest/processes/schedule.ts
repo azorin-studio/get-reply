@@ -83,7 +83,7 @@ export default async function schedule(action_id: string): Promise<Action>{
   }
 
   try {
-    if (action.name === 'send' || action.name === 'reply') {
+    if (action.type === 'send') {
       const reply = await sendMail({
         from: `reply@getreply.app`,
         to: (log.from as any).address,
@@ -104,7 +104,7 @@ export default async function schedule(action_id: string): Promise<Action>{
       return action
     }
   
-    if (action.name === 'draft') {
+    if (action.type === 'draft') {
       // TODO: add check for if email already received a reply
 
       const draft = await createGmailDraftInThread(

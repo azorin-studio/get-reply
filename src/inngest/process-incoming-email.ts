@@ -64,7 +64,6 @@ export default async function verifyIncomingEmail (incomingEmail: IncomingEmail)
 
   try {
     const actions = await Promise.all(sequence.steps.map(async (step: any) => {
-      
       // in days
       let msDelay = step.delay * 1000 * 60 * 60 * 24
       if (step.delayUnit === 'hours') {
@@ -77,15 +76,13 @@ export default async function verifyIncomingEmail (incomingEmail: IncomingEmail)
         msDelay = step.delay * 1000
       }
 
-      console.log({ step, msDelay } )
-
       const { error, data: action } = await supabaseAdminClient
         .from('actions')
         .insert({
           // delay needs to be in ms
           run_date: addMilliseconds(parseISO(log!.date!), msDelay).toISOString(),
           prompt_id: step.prompt_id,
-          name: step.action || 'draft',
+          type: step.action || 'draft',
           generation: '', // placeholder
           mailId: '', // placeholder 
           log_id: log!.id,
@@ -104,6 +101,7 @@ export default async function verifyIncomingEmail (incomingEmail: IncomingEmail)
       return action[0]
     }))
 
+    console.log(`[messageId: ${incomingEmail.messageId}] made actions: [${actions.map(action => action.id).join(', ')}]`)
     log = await appendToLog(log, {
       status: 'generating',
       action_ids: actions.map(action => action.id),

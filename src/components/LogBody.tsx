@@ -17,7 +17,6 @@ export default function LogBody(props: { log: Log, sequence: Sequence }) {
 
   return (
     <div className="w-full p-2 flex flex-col gap-4">
-      
       <div className='border rounded-sm divide-y'>
         <div className="w-full p-2 flex flex-row items-center justify-between bg-slate-50 group-hover:bg-slate-100">
           <div className="flex flex-row gap-4 items-center">

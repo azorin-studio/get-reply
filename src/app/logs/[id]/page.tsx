@@ -37,7 +37,10 @@ export default async function Page(props: { params: { id: string } }) {
   const sequence = await getSequenceById(log!, supabase)
 
   return (
-    <main>
+    <main className="p-2 flex flex-col gap-4">
+      <h1 className="text-2xl font-bold">
+        Log
+      </h1>
       {log && 
         <LogBody
           log={log} 

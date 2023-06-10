@@ -21,12 +21,11 @@ export async function POST (request: Request) {
   }
 
   try {
-    console.log('Sending to inngest')
     await inngest.send({ 
+      id: `queue/process-incoming-email-${json.messageId}`,
       name: 'queue/process-incoming-email', 
       data: json as IncomingEmail 
     })
-    console.log('Sent to inngest')
     return NextResponse.json({ success: true })
   } catch (err: any) {
     console.error(err)

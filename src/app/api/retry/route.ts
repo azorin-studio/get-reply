@@ -44,8 +44,6 @@ export async function POST (request: Request) {
   }
 
   try {
-    console.log('Sending to inngest')
-
     // set action status to retrying
     await supabase
       .from('actions')
@@ -53,6 +51,7 @@ export async function POST (request: Request) {
       .eq('id', json.action_id)
 
     await inngest.send({ 
+      id: `queue/retry-generate-${json.action_id}`,
       name: 'queue/generate', 
       data: { action_id: json.action_id }
     })

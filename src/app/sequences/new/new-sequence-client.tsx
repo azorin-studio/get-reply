@@ -108,7 +108,10 @@ export default function DemoPage(props: any) {
   }
 
   return (
-    <main>
+    <main className="p-2 flex flex-col gap-4">
+      <h1 className="text-2xl font-bold">
+      {!props.params || !props.params.id ? 'New' : 'Update'} Sequence
+      </h1>
       <div className="flex flex-col gap-2 rounded">      
         <input 
           type="text"
