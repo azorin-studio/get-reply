@@ -3,7 +3,7 @@ import { createClientComponentClient, createServerComponentClient } from '@supab
 import { Auth } from '@supabase/auth-ui-react'
 import { ThemeSupa } from '@supabase/auth-ui-shared'
 import classNames from 'classnames'
-import { MailPlus } from 'lucide-react'
+import { LuMailPlus } from 'react-icons/lu'
 import { cookies } from 'next/headers'
 import Link from 'next/link'
 import { Database } from '~/db-admin/database.types'
@@ -17,7 +17,7 @@ export default function Header(props: { user?: object | null }) {
       <div className="flex h-16 items-center justify-between border-b border-b-slate-200 p-4">
         <div className="flex gap-6 md:gap-10">
           <Link href="/" className="items-center space-x-2 flex">
-            <MailPlus />
+            <LuMailPlus />
             <span className="font-bold sm:inline-block">
               Get Reply
             </span>

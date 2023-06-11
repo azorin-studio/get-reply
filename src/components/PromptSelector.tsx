@@ -1,6 +1,6 @@
 import classNames from 'classnames'
 import * as Popover from '@radix-ui/react-popover'
-import { ChevronDown } from "lucide-react"
+import { LuChevronDown } from "react-icons/lu"
 import { Prompt } from "~/db-admin/types"
 
 export default function PromptSelector(props: { prompts: Prompt[], activePrompt: Prompt | null }) {
@@ -14,7 +14,7 @@ export default function PromptSelector(props: { prompts: Prompt[], activePrompt:
           'hover:bg-slate-200 hover:border-slate-300'
         )}
       >
-        {activePrompt?.name || 'Choose a prompt'} <ChevronDown width={16} />
+        {activePrompt?.name || 'Choose a prompt'} <LuChevronDown width={16} />
       </Popover.Trigger>
 
       <Popover.Portal>

@@ -1,5 +1,5 @@
 'use client'
-import { ArrowUpRight } from 'lucide-react'
+import { LuArrowUpRight } from 'react-icons/lu'
 import Link from 'next/link'
 
 const NewsletterForm = () => {
@@ -37,7 +37,7 @@ const NewsletterForm = () => {
           <span className="underline font-bold sm:inline-block">
           Try out the demo
           </span>
-          <ArrowUpRight />
+          <LuArrowUpRight />
         </Link>
         </div>
     </form>

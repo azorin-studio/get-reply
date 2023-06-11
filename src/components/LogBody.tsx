@@ -8,7 +8,7 @@ import classNames from 'classnames'
 import { useState } from 'react'
 import Link from 'next/link'
 import * as Popover from '@radix-ui/react-popover'
-import { MoreVertical } from 'lucide-react'
+import { LuMoreVertical } from 'react-icons/lu'
 
 export default function LogBody(props: { log: Log, sequence: Sequence }) {
   const { log, sequence } = props
@@ -50,7 +50,7 @@ export default function LogBody(props: { log: Log, sequence: Sequence }) {
                   'text-slate-700 hover:text-slate-500'
                 )}
               >
-                <MoreVertical />
+                <LuMoreVertical />
               </Popover.Trigger>
 
               <Popover.Portal>
@@ -87,7 +87,6 @@ export default function LogBody(props: { log: Log, sequence: Sequence }) {
             {log.errorMessage}
           </div>
         }
-
 
         <div className="flex flex-col gap-2 p-2">
           <div

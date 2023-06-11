@@ -30,7 +30,9 @@ export default function LogBadge(props: { log: Log }) {
           </div>
 
           <div className='flex flex-row gap-4 items-center'>
-            {log.status && <StatusBadge status={log.status} />}
+            {log.status && (
+              <StatusBadge status={log.status} />
+            )}
             <div className="text-gray-600 text-sm">
               { log.created_at && 
                 <span>

@@ -1,7 +1,7 @@
 "use client"
 
 import fetch from 'isomorphic-fetch'
-import { Loader, Plus } from "lucide-react"
+import { LuLoader, LuPlus } from "react-icons/lu"
 import ms from "ms"
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from "react"
@@ -270,7 +270,7 @@ export default function DemoPage(props: any) {
               )}
               onClick={handleNewPromptClick}
             >
-              Create new prompt <Plus width={16} />
+              Create new prompt <LuPlus width={16} />
             </button>
           )}
         </div>
@@ -320,7 +320,7 @@ export default function DemoPage(props: any) {
             {!busy && 'Response'}
             {busy && (
               <div className="inline-flex items-center flex-row gap-1">
-                <Loader className="h-[16px] animate-spin" />
+                <LuLoader className="h-[16px] animate-spin" />
                 Generating, this can take a few seconds...
               </div>
             )} 

@@ -4,7 +4,7 @@ import Link from 'next/link';
 import hero from "../../public/hero.svg";
 
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
-import { ArrowUpRight } from 'lucide-react';
+import { LuArrowUpRight } from 'react-icons/lu';
 import { cookies, headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import ExampleSelector from '~/components/ExampleSelector';
@@ -79,7 +79,7 @@ export default async function Page() {
                 <span className="font-bold sm:inline-block underline">
                 Try out the demo
                 </span>
-                <ArrowUpRight />
+                <LuArrowUpRight />
               </Link>
             </p>
           </div>

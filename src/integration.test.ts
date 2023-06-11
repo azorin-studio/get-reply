@@ -4,6 +4,8 @@ import getProfileFromEmail from '~/db-admin/get-profile-from-email'
 import { Profile } from '~/db-admin/types'
 import { createGmailDraftInThread, sendDraft } from '~/google'
 
+import EXAMPLES from './data/examples'
+
 describe('queue', () => {
   it('should directly reply to the email', async () => {
     testEmail.messageId = `test-${Math.random().toString(36).slice(2, 14)}@getreply.app` 
@@ -70,7 +72,7 @@ describe('queue', () => {
     expect(data).toHaveProperty('success')
   }, 10000)
 
-  it.only('should send an email using gmail', async () => {
+  it('should use gmail to hit haiku sequence', async () => {
     const profile: Profile = await getProfileFromEmail('amonecho1@gmail.com')
     const r = Math.random().toString(36).slice(2, 7)
     const draft = await createGmailDraftInThread(
@@ -83,4 +85,19 @@ describe('queue', () => {
     )
     await sendDraft(draft.id!, profile.google_refresh_token!)
   })
+
+  it.only('should use gmail to reply sequence with long body text', async () => {
+    const profile: Profile = await getProfileFromEmail('amonecho1@gmail.com')
+    const r = Math.random().toString(36).slice(2, 7)
+    const draft = await createGmailDraftInThread(
+      [{ address: 'haiku@getreply.app', name: '' }], 
+      { address: 'amonecho1@gmail.com', name: '' },
+      `Test: ${r}`, 
+      EXAMPLES.sales.emails[0], 
+      null,
+      profile.google_refresh_token!
+    )
+    await sendDraft(draft.id!, profile.google_refresh_token!)
+  })
+
 })

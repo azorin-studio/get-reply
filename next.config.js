@@ -6,6 +6,11 @@ const nextConfig = {
     appDir: true,
     serverComponentsExternalPackages: ['bullmq']
   },
+  modularizeImports: {
+    'react-icons': {
+      transform: 'react-icons/{{member}}',
+    }
+  },
   webpack: (config) => {
     config.resolve.fallback = { fs: false };
     

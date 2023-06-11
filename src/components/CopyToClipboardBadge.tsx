@@ -1,6 +1,6 @@
 "use client"
 import classNames from 'classnames'
-import { Copy, CopyCheck } from 'lucide-react'
+import { LuCopy, LuCopyCheck } from 'react-icons/lu'
 import React from 'react'
 
 const CopyToClipboardBadge = ({ text }: { text: string }) => {
@@ -26,10 +26,10 @@ const CopyToClipboardBadge = ({ text }: { text: string }) => {
 
       <span className='text-xs text-slate-500'>
       {!copied && (
-        <Copy {...iconOpts} />
+        <LuCopy {...iconOpts} />
       )}
       {copied && (
-        <CopyCheck {...iconOpts} />
+        <LuCopyCheck {...iconOpts} />
       )}
       </span>
       <span className='text-xs text-slate-500'>

@@ -1,4 +1,4 @@
-import { ThumbsDown, ThumbsUp } from "lucide-react"
+import { LuThumbsDown, LuThumbsUp } from "react-icons/lu"
 import { useState } from "react"
 
 function classNames(...classes: string[]) {
@@ -44,7 +44,7 @@ const RatingButtons = (props: { disabled: boolean, result: null }) => {
         }
         disabled={disabled}
       > 
-        <ThumbsUp size={16}/>
+        <LuThumbsUp size={16}/>
         Good
       </button>
       <button 
@@ -58,7 +58,7 @@ const RatingButtons = (props: { disabled: boolean, result: null }) => {
         }
         disabled={disabled}
       >
-        <ThumbsDown size={16} />
+        <LuThumbsDown size={16} />
         Bad
       </button>
     </div>

@@ -7,7 +7,7 @@ import { useSupabase } from "~/hooks/use-supabase"
 import StatusBadge from './StatusBadge'
 import * as Popover from '@radix-ui/react-popover'
 import classNames from 'classnames'
-import { MoreVertical } from 'lucide-react'
+import { LuMoreVertical } from 'react-icons/lu'
 import Link from 'next/link'
 
 export const revalidate = 0
@@ -89,7 +89,7 @@ const UnpureAction = (props: {
                 'text-slate-700 hover:text-slate-500'
               )}
             >
-              <MoreVertical />
+              <LuMoreVertical />
             </Popover.Trigger>
 
             <Popover.Portal>
