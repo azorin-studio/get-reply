@@ -1,7 +1,7 @@
 import { useState } from "react"
 import usePrompts from "~/hooks/use-prompts"
 
-export default function Step(props: { 
+export default function StepForm(props: { 
   step: any, 
   onRemoveStep: any,
   onChange: any,

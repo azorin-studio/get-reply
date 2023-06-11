@@ -9,13 +9,14 @@ import * as Popover from '@radix-ui/react-popover'
 import classNames from 'classnames'
 import { LuMoreVertical } from 'react-icons/lu'
 import Link from 'next/link'
-
+import { Buffer } from 'buffer';
 export const revalidate = 0
 
 const UnpureAction = (props: { 
-  action_id: string
+  action_id: string,
+  logText?: string | null | undefined
 }) => {
-  const { action_id } = props
+  const { action_id, logText } = props
   const { supabase } = useSupabase()
   const [action, setAction] = useState<Action | null>(null)
   const [refreshing, setRefreshing] = useState<boolean>(false)
@@ -68,6 +69,8 @@ const UnpureAction = (props: {
     )
   }
 
+  
+
   return (      
     <div className="w-full flex flex-col border rounded divide-y">
       <div className="w-full p-2 flex flex-row items-center justify-between bg-slate-50">
@@ -101,7 +104,7 @@ const UnpureAction = (props: {
                 )}
               >
                 <Link
-                  href={`/prompts/${action.prompt_id}`}
+                  href={`/prompts/${action.prompt_id}${logText && `?text=${Buffer.from(logText).toString('base64')}`}`}
                   legacyBehavior
                 >
                   <div

@@ -23,16 +23,23 @@ Mike Smith`
 
 const DEFAULT_RESULT = null
 
-export default function DemoPage(props: any) {
+export default function NewPromptClient(props: any) {
+  console.log({ props })
   const { supabase } = useSupabase()
   const prompts = usePrompts()  
 
   const router = useRouter()
+
   const [creatingNew, setCreatingNew] = useState<boolean>(false)
   const [busy, setBusy] = useState<boolean>(false)
   const [result, setResult] = useState<null>(DEFAULT_RESULT)
   const [timer, setTimer] = useState<null | string>(null)
-  const [content, setContent] = useState<string | null>(DEFAULT_EMAIL)
+  const [content, setContent] = useState<string | null>(
+    props.searchParams?.text ? 
+      Buffer.from(props.searchParams?.text, 'base64').toString('ascii')
+    : 
+      DEFAULT_EMAIL
+  )
   const [activePrompt, setActivePrompt] = useState<Prompt | null>(null)
   const [error, setError] = useState<null | string>(null)
 

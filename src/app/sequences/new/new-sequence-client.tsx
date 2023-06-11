@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import slugify from "slugify"
-import Step from "~/components/Step"
+import StepForm from "~/components/StepForm"
 import usePrompts from "~/hooks/use-prompts"
 import { useSupabase } from '~/hooks/use-supabase'
 
@@ -126,7 +126,7 @@ export default function DemoPage(props: any) {
 
         <div className="divide-y border rounded">
           {steps.map((step) => (
-            <Step
+            <StepForm
               key={step.id}
               step={step}
               onChange={(changedStep: any) => {
