@@ -91,7 +91,6 @@ export default function DemoPage(props: any) {
         description,
         steps: steps.map(({ id, ...item }) => ({
           ...item,
-          action: 'draft',
         })),
         user_id: user.id,
       })

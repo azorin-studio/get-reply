@@ -82,7 +82,7 @@ export default async function verifyIncomingEmail (incomingEmail: IncomingEmail)
           // delay needs to be in ms
           run_date: addMilliseconds(parseISO(log!.date!), msDelay).toISOString(),
           prompt_id: step.prompt_id,
-          type: step.action || 'draft',
+          type: step.type || 'draft',
           generation: '', // placeholder
           mailId: '', // placeholder 
           log_id: log!.id,

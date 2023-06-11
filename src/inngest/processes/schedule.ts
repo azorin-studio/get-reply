@@ -130,7 +130,7 @@ export default async function schedule(action_id: string): Promise<Action>{
       action = await appendToAction(action, {
         threadId: thread.id,
         mailId: draft.id,
-        status: 'sent',
+        status: 'drafted',
       })
       
       log = await appendToLog(log, {

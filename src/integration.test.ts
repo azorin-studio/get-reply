@@ -90,7 +90,7 @@ describe('queue', () => {
     const profile: Profile = await getProfileFromEmail('amonecho1@gmail.com')
     const r = Math.random().toString(36).slice(2, 7)
     const draft = await createGmailDraftInThread(
-      [{ address: 'haiku@getreply.app', name: '' }], 
+      [{ address: 'test@getreply.app', name: '' }], 
       { address: 'amonecho1@gmail.com', name: '' },
       `Test: ${r}`, 
       EXAMPLES.sales.emails[0], 

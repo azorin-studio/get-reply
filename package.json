@@ -14,7 +14,10 @@
     "test": "jest",
     "wrangler:dev": "wrangler dev",
     "wrangler:deploy": "wrangler deploy",
-    "wrangler:logs": "wrangler tail email-forwarding"
+    "wrangler:logs": "wrangler tail email-forwarding",
+    "wrangler:target-pc": "echo 'https://pc.azorin.studio/api/process-email' | wrangler secret put GETREPLY_URL",
+    "wrangler:target-laptop": "echo 'https://laptop.azorin.studio/api/process-email' | wrangler secret put GETREPLY_URL",
+    "wrangler:target-prod": "echo 'https://getreply.app/api/process-email' | wrangler secret put GETREPLY_URL"
   },
   "dependencies": {
     "@google-cloud/local-auth": "^2.1.0",

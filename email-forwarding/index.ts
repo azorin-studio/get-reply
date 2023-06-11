@@ -3,6 +3,7 @@ import PostalMime from 'postal-mime';
 
 export interface Env {
   GETREPLY_BOT_AUTH_TOKEN: string;
+  GETREPLY_URL: string;
 }
 
 const worker = {
@@ -20,29 +21,12 @@ const worker = {
       },
       body: JSON.stringify(email)
     }
-
-    // try {
-    //   console.log('Sending to https://laptop.azorin.studio/api/process-email')
-    //   const r = await fetch('https://laptop.azorin.studio/api/process-email', opts)
-    //   console.log(r.status)
-    //   console.log(await r.json())
-    // } catch (e) {
-    //   console.log(e)
-    // }
-
-    // try {
-    //   const r = await fetch('https://pc.azorin.studio/api/process-email', opts)
-    //   console.log(r.status)
-    //   console.log(await r.json())
-    // } catch (e) {
-    //   console.log(e)
-    // }
     
     try {
-      console.log('Sending to https://getreply.app/api/process-email')
-      const r = await fetch('https://getreply.app/api/process-email', opts)
+      console.log(`Sending to ${env.GETREPLY_URL}`)
+      const r = await fetch(env.GETREPLY_URL, opts)
       console.log(r.status)
-      console.log(await r.json())
+      console.log(await r.text())
     } catch (e) {
       console.log(e)
     }
