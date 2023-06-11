@@ -1,3 +1,4 @@
+import classNames from "classnames"
 import { useState } from "react"
 import usePrompts from "~/hooks/use-prompts"
 
@@ -11,7 +12,8 @@ export default function StepForm(props: {
   const prompts = usePrompts()
   
   return (
-    <div key={step.id} className='p-1 flex flex-row gap-2 items-center'>
+    <div key={step.id} className='flex flex-row gap-2 items-center justify-between'>
+      <div className="flex flex-row gap-4">
       <select
         id="prompt-selector"
         name="prompt-selector"
@@ -98,11 +100,17 @@ export default function StepForm(props: {
           </option>
         ))}
       </select>
+      </div>
       <button
-        className='border px-2 rounded'
+        className={classNames(
+          'text-sm border px-2.5 py-1.5',
+          'bg-red-500 border-red-600 text-white rounded border flex flex-row gap-2 items-center',
+          'hover:bg-red-600'
+        )}
+        
         onClick={() => {onRemoveStep(step)}}
       >
-        x
+        Remove
       </button>
     </div>
   )

@@ -1,8 +1,10 @@
 "use client"
 
+import classNames from "classnames"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import slugify from "slugify"
+import CopyToClipboardBadge from "~/components/CopyToClipboardBadge"
 import StepForm from "~/components/StepForm"
 import usePrompts from "~/hooks/use-prompts"
 import { useSupabase } from '~/hooks/use-supabase'
@@ -18,8 +20,8 @@ export default function DemoPage(props: any) {
 
   const [saveButtonText, setSaveButtonText] = useState<null | string>(defaultSaveButtonText)
   const [name, setName] = useState<string>("")
-  const router = useRouter()
   const [description, setDescription] = useState<string>("")
+  const router = useRouter()
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -54,6 +56,7 @@ export default function DemoPage(props: any) {
       const sequence = sequences[0]
 
       if (sequence.name) setName(sequence.name)
+      if (sequence.description) setDescription(sequence.description)
       if (sequence.description) setDescription(sequence.description)
       if (sequence.steps) setSteps(sequence.steps)
     }
@@ -108,9 +111,12 @@ export default function DemoPage(props: any) {
 
   return (
     <main className="p-2 flex flex-col gap-4">
-      <h1 className="text-2xl font-bold">
-      {!props.params || !props.params.id ? 'New' : 'Update'} Sequence
-      </h1>
+      <div className="flex flex-row justify-between">
+        <h1 className="text-2xl font-bold">
+          {!props.params || !props.params.id ? 'New' : 'Update'} Sequence
+        </h1>
+        <CopyToClipboardBadge text={`${name}@getreply.app`} />
+      </div>
       <div className="flex flex-col gap-2 rounded">      
         <input 
           type="text"
@@ -121,10 +127,17 @@ export default function DemoPage(props: any) {
             setName(slugify(e.target.value))
           }}
         />
+        <input 
+          type="text"
+          className='border p-1 rounded'
+          placeholder='Description'
+          defaultValue={description}
+          onChange={(e) => {
+            setDescription(e.target.value)
+          }}
+        />
 
-        <div className="text-sm">Sequence will be available at: {name}@getreply.app</div>
-
-        <div className="divide-y border rounded">
+        <div className="flex flex-col gap-8 py-8">
           {steps.map((step) => (
             <StepForm
               key={step.id}
@@ -148,9 +161,13 @@ export default function DemoPage(props: any) {
           ))}
         </div>
         
-        <div>
+        <div className="flex flex-row justify-end">
           <button
-            className='border p-1 rounded text-sm'
+            className={classNames(
+              'text-sm border px-2.5 py-1.5',
+              'bg-slate-100 border-slate-200 rounded border flex flex-row gap-2 items-center',
+              'hover:bg-slate-200'
+            )}
             onClick={(e) => {
               setSteps([...steps, {
                 id: Math.random().toString(36).substring(7),
@@ -163,14 +180,18 @@ export default function DemoPage(props: any) {
           </button>
         </div>
 
-        <div>
+        <div className="flex flex-row justify-end">
           <button
-            className='border p-1 rounded mt-4 text-sm'
+            className={classNames(
+              'text-sm border px-2.5 py-1.5',
+              'bg-blue-500 border-blue-600 text-white rounded border flex flex-row gap-2 items-center',
+              'hover:bg-blue-600'
+            )}
+            
             onClick={(e) => {
               saveSequence()
             }}
           >
-            {/* {props.params.id ? 'Update' : 'Save'} sequence */}
             {saveButtonText}
           </button>
         </div>

@@ -37,18 +37,22 @@ export default async function Page() {
         Sequences
       </h1>
 
-      <div className="flex flex-col gap-1">
-        <div className='divide-y border rounded'>
-          {sequences && sequences
-            .filter((sequence) => !sequence.user_id)
-            .map((sequence) => 
-              <SequenceBadge key={sequence.id} sequence={sequence} />
-            )
-          }
-        </div>
+      <p>
+        Sequences are a series of steps that can be used to automate your email outreach. 
+        You can create your own sequences or use one of the pre-built sequences below.
+        Email a sequence to trigger it.
+      </p>
+
+      <div className="flex flex-col gap-4">
+        {sequences && sequences
+          .filter((sequence) => !sequence.user_id)
+          .map((sequence) => 
+            <SequenceBadge key={sequence.id} sequence={sequence} />
+          )
+        }
       </div>
 
-      <div className="flex flex-col gap-1 mt-12">
+      <div className="flex flex-col gap-4 mt-6">
         <div className='flex flex-row justify-between'>
           <h2 className="text-xl font-bold">
               My Sequences
@@ -64,7 +68,7 @@ export default async function Page() {
             Create new sequence <LuPlus width={16} />
           </Link>
         </div>
-        <div className='divide-y border rounded'>
+        <div className="flex flex-col gap-4">
           {sequences && sequences
             .filter((sequence) => sequence.user_id === session.user.id)
             .map((sequence) => 
