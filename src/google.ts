@@ -115,12 +115,12 @@ export const getThreadById = async (id: string, google_refresh_token: string) =>
     id,
   })
 
-  if (!thread) {
+  if (!thread || !thread.data) {
     console.log('no thread found')
     return null
   }
 
-  return thread as any
+  return thread.data as any
 }
 
 export const getMessageById = async (id: string, google_refresh_token: string) => {
@@ -171,3 +171,38 @@ export const sendDraft = async (draftId: string, google_refresh_token: string) =
   })
 }
 
+export const checkForReply = async (threadId: string, messageId: string, google_refresh_token: string) => {
+  let thread
+  try {
+    thread = await getThreadById(threadId, google_refresh_token)
+  }
+  catch (e) {
+    return null
+  }
+
+  const { messages } = thread
+
+  const replyMessage = messages.find((message: any) => {
+    return message.payload.headers.find((header: any) => {
+      return header.name.toLowerCase() === 'in-reply-to' && header.value === messageId
+    })
+  })
+
+  return replyMessage
+}
+
+export const checkForDraft = async (threadId: string, messageId: string, google_refresh_token: string) => {
+  let thread
+  try {
+    thread = await getThreadById(threadId, google_refresh_token)
+  }
+  catch (e) {
+    return null
+  }
+
+  const draftedMessage = thread.messages.find((message: any) => {
+    return message.labelIds.find((label: any) => label === 'DRAFT')
+  })
+
+  return draftedMessage
+}
