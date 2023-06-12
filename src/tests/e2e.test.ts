@@ -66,11 +66,11 @@ describe('e2e', () => {
   }, 1000 * 60) // wait 1 minute
 
 
-  it.only('should use gmail to hit the fastfollowup sequence then check for draft within 5 minutes', async () => {
+  it('should use gmail to hit the fastfollowup sequence then check for draft within 5 minutes', async () => {
     const r = Math.random().toString(36).slice(2, 7)
 
     const draft = await createGmailDraftInThread({
-      to: ['fastfollowup@getreply.app', 'me@eoinmurray.eu'], 
+      to: ['fastfollowup@getreply.app'], 
       from: 'amonecho1@gmail.com',
       subject: `${r}`, 
       text: `Print the word ${r}`, 
