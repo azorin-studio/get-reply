@@ -3,7 +3,7 @@
 import { format } from 'date-fns'
 import { Log, Sequence } from '~/db-admin/types'
 import StatusBadge from './StatusBadge'
-import UnpureAction from './UnpureAction'
+import StepBody from './StepBody'
 import classNames from 'classnames'
 import { useState } from 'react'
 import Link from 'next/link'
@@ -110,9 +110,10 @@ export default function LogBody(props: { log: Log, sequence: Sequence }) {
       </div>
 
       {log.action_ids?.map((action_id, index) => (
-        <UnpureAction
+        <StepBody
           key={index}
           action_id={action_id}
+          logText={log.text}
         />
       ))}
 

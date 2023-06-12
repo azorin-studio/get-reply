@@ -6,6 +6,7 @@ import { useHover } from 'usehooks-ts'
 import { Sequence } from '~/db-admin/types'
 import { useSupabase } from "~/hooks/use-supabase"
 import useUser from '~/hooks/use-user'
+import CopyToClipboardBadge from './CopyToClipboardBadge'
 
 export const revalidate = 0
 
@@ -32,14 +33,13 @@ export default function SequenceBadge(props: { sequence: Sequence }) {
   }
 
   return (
-    <Link
-      ref={hoverRef} 
-      className="p-2 flex flex-row gap-4 w-full items-center hover:bg-slate-50"
-      href={`/sequences/${sequence.id}`}
+    <div
+      className="flex flex-row gap-4 w-full items-center "
     >
-        <div className="flex flex-row grow gap-2 items-center w-44 truncate">
-          <div className="">
-            {sequence.name}
+        <div className="flex flex-col grow truncate">
+          <div className="font-semibold">
+            <CopyToClipboardBadge text={`${sequence.name}@getreply.app`}              
+            />
           </div>
           <div className='truncate text-slate-500'>
             {sequence.description}
@@ -49,7 +49,7 @@ export default function SequenceBadge(props: { sequence: Sequence }) {
         <div className="flex flex-row items-center gap-2 justify-between"> 
           {!isHovered && (user && user.id === sequence.user_id) &&
             <div>
-              { sequence.created_at && formatDistance(new Date(sequence.created_at), new Date(), { addSuffix: true }) }
+              {sequence.created_at && formatDistance(new Date(sequence.created_at), new Date(), { addSuffix: true }) }
             </div>
           }
 
@@ -66,8 +66,15 @@ export default function SequenceBadge(props: { sequence: Sequence }) {
               Delete
             </button>
           }
+          <Link
+            href={`/sequences/${sequence.id}`}
+            className='text-blue-500 hover:underline'
+            // legacyBehavior
+          >
+            Edit
+          </Link>
         </div>
-      </Link>
+      </div>
 
   )
 }
