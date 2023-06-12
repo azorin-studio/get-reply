@@ -1,5 +1,5 @@
-import supabaseAdminClient from "./server-admin-client"
-import { Action } from "./types"
+import supabaseAdminClient from "~/db-admin/server-admin-client"
+import { Action } from "~/db-admin/types"
 
 export default async function appendToAction (action: Action, newTerms: object): Promise<Action> {
   const { error, data: newActions } = await supabaseAdminClient

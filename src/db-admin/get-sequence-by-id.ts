@@ -1,6 +1,6 @@
 import parseSequenceName from "~/inngest/parse-sequence-name"
-import supabaseAdminClient from "./server-admin-client"
-import { Log } from "./types"
+import supabaseAdminClient from "~/db-admin/server-admin-client"
+import { Log } from "~/db-admin/types"
 
 export default async function getSequenceById (log: Log, passedSupabase?: any) {
   const toGetReply = parseSequenceName(log)

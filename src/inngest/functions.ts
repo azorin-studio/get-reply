@@ -1,7 +1,7 @@
 import processIncomingEmail from '~/inngest/process-incoming-email'
-import generate from './processes/generate'
-import schedule from './processes/schedule'
-import { inngest } from './client'
+import generate from '~/inngest/processes/generate'
+import sendOrDraft from '~/inngest/processes/send-or-draft'
+import { inngest } from '~/inngest/client'
 import getActionById from '~/db-admin/get-action-by-id'
 import { differenceInMilliseconds } from 'date-fns'
 
@@ -63,7 +63,7 @@ const inngestSchedule = inngest.createFunction(
 
     action = await step.run('Schedule', async () => {
       console.log(`[action_id: ${event.data.action_id}]: in queue/schedule - schedule`)
-      return await schedule(event.data.action_id)
+      return await sendOrDraft(event.data.action_id)
     })
     console.log(`[action_id: ${event.data.action_id}]: finished queue/schedule`)
     return { event, body: action }

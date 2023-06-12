@@ -4,7 +4,7 @@ import getProfileFromEmail from '~/db-admin/get-profile-from-email'
 import { Profile } from '~/db-admin/types'
 import { createGmailDraftInThread, sendDraft } from '~/google'
 
-import EXAMPLES from './data/examples'
+import EXAMPLES from '~/data/examples'
 
 describe('queue', () => {
   it('should directly reply to the email', async () => {

@@ -1,6 +1,6 @@
 import { User } from "@supabase/supabase-js"
 import { useEffect, useState } from "react"
-import { useSupabase } from "./use-supabase"
+import { useSupabase } from "~/hooks/use-supabase"
 
 export default function useUser (): User | null {
   const { supabase } = useSupabase()

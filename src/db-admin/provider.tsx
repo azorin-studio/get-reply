@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import { createContext, useEffect, useState } from "react"
 
 import type { SupabaseClient } from "@supabase/auth-helpers-nextjs"
-import { Database } from "./database.types"
+import { Database } from "~/db-admin/database.types"
 
 type SupabaseContext = {
   supabase: SupabaseClient<Database>

@@ -1,4 +1,4 @@
-import supabaseAdminClient from "./server-admin-client"
+import supabaseAdminClient from "~/db-admin/server-admin-client"
 
 export default async function getProfileFromEmail (email: string) {
   const { data: profiles, error } = await supabaseAdminClient

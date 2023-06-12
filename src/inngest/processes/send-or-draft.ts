@@ -10,7 +10,7 @@ import getPromptById from "~/db-admin/get-prompt-by-id"
 import sendMail from "~/send-mail"
 import appendToLog from "~/db-admin/append-to-log"
 
-export default async function schedule(action_id: string): Promise<Action>{
+export default async function sendOrDraft(action_id: string): Promise<Action>{
   let action = await getActionById(action_id)
   
   if (!action) {
@@ -96,6 +96,7 @@ export default async function schedule(action_id: string): Promise<Action>{
         to: (log.from as any).address,
         subject: `re: ${log.subject}`,
         textBody: action.generation as string,
+        messageId: log.messageId
       })
   
       action = await appendToAction(action, {

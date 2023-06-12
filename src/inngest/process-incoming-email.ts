@@ -1,5 +1,4 @@
-import { addDays, addMilliseconds, parseISO } from "date-fns"
-import { th } from "date-fns/locale"
+import { addMilliseconds, parseISO } from "date-fns"
 import appendToLog from "~/db-admin/append-to-log"
 import createLog from "~/db-admin/create-log"
 import getProfileFromEmail from "~/db-admin/get-profile-from-email"

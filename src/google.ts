@@ -105,6 +105,43 @@ export const findThread = async (subject: string, to: Contact[], google_refresh_
   return threads.data.threads[0] as any
 }
 
+export const getThreadById = async (id: string, google_refresh_token: string) => {
+  const tokens = await refreshAccessToken(google_refresh_token)
+  oauth2Client.setCredentials(tokens)
+  const gmail = google.gmail({ version: 'v1', auth: oauth2Client })
+
+  const thread = await gmail.users.threads.get({
+    userId: 'me',
+    id,
+  })
+
+  if (!thread) {
+    console.log('no thread found')
+    return null
+  }
+
+  return thread as any
+}
+
+export const getMessageById = async (id: string, google_refresh_token: string) => {
+  const tokens = await refreshAccessToken(google_refresh_token)
+  oauth2Client.setCredentials(tokens)
+  const gmail = google.gmail({ version: 'v1', auth: oauth2Client })
+
+  const message = await gmail.users.messages.get({
+    userId: 'me',
+    id,
+  })
+
+  if (!message) {
+    console.log('no message found')
+    return null
+  }
+
+  return message as any
+}
+
+
 export const makeUnreadInInbox = async (draftId: string, google_refresh_token: string) => {
   const tokens = await refreshAccessToken(google_refresh_token)
   oauth2Client.setCredentials(tokens)

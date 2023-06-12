@@ -1,5 +1,5 @@
 
-import { Database, Json as JsonType } from "./database.types";
+import { Database, Json as JsonType } from "~/db-admin/database.types";
 
 export type Status = 
   'pending' | 

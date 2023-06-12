@@ -5,7 +5,7 @@ import hero from "../../public/hero.svg";
 
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { LuArrowUpRight } from 'react-icons/lu';
-import { cookies, headers } from 'next/headers';
+import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import ExampleSelector from '~/components/ExampleSelector';
 import NewsletterForm from '~/components/NewsletterForm';
