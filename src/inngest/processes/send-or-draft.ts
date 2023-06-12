@@ -82,14 +82,16 @@ export default async function sendOrDraft(action_id: string): Promise<Action>{
     })
     throw new Error(err.message || 'Could not find thread')
   }
+  
+  const sequence = await getSequenceFromLog(log)
 
+  if (!sequence) {
+    throw new Error('Could not find sequence')
+  }
+  
   try {
     if (action.type === 'send') {
-      const sequence = await getSequenceFromLog(log)
-
-      if (!sequence) {
-        throw new Error('Could not find sequence')
-      }
+      
 
       const reply = await sendMail({
         from: `${sequence.name}@getreply.app`,
@@ -136,9 +138,16 @@ export default async function sendOrDraft(action_id: string): Promise<Action>{
         threadId: thread.id,
         google_refresh_token: profile.google_refresh_token
       })
-  
+
       if (draft.message!.id) {
-        await makeUnreadInInbox(draft.message!.id, profile.google_refresh_token)
+        // await makeUnreadInInbox(draft.message!.id, profile.google_refresh_token)
+        const reply = await sendMail({
+          from: `${sequence.name}@getreply.app`,
+          to: (log.from as any).address,
+          subject: `re: ${log.subject}`,
+          textBody: 'Just a quick note to let you know we have drafted your response',
+          messageId: log.messageId
+        })  
       }
   
       action = await appendToAction(action, {
