@@ -10,16 +10,20 @@ import classNames from 'classnames'
 import { LuMoreVertical } from 'react-icons/lu'
 import Link from 'next/link'
 import { Buffer } from 'buffer';
+import { statusColors } from './status-colors'
 export const revalidate = 0
 
 const UnpureAction = (props: { 
   action_id: string,
-  logText?: string | null | undefined
+  logText?: string | null | undefined,
+  status?: string | null | undefined
 }) => {
-  const { action_id, logText } = props
+  const { action_id, logText, status } = props
   const { supabase } = useSupabase()
   const [action, setAction] = useState<Action | null>(null)
   const [refreshing, setRefreshing] = useState<boolean>(false)
+
+  const statusColor = (status && statusColors[status]) || 'blue'
 
   useEffect(() => {
     const fetchAction = async () => {
@@ -134,7 +138,7 @@ const UnpureAction = (props: {
       </div>
 
       {action!.errorMessage &&
-        <div className={`bg-red-50 p-2 text-xs font-medium text-red-500`}>
+        <div className={`bg-${statusColor}-50 p-2 text-xs font-medium text-${statusColor}-500`}>
           {action.errorMessage}
         </div>
       }

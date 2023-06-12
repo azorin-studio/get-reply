@@ -5,11 +5,14 @@ import Link from 'next/link'
 import { Log } from '~/db-admin/types'
 import StatusBadge from './StatusBadge'
 import classNames from 'classnames'
+import { statusColors } from './status-colors'
 
 export const revalidate = 0
 
 export default function LogBadge(props: { log: Log }) {
   const { log } = props
+
+  const statusColor = (log.status && statusColors[log.status]) || 'blue'
 
   return (
     <Link
@@ -44,7 +47,7 @@ export default function LogBadge(props: { log: Log }) {
         </div>
 
         {log.errorMessage &&
-          <div className={`bg-red-50 p-2 text-xs font-medium text-red-500`}>
+          <div className={`bg-${statusColor}-50 p-2 text-xs font-medium text-${statusColor}-500`}>
             {log.errorMessage}
           </div>
         }

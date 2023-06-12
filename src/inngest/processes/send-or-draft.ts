@@ -2,7 +2,7 @@ import appendToAction from "~/db-admin/append-to-action"
 import getProfileFromEmail from "~/db-admin/get-profile-from-email"
 import getSequenceFromLog from "~/db-admin/get-sequence-by-id"
 import { Action, Log, Profile } from "~/db-admin/types"
-import { createGmailDraftInThread, findThread, makeUnreadInInbox } from "~/google"
+import { checkForReply, createGmailDraftInThread, findThread, makeUnreadInInbox } from "~/google"
 import getActionById from "~/db-admin/get-action-by-id"
 import getLogById from "~/db-admin/get-log-by-id"
 import getPromptById from "~/db-admin/get-prompt-by-id"
@@ -67,7 +67,7 @@ export default async function sendOrDraft(action_id: string): Promise<Action>{
 
   let thread: any = null
   try {
-    thread = await findThread(log.subject!, log.to as any[], profile.google_refresh_token)
+    thread = await findThread(log.subject!, log.to?.map(t => t.address as string)!, profile.google_refresh_token)
     if (!thread) {  
       throw new Error('Could not find thread')
     }
@@ -115,14 +115,27 @@ export default async function sendOrDraft(action_id: string): Promise<Action>{
     if (action.type === 'draft') {
       // TODO: add check for if email already received a reply
 
-      const draft = await createGmailDraftInThread(
-        log.to as any[],
-        log.from as any,
-        log.subject || '',
-        action.generation!,
-        thread.id,
-        profile.google_refresh_token
-      )
+      const replyMessage = await checkForReply(thread.id, log.messageId!, profile.google_refresh_token!)
+      if (replyMessage) {
+        action = await appendToAction(action, {
+          status: 'cancelled',
+          errorMessage: 'Email already received a reply'
+        })
+        log = await appendToLog(log, {
+          status: 'cancelled',
+          errorMessage: 'Email already received a reply'
+        })
+        return action
+      }
+
+      const draft = await createGmailDraftInThread({
+        to: log.to?.map((to: any) => to.address as string) || [],
+        from: log.from.address,
+        subject: log.subject || '',
+        text: action.generation!,
+        threadId: thread.id,
+        google_refresh_token: profile.google_refresh_token
+      })
   
       if (draft.message!.id) {
         await makeUnreadInInbox(draft.message!.id, profile.google_refresh_token)

@@ -1,7 +1,6 @@
 
 import { google } from 'googleapis'
 import fetch from 'isomorphic-fetch'
-import { Contact } from '~/db-admin/types'
 
 const oauth2Client = new google.auth.OAuth2(
   process.env.GOOGLE_CLIENT_ID,
@@ -9,12 +8,12 @@ const oauth2Client = new google.auth.OAuth2(
   process.env.GOOGLE_REDIRECT_URL
 )
 
-export function makeBody(to: Contact[], from: Contact, subject: string, message: string) {
+export function makeBody(to: string[], from: string, subject: string, message: string) {
     const str = ["Content-Type: text/plain; charset=\"UTF-8\"\n",
         "MIME-Version: 1.0\n",
         "Content-Transfer-Encoding: 7bit\n",
-        "to: ", to.map(t => t.address).join(', '), "\n",
-        "from: ", from.address, "\n",
+        "to: ", to.join(', '), "\n",
+        "from: ", from, "\n",
         "subject: ", subject, "\n\n",
         message
     ].join('')
@@ -51,14 +50,23 @@ export const refreshAccessToken = async (google_refresh_token: string) => {
   return tokens
 }
 
-export const createGmailDraftInThread = async (
-  to: Contact[], 
-  from: Contact, 
-  subject: string, 
-  text: string, 
-  threadId: string | null | undefined, 
+interface ICreateGmailDraftInThread {
+  to: string[],
+  from: string,
+  subject: string,
+  text: string,
+  threadId: string | null | undefined,
   google_refresh_token: string
-) => {
+}
+
+export const createGmailDraftInThread = async ({
+  to, 
+  from, 
+  subject, 
+  text, 
+  threadId, 
+  google_refresh_token,
+}: ICreateGmailDraftInThread) => {
   const tokens = await refreshAccessToken(google_refresh_token)
   oauth2Client.setCredentials(tokens)
   const gmail = google.gmail({ version: 'v1', auth: oauth2Client })
@@ -86,11 +94,11 @@ export const deleteDraft = async (draftId: string, google_refresh_token: string)
   return res.data
 }
 
-export const findThread = async (subject: string, to: Contact[], google_refresh_token: string) => {
+export const findThread = async (subject: string, to: string[], google_refresh_token: string) => {
   const tokens = await refreshAccessToken(google_refresh_token)
   oauth2Client.setCredentials(tokens)
   const gmail = google.gmail({ version: 'v1', auth: oauth2Client })
-  const q = `${subject} to: ${to.map(t => t!.address).join(', ')}`
+  const q = `${subject} to: ${to.join(', ')}`
   console.log('finding thread', q)
   const threads = await gmail.users.threads.list({
     userId: 'me',

@@ -9,9 +9,12 @@ import { useState } from 'react'
 import Link from 'next/link'
 import * as Popover from '@radix-ui/react-popover'
 import { LuMoreVertical } from 'react-icons/lu'
+import { statusColors } from './status-colors'
 
 export default function LogBody(props: { log: Log, sequence: Sequence }) {
   const { log, sequence } = props
+
+  const statusColor = (log.status && statusColors[log.status]) || 'blue'
 
   const [showAll, setShowAll] = useState(false)
 
@@ -83,7 +86,7 @@ export default function LogBody(props: { log: Log, sequence: Sequence }) {
         </div>
 
         {log.errorMessage &&
-          <div className={`bg-red-50 p-2 text-xs font-medium text-red-500`}>
+          <div className={`bg-${statusColor}-50 p-2 text-xs font-medium text-${statusColor}-500`}>
             {log.errorMessage}
           </div>
         }
@@ -114,6 +117,7 @@ export default function LogBody(props: { log: Log, sequence: Sequence }) {
           key={index}
           action_id={action_id}
           logText={log.text}
+          status={log.status}
         />
       ))}
 

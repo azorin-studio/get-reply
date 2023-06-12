@@ -29,14 +29,14 @@ describe('e2e', () => {
   it('should use gmail to hit the reply sequence then check for response within 5 minutes', async () => {
     const r = Math.random().toString(36).slice(2, 7)
 
-    const draft = await createGmailDraftInThread(
-      [{ address: 'reply@getreply.app', name: '' }], 
-      { address: 'amonecho1@gmail.com', name: '' },
-      `${r}`, 
-      `Print the word ${r}`, 
-      null,
-      profile.google_refresh_token!
-    )
+    const draft = await createGmailDraftInThread({
+      to: ['reply@getreply.app'], 
+      from: 'amonecho1@gmail.com',
+      subject: `${r}`, 
+      text: `Print the word ${r}`, 
+      threadId: null,
+      google_refresh_token: profile.google_refresh_token!
+    })
 
     const { data } = await sendDraft(draft.id!, profile.google_refresh_token!)
     if (!data.threadId) {
@@ -69,14 +69,14 @@ describe('e2e', () => {
   it.only('should use gmail to hit the fastfollowup sequence then check for draft within 5 minutes', async () => {
     const r = Math.random().toString(36).slice(2, 7)
 
-    const draft = await createGmailDraftInThread(
-      [{ address: 'fastfollowup@getreply.app', name: '' }], 
-      { address: 'amonecho1@gmail.com', name: '' },
-      `${r}`, 
-      `Print the word ${r}`, 
-      null,
-      profile.google_refresh_token!
-    )
+    const draft = await createGmailDraftInThread({
+      to: ['fastfollowup@getreply.app', 'me@eoinmurray.eu'], 
+      from: 'amonecho1@gmail.com',
+      subject: `${r}`, 
+      text: `Print the word ${r}`, 
+      threadId: null,
+      google_refresh_token: profile.google_refresh_token!
+    })
 
     const { data } = await sendDraft(draft.id!, profile.google_refresh_token!)
     if (!data.threadId) {

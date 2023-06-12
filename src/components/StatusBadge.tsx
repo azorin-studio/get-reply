@@ -1,19 +1,10 @@
 'use client'
 
+import { statusColors } from "./status-colors"
+
 export default function StatusBadge(props: { status: string }) {
   const { status } = props
-  let statusColor = 'blue'
-  if (status === "error") {
-    statusColor = 'red'
-  } else if (status === "pending") {
-    statusColor = 'yellow'
-  } else if (status === "verified") {
-    statusColor = 'yellow'
-  } else if (status === "generated" || status === "generating" || status === "scheduling") {
-    statusColor = 'yellow'
-  } else if (status === "sent" || status === "complete") {
-    statusColor = 'green'
-  }
+  const statusColor = statusColors[status] || 'blue'
 
   return (
     <div 
