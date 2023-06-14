@@ -47,7 +47,7 @@ export default async function Page() {
 
       <div className="flex flex-col gap-4">
         {sequences && sequences
-          .filter((sequence) => !sequence.user_id)
+          .filter((sequence) => sequence.visibility==='public')
           .map((sequence) => 
             <SequenceBadge key={sequence.id} sequence={sequence} />
           )

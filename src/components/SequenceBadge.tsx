@@ -66,13 +66,15 @@ export default function SequenceBadge(props: { sequence: Sequence }) {
               Delete
             </button>
           }
-          <Link
-            href={`/sequences/${sequence.id}`}
-            className='text-blue-500 hover:underline'
-            // legacyBehavior
-          >
-            Edit
-          </Link>
+          {user && user.id === sequence.user_id && (
+            <Link
+              href={`/sequences/${sequence.id}`}
+              className='text-blue-500 hover:underline'
+              // legacyBehavior
+            >
+              Edit
+            </Link>
+          )}
         </div>
       </div>
 

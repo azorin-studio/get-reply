@@ -33,13 +33,14 @@ export default function DemoPage(props: any) {
 
   useEffect(() => {
     const fetchSequence = async () => {
-      if (!props.params || !props.params.id) {
+      if (!props.params || !props.params.id || !user) {
         return
       }
       const { data: sequences, error } = await supabase
         .from("sequences")
         .select("*")
         .eq("id", props.params.id)
+        .eq("user_id", user.id)
         .limit(1)
 
       if (error || !sequences) {
@@ -62,7 +63,7 @@ export default function DemoPage(props: any) {
     }
 
     fetchSequence()
-  }, [props.params?.id])
+  }, [props.params?.id, user])
 
   const saveSequence = async () => {
     setError(null)

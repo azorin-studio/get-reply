@@ -151,18 +151,21 @@ export interface Database {
           email: string | null
           google_refresh_token: string | null
           id: string
+          role: string | null
           user_constraints: string[] | null
         }
         Insert: {
           email?: string | null
           google_refresh_token?: string | null
           id: string
+          role?: string | null
           user_constraints?: string[] | null
         }
         Update: {
           email?: string | null
           google_refresh_token?: string | null
           id?: string
+          role?: string | null
           user_constraints?: string[] | null
         }
         Relationships: [
@@ -170,6 +173,12 @@ export interface Database {
             foreignKeyName: "profiles_id_fkey"
             columns: ["id"]
             referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "profiles_role_fkey"
+            columns: ["role"]
+            referencedRelation: "role_permissions"
             referencedColumns: ["id"]
           }
         ]
@@ -208,6 +217,27 @@ export interface Database {
           }
         ]
       }
+      role_permissions: {
+        Row: {
+          created_at: string | null
+          id: string
+          permissions: string[] | null
+          role: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          permissions?: string[] | null
+          role?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          permissions?: string[] | null
+          role?: string | null
+        }
+        Relationships: []
+      }
       sequences: {
         Row: {
           created_at: string | null
@@ -216,6 +246,7 @@ export interface Database {
           name: string | null
           steps: Json[] | null
           user_id: string | null
+          visibility: string
         }
         Insert: {
           created_at?: string | null
@@ -224,6 +255,7 @@ export interface Database {
           name?: string | null
           steps?: Json[] | null
           user_id?: string | null
+          visibility?: string
         }
         Update: {
           created_at?: string | null
@@ -232,6 +264,7 @@ export interface Database {
           name?: string | null
           steps?: Json[] | null
           user_id?: string | null
+          visibility?: string
         }
         Relationships: [
           {
