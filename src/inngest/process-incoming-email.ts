@@ -48,7 +48,7 @@ export default async function verifyIncomingEmail (incomingEmail: IncomingEmail)
 
   const sequence = await getSequenceFromLog(log)
   if (!sequence || !sequence.steps || sequence.steps.length === 0) {
-    const sequenceName = parseSequenceName(log)
+    const { sequenceName } = parseSequenceName(log)
     log = await appendToLog(log, {
       status: 'error',
       errorMessage: `Could not find sequence:${sequenceName}`

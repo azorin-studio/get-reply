@@ -37,7 +37,8 @@ export type Log = Omit<
 export type IncomingEmail = Pick<Log, 'bcc' | 'cc' | 'date' | 'from' | 'headers' | 'html' | 'messageId' | 'subject' | 'text' | 'to' > & {
   from: Contact;
   to: Contact[];
-  bcc: Contact[];
+  bcc?: Contact[];
+  cc?: Contact[];
   attachments?: any[];
 }
 

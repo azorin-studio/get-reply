@@ -93,6 +93,8 @@
     "address": "amonecho1@gmail.com",
     "name": ""
   },
+  "cc": [],
+  "bcc": [],
   "to": [
     {
       "address": "reply@getreply.app",

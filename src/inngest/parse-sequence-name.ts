@@ -1,6 +1,6 @@
-import { Log } from "~/db-admin/types"
+import { IncomingEmail, Log } from "~/db-admin/types"
 
-export default function parseSequenceName (log: Log) {
+export default function parseSequenceName (log: Log | IncomingEmail): { sequenceName: string | null, tags: string[] } {
   let allToEmails: any[] = []
   if (log.to) {
     allToEmails = [...allToEmails, ...log.to.map((to) => to.address)]
@@ -14,8 +14,12 @@ export default function parseSequenceName (log: Log) {
 
   const toGetReply = allToEmails.find((email) => email.endsWith('getreply.app'))
   if (!toGetReply) {
-    return null
+    return { sequenceName: null, tags: [] }
   }
 
-  return toGetReply.split('@')[0]
+  const emailPrefix = toGetReply.split('@')[0]
+  const sequenceName = emailPrefix.split('+')[0]
+  const tags = emailPrefix.split('+').slice(1)
+
+  return { sequenceName, tags }
 }
