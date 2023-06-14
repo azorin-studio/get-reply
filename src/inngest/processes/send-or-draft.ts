@@ -141,7 +141,7 @@ export default async function sendOrDraft(action_id: string): Promise<Action>{
 
       if (draft.message!.id) {
         // await makeUnreadInInbox(draft.message!.id, profile.google_refresh_token)
-        const reply = await sendMail({
+        await sendMail({
           from: `${sequence.name}@getreply.app`,
           to: (log.from as any).address,
           subject: `re: ${log.subject}`,

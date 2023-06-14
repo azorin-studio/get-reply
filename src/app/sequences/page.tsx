@@ -24,12 +24,14 @@ export default async function Page() {
     return redirect('/login') 
   }
 
-  const { data } = await supabase
+  const res = await supabase
     .from('sequences')
     .select('*')
     .order('created_at', { ascending: false })
 
-  const sequences: Sequence[] = data || []
+  const sequences: Sequence[] = res.data || []
+
+  console.log(res)
 
   return (
     <main className="p-2 flex flex-col gap-4">

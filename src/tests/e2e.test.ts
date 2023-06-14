@@ -62,9 +62,7 @@ describe('e2e', () => {
 
     expect(replyMessage).toBeDefined()
     expect(replyMessage?.snippet).toEqual(r)
-
   }, 1000 * 60) // wait 1 minute
-
 
   it('should use gmail to hit the fastfollowup sequence then check for draft within 5 minutes', async () => {
     const r = Math.random().toString(36).slice(2, 7)
