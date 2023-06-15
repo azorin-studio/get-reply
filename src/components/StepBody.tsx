@@ -80,9 +80,12 @@ const UnpureAction = (props: {
       <div className="w-full p-2 flex flex-row items-center justify-between bg-slate-50">
         <div className="flex flex-col">
           <div className="text-sm">
-            Will <span className="font-bold">{action.type}</span> on { action.created_at && 
+            Will{' '} 
+            <span className="font-bold">{action.type}</span> on {' '}
+            { action.created_at && 
               <span>
-                {format(new Date(action.created_at as string), 'LLLL dd, yyyy, h:MM a')}  ({formatDistance(new Date(action.run_date as string), new Date(), { addSuffix: true })})          
+                {format(new Date(action.created_at as string), 'LLLL dd, yyyy, h:m a')}  {' '}
+                ({formatDistance(new Date(action.run_date as string), new Date(), { addSuffix: true })})          
               </span>
             }
           </div>

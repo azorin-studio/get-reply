@@ -6,31 +6,26 @@ import { useEffect, useState } from "react"
 import slugify from "slugify"
 import CopyToClipboardBadge from "~/components/CopyToClipboardBadge"
 import StepForm from "~/components/StepForm"
+import { Sequence } from "~/db-admin/types"
 import usePrompts from "~/hooks/use-prompts"
 import { useSupabase } from '~/hooks/use-supabase'
+import useUser from "~/hooks/use-user"
 
 export default function DemoPage(props: any) {
   const { supabase } = useSupabase()
   const prompts = usePrompts()
-  const [steps, setSteps] = useState<any[]>([])
-  const [user, setUser] = useState<any>(null)
-  const [error, setError] = useState<null | string>(null)
-
-  const defaultSaveButtonText = `${props.params?.id ? 'Update' : 'Save'} sequence`
-
-  const [saveButtonText, setSaveButtonText] = useState<null | string>(defaultSaveButtonText)
-  const [name, setName] = useState<string>("")
-  const [description, setDescription] = useState<string>("")
   const router = useRouter()
+  const user = useUser()
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      const { data: { user }, error } = await supabase.auth.getUser()
-      setUser(user)
-    }
-    fetchUser()
-  }, [])
-
+  const [sequence, setSequence] = useState<Sequence>({
+    name: '',
+    description: '',
+    steps: [],
+  })
+  const [error, setError] = useState<null | string>(null)
+  const defaultSaveButtonText = `${props.params?.id ? 'Update' : 'Save'} sequence`
+  const [saveButtonText, setSaveButtonText] = useState<null | string>(defaultSaveButtonText)
+  
   useEffect(() => {
     const fetchSequence = async () => {
       if (!props.params || !props.params.id || !user) {
@@ -55,11 +50,7 @@ export default function DemoPage(props: any) {
       }
 
       const sequence = sequences[0]
-
-      if (sequence.name) setName(sequence.name)
-      if (sequence.description) setDescription(sequence.description)
-      if (sequence.description) setDescription(sequence.description)
-      if (sequence.steps) setSteps(sequence.steps)
+      if (sequence) setSequence(sequence)
     }
 
     fetchSequence()
@@ -69,19 +60,19 @@ export default function DemoPage(props: any) {
     setError(null)
     setSaveButtonText(props.params?.id ? 'Updating...' : 'Saving...')
 
-    if (!name) {
-      setError("Name is required")
-      setSaveButtonText(defaultSaveButtonText)
-      return
-    }
-
     if (!user) {
       setError("User is required")
       setSaveButtonText(defaultSaveButtonText)
       return
     }
 
-    if (!steps || steps.length === 0) {
+    if (!sequence.name) {
+      setError("Name is required")
+      setSaveButtonText(defaultSaveButtonText)
+      return
+    }
+
+    if (!sequence.steps || sequence.steps.length === 0) {
       setError("Steps are required")
       setSaveButtonText(defaultSaveButtonText)
       return
@@ -90,12 +81,7 @@ export default function DemoPage(props: any) {
     const { data: sequences, error } = await supabase
       .from("sequences")
       .upsert({
-        id: props.params?.id,
-        name,
-        description,
-        steps: steps.map(({ id, ...item }) => ({
-          ...item,
-        })),
+        ...sequence,
         user_id: user.id,
       })
       .select()
@@ -106,7 +92,6 @@ export default function DemoPage(props: any) {
     } 
 
     setSaveButtonText(defaultSaveButtonText)
-
     router.replace(`/sequences/${sequences[0].id}`)
   }
 
@@ -116,47 +101,58 @@ export default function DemoPage(props: any) {
         <h1 className="text-2xl font-bold">
           {!props.params || !props.params.id ? 'New' : 'Update'} Sequence
         </h1>
-        <CopyToClipboardBadge text={`${name}@getreply.app`} />
+        <CopyToClipboardBadge text={`${sequence.name}@getreply.app`} />
       </div>
       <div className="flex flex-col gap-2 rounded">      
         <input 
           type="text"
           className='border p-1 rounded'
           placeholder='Name sequence'
-          defaultValue={name}
+          defaultValue={sequence.name || ''}
           onChange={(e) => {
-            setName(slugify(e.target.value))
+            setSequence({
+              ...sequence,
+              name: slugify(e.target.value)
+            })
           }}
         />
         <input 
           type="text"
           className='border p-1 rounded'
           placeholder='Description'
-          defaultValue={description}
+          defaultValue={sequence.description || ''}
           onChange={(e) => {
-            setDescription(e.target.value)
+            setSequence({
+              ...sequence,
+              description: e.target.value
+            })
           }}
         />
 
         <div className="flex flex-col gap-8 py-8">
-          {steps.map((step) => (
+          {sequence.steps?.map((step, index) => (
             <StepForm
               key={step.id}
               step={step}
-              onChange={(changedStep: any) => {
-                const newSteps = [...steps].map(function(s) {
-                  if (s.id === step.id) {
-                    return changedStep
-                  }
-                  return s
+              onChange={(step: any) => {
+                setSequence({
+                  ...sequence,
+                  steps: [
+                    ...sequence.steps.slice(0, index),
+                    step,
+                    ...sequence.steps.slice(index + 1),
+                  ],
                 })
-                setSteps(newSteps)
+
               }}
               onRemoveStep={() => {
-                const newSteps = [...steps].filter(function(s) {
-                  return s.id !== step.id
+                setSequence({
+                  ...sequence,
+                  steps: [
+                    ...sequence.steps.slice(0, index),
+                    ...sequence.steps.slice(index + 1),
+                  ],
                 })
-                setSteps(newSteps)
               }}
             />
           ))}
@@ -170,11 +166,18 @@ export default function DemoPage(props: any) {
               'hover:bg-slate-200'
             )}
             onClick={(e) => {
-              setSteps([...steps, {
-                id: Math.random().toString(36).substring(7),
-                prompt_id: prompts && prompts[0].id,
-                delay: 0,
-              }])
+              setSequence({
+                ...sequence,
+                steps: [
+                  ...sequence.steps,
+                  {
+                    prompt_id: null,
+                    type: 'draft',
+                    delay: 0,
+                    delayUnit: 'days',
+                  }
+                ]
+              })
             }}
           >
             + Add step

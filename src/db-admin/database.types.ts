@@ -244,7 +244,7 @@ export interface Database {
           description: string | null
           id: string
           name: string | null
-          steps: Json[] | null
+          steps: Json[]
           user_id: string | null
           visibility: string
         }
@@ -253,7 +253,7 @@ export interface Database {
           description?: string | null
           id?: string
           name?: string | null
-          steps?: Json[] | null
+          steps: Json[]
           user_id?: string | null
           visibility?: string
         }
@@ -262,7 +262,7 @@ export interface Database {
           description?: string | null
           id?: string
           name?: string | null
-          steps?: Json[] | null
+          steps?: Json[]
           user_id?: string | null
           visibility?: string
         }

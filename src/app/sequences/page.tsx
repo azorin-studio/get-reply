@@ -72,25 +72,25 @@ export default async function Page() {
         </div>
         <div className="flex flex-col gap-4">
           {sequences && sequences
-            .filter((sequence) => sequence.user_id === session.user.id)
+            .filter((sequence) => sequence.visibility==='private')
             .map((sequence) => 
               <SequenceBadge key={sequence.id} sequence={sequence} />
             )
           }
 
           {sequences
-            .filter((sequence) => sequence.user_id === session.user.id)
+            .filter((sequence) => sequence.visibility==='private')
             .length === 0 && (
-            <div className='p-4 text-center text-sm'>
-              You don&apos;t have any sequences yet. {' '}
-              <Link 
-                href="/sequences/new"
-                className='text-blue-500 hover:underline'
-              >
-                Create one!
-              </Link>
-            </div>
-          )}
+              <div className='p-4 text-center text-sm'>
+                You don&apos;t have any sequences yet. {' '}
+                <Link 
+                  href="/sequences/new"
+                  className='text-blue-500 hover:underline'
+                >
+                  Create one!
+                </Link>
+              </div>
+            )}
         </div>
       </div>
 

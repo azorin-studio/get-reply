@@ -39,7 +39,7 @@ export default function LogBadge(props: { log: Log }) {
             <div className="text-gray-600 text-sm">
               { log.created_at && 
                 <span>
-                  {format(new Date(log.created_at), 'dd LLL, h:MM a')}
+                  {format(new Date(log.created_at), 'dd LLL, h:m a')}
                 </span>
               }
             </div>

@@ -54,9 +54,5 @@ export type Sequence = Omit<
   Database['public']['Tables']['sequences']['Insert'],
   'steps'
 > & {
-  // steps?: {
-  //   prompt_id: string;
-  //   delay:    number;
-  // }[] | null
-  steps?: any[] | null
+  steps: any[]
 }
