@@ -1,14 +1,18 @@
 import { addMilliseconds, parseISO } from "date-fns"
 import appendToLog from "~/db-admin/append-to-log"
-import createLog from "~/db-admin/create-log"
+import getLogById from "~/db-admin/get-log-by-id"
 import getProfileFromEmail from "~/db-admin/get-profile-from-email"
 import getSequenceFromLog from "~/db-admin/get-sequence-by-id"
 import supabaseAdminClient from "~/db-admin/server-admin-client"
-import { IncomingEmail, Log, Profile } from "~/db-admin/types"
+import { Log, Profile } from "~/db-admin/types"
 import parseSequenceName from "~/inngest/parse-sequence-name"
 
-export default async function verifyIncomingEmail (incomingEmail: IncomingEmail): Promise<Log> {
-  let log: Log | null = await createLog(incomingEmail)
+export default async function processIncomingEmail (log_id: string): Promise<Log> {
+  let log = await getLogById(log_id)
+
+  if (!log) {
+    throw new Error('Log not found')
+  }
 
   if (!log.from) {
     log = await appendToLog(log, {
@@ -100,7 +104,7 @@ export default async function verifyIncomingEmail (incomingEmail: IncomingEmail)
       return action[0]
     }))
 
-    console.log(`[messageId: ${incomingEmail.messageId}] made actions: [${actions.map(action => action.id).join(', ')}]`)
+    console.log(`[log_id: ${log.id}] made actions: [${actions.map(action => action.id).join(', ')}]`)
     log = await appendToLog(log, {
       status: 'generating',
       action_ids: actions.map(action => action.id),

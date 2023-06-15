@@ -15,10 +15,11 @@ export const revalidate = 0
 
 const UnpureAction = (props: { 
   action_id: string,
+  log_id: string,
   logText?: string | null | undefined,
   status?: string | null | undefined
 }) => {
-  const { action_id, logText, status } = props
+  const { action_id, log_id, logText, status } = props
   const { supabase } = useSupabase()
   const [action, setAction] = useState<Action | null>(null)
   const [refreshing, setRefreshing] = useState<boolean>(false)
@@ -52,7 +53,8 @@ const UnpureAction = (props: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        action_id
+        action_id,
+        log_id
       })
     })
     setRefreshing(false)
@@ -84,7 +86,7 @@ const UnpureAction = (props: {
             <span className="font-bold">{action.type}</span> on {' '}
             { action.created_at && 
               <span>
-                {format(new Date(action.created_at as string), 'LLLL dd, yyyy, h:m a')}  {' '}
+                {format(new Date(action.created_at as string), 'LLLL dd, yyyy, HH:mm')}  {' '}
                 ({formatDistance(new Date(action.run_date as string), new Date(), { addSuffix: true })})          
               </span>
             }

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
-import { IncomingEmail } from '~/db-admin/types'
+import createLog from '~/db-admin/create-log'
+import { IncomingEmail, Log } from '~/db-admin/types'
 import { inngest } from '~/inngest/client'
 
 export const revalidate = 0
@@ -21,10 +22,11 @@ export async function POST (request: Request) {
   }
 
   try {
+    let log: Log | null = await createLog(json as IncomingEmail)
     await inngest.send({ 
       id: `queue/process-incoming-email-${json.messageId}`,
       name: 'queue/process-incoming-email', 
-      data: json as IncomingEmail 
+      data: { log_id: log.id }
     })
     return NextResponse.json({ success: true })
   } catch (err: any) {

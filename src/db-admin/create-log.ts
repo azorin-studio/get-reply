@@ -13,20 +13,6 @@ export default async function createLog (incomingEmail: IncomingEmail) {
   }
 
   if (existingLogs && existingLogs.length > 0) {
-    // console.log(`log already exists with messageId: ${incomingEmail.messageId}`)
-    // console.log({
-    //   incomingEmail: {
-    //     id: incomingEmail.messageId,
-    //     text: incomingEmail.text,
-    //     subject: incomingEmail.subject
-    //   },
-    //   existingLogs: {
-    //     id: existingLogs[0].id,
-    //     messageId: existingLogs[0].messageId,
-    //     text: existingLogs[0].text,
-    //     subject: existingLogs[0].subject
-    //   }
-    // })
     throw new Error('Log already exists')
   }
 
@@ -55,6 +41,5 @@ export default async function createLog (incomingEmail: IncomingEmail) {
     throw new Error('Could not create log')
   }
 
-  // console.log(`created [${newLogs.length} new] log(s):`, newLogs[0].id)
   return newLogs[0] as Log
 }

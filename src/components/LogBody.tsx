@@ -43,7 +43,7 @@ export default function LogBody(props: { log: Log, sequence: Sequence }) {
             <div className="text-gray-600 text-sm">
               { log.created_at && 
                 <span>
-                  {format(new Date(log.created_at), 'dd LLL, h:m a')}
+                  {format(new Date(log.created_at), 'dd LLL, HH:mm')}
                 </span>
               }
             </div>
@@ -116,6 +116,7 @@ export default function LogBody(props: { log: Log, sequence: Sequence }) {
         <StepBody
           key={index}
           action_id={action_id}
+          log_id={log.id!}
           logText={log.text}
           status={log.status}
         />

@@ -53,7 +53,7 @@ export async function POST (request: Request) {
     await inngest.send({ 
       id: `queue/retry-generate-${json.action_id}`,
       name: 'queue/generate', 
-      data: { action_id: json.action_id }
+      data: { action_id: json.action_id, log_id: json.log_id }
     })
     return NextResponse.json({ success: true })
   } catch (err: any) {
