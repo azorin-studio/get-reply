@@ -53,7 +53,7 @@ export default function StepForm(props: {
           onChange(newStep)
         }}
       >
-        {[{label: 'draft an email', value: 'draft'}, {label: 'send an email', value: 'send'}].map((type) => (
+        {[{label: 'draft an email', value: 'draft'}, {label: 'reply to the email', value: 'send'}].map((type) => (
           <option key={type.value} value={type.value}>
             {type.label}
           </option>

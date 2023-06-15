@@ -19,7 +19,7 @@ export default function Header(props: { user?: object | null }) {
           <Link href="/" className="items-center space-x-2 flex">
             <LuMailPlus />
             <span className="font-bold sm:inline-block">
-              Get Reply
+              Get Reply (ALPHA)
             </span>
           </Link>
         </div>
@@ -48,8 +48,8 @@ export default function Header(props: { user?: object | null }) {
                 href="/logout"
                 className="items-center space-x-2 flex font-bold sm:inline-block hover:underline text-red-600"
               >
-                Logout
-              </Link>
+                Logout ({(user as any).email})
+              </Link> 
             </>
           )}
           {!user && (
