@@ -77,7 +77,7 @@ describe('e2e', () => {
   const from = 'amonecho1@gmail.com'
 
   // this allows us to send emails to getreply, pc or laptop
-  const emailRoutingTag = '+pc'
+  const emailRoutingTag = process.env.EMAIL_ROUTING_TAG || ''
 
   beforeAll(async () => {
     profile = await getProfileFromEmail(from)
