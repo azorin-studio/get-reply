@@ -179,7 +179,7 @@ export const sendDraft = async (draftId: string, google_refresh_token: string) =
   })
 }
 
-export const checkForReply = async (threadId: string, messageId: string, google_refresh_token: string) => {
+export const checkForReply = async (threadId: string, messageId: string, google_refresh_token: string): Promise<object | null> => {
   let thread
   try {
     thread = await getThreadById(threadId, google_refresh_token)
@@ -199,7 +199,7 @@ export const checkForReply = async (threadId: string, messageId: string, google_
   return replyMessage
 }
 
-export const checkForDraft = async (threadId: string, messageId: string, google_refresh_token: string) => {
+export const checkForDraft = async (threadId: string, messageId: string, google_refresh_token: string): Promise<object | null> => {
   let thread
   try {
     thread = await getThreadById(threadId, google_refresh_token)

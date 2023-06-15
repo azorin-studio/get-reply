@@ -23,12 +23,12 @@ const liveGmailTest = async ({
   to, 
   from,
   google_refresh_token,
-  type
+  expectedReplies
 }: {
   to: string,
   from: string,
   google_refresh_token: string
-  type: 'reply' | 'draft'
+  expectedReplies: string[]
 }) => {
   const r = Math.random().toString(36).slice(2, 7)
 
@@ -56,23 +56,24 @@ const liveGmailTest = async ({
   const messageId = mail.payload.headers.find((h: any) => h.name.toLowerCase() === 'message-id')?.value
   const threadId = thread.id
 
-  let replyMessage: any
-  await watch(async () => {
-    if (type === 'draft') {
-      replyMessage = await checkForDraft(threadId, messageId, google_refresh_token)
-    } else {
-      replyMessage = await checkForReply(threadId, messageId, google_refresh_token)
-    }
-    return !!replyMessage
-  }, 1000)
+  const replies = await Promise.all(
+    expectedReplies.map(async (type: string) => {
+      return watch(async () => {      
+        if (type === 'draft') {
+          return checkForDraft(threadId, messageId, google_refresh_token)
+        }
+        // or type is reply
+        return checkForReply(threadId, messageId, google_refresh_token)
+      }, 1000)
+    })
+  )
 
-  expect(replyMessage).toBeDefined()
-  expect(replyMessage?.snippet).toContain(r)
+  // expect all replies to be truthy
+  expect(replies.every((r: any) => r)).toBe(true)
 }
 
-
 describe('e2e', () => {
-  let profile: Profile  
+  let profile: Profile
   const from = 'amonecho1@gmail.com'
 
   // this allows us to send emails to getreply, pc or laptop
@@ -90,7 +91,7 @@ describe('e2e', () => {
       to: `reply${emailRoutingTag}@getreply.app`,
       from,
       google_refresh_token: profile.google_refresh_token!,
-      type: 'reply'
+      expectedReplies: ['reply']
     })
   }, 1000 * 60) // wait 1 minute
 
@@ -99,16 +100,7 @@ describe('e2e', () => {
       to: `fastfollowup${emailRoutingTag}@getreply.app`,
       from,
       google_refresh_token: profile.google_refresh_token!,
-      type: 'draft'
+      expectedReplies: ['draft', 'draft']
     })
   }, 1000 * 60) // wait 1 minute
-
-  // it('should hit reply sequence with tags then check for reply in inbox', async () => {
-  //   await liveGmailTest({
-  //     to: 'reply+pc@getreply.app',
-  //     from,
-  //     google_refresh_token: profile.google_refresh_token!,
-  //     type: 'reply'
-  //   })
-  // }, 1000 * 60) // wait 1 minute
 })
