@@ -7,7 +7,7 @@ import { Database } from '~/db-admin/database.types'
 
 export const revalidate = 0
 
-export default async function Page() {
+export default async function Page(props) {
   const supabase = createServerComponentClient<Database>({
     cookies,
   })
@@ -38,6 +38,11 @@ export default async function Page() {
       <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
         Logging you in...
       </h2>
+      {props.searchParams?.error && (
+        <p className="text-center text-red-500">
+          {props.searchParams?.error_description}
+        </p>
+      )}
     </main>
   )
 }

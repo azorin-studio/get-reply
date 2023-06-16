@@ -50,6 +50,102 @@ export const refreshAccessToken = async (google_refresh_token: string) => {
   return tokens
 }
 
+export const createDriveFolder = async (name: string, google_refresh_token: string) => {
+  const tokens = await refreshAccessToken(google_refresh_token)
+  oauth2Client.setCredentials(tokens)
+
+  const drive = google.drive({ version: 'v3', auth: oauth2Client })
+  
+  const res = await drive.files.create({
+    requestBody: {
+      name,
+      mimeType: 'application/vnd.google-apps.folder',
+    }
+  })
+
+  return res.data
+}
+
+interface ICreateGmailDriveFile {
+  text: string,
+  google_refresh_token: string
+}
+
+export const createDriveFile = async ({
+  text, 
+  google_refresh_token,
+}: ICreateGmailDriveFile) => {
+  const tokens = await refreshAccessToken(google_refresh_token)
+  oauth2Client.setCredentials(tokens)
+
+  const docs = google.docs({ version: 'v1', auth: oauth2Client })
+  const drive = google.drive({ version: 'v3', auth: oauth2Client })
+
+  const parent = await createDriveFolder('GetReplyCollab', google_refresh_token)
+
+  const createFileRes = await docs.documents.create({
+    requestBody: {
+      title: 'collab',
+    }
+  })
+
+  await drive.files.update({
+    addParents: `${parent.id}`,
+    fileId: createFileRes.data.documentId!,
+  });
+
+  const updateFileRes = await docs.documents.batchUpdate({
+    documentId: createFileRes.data.documentId!,
+    requestBody: {
+      requests: [
+        {
+          insertText: {
+            text,
+            endOfSegmentLocation: {
+              segmentId: ''
+            }
+          }
+        }
+      ]
+    }
+  })
+
+  const permissionIds = [];
+
+  const permissions = [
+    {
+      type: 'user',
+      role: 'writer',
+      emailAddress: 'amonecho1@gmail.com',
+    },
+    {
+      type: 'user',
+      role: 'writer',
+      emailAddress: 'me@eoinmurray.eu',
+    },
+  ];
+
+  for (const permission of permissions) {
+    try {
+      const result = await drive.permissions.create({
+        requestBody: permission,
+        fileId: createFileRes.data.documentId!,
+        fields: 'id',
+      });
+      permissionIds.push(result.data.id);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  const file = await drive.files.get({
+    fileId: createFileRes.data.documentId!,
+    fields: 'webViewLink',
+  });
+
+  return file.data;
+}
+
 interface ICreateGmailDraftInThread {
   to: string[],
   from: string,
@@ -58,6 +154,7 @@ interface ICreateGmailDraftInThread {
   threadId: string | null | undefined,
   google_refresh_token: string
 }
+
 
 export const createGmailDraftInThread = async ({
   to, 

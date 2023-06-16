@@ -3,6 +3,14 @@ import parseSequenceName from '~/inngest/parse-sequence-name'
 import { IncomingEmail } from '~/db-admin/types'
 
 describe('address-route-parser', () => {
+
+  it('should print all to addresses', () => {
+    console.log([
+      ...(testEmail?.to as any).map((to: any) => to.address).filter((address: string) => !address.endsWith('getreply.app')),
+      ...(testEmail?.cc as any).map((to: any) => to.address).filter((address: string) => !address.endsWith('getreply.app')),
+    ])
+  })
+
   it('should parse the sequence name from the address', () => {
     testEmail.to = [{
       "address": "reply@getreply.app",

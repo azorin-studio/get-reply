@@ -25,7 +25,7 @@ const liveGmailTest = async ({
   google_refresh_token,
   expectedReplies
 }: {
-  to: string,
+  to: string[],
   from: string,
   google_refresh_token: string
   expectedReplies: string[]
@@ -33,7 +33,7 @@ const liveGmailTest = async ({
   const r = Math.random().toString(36).slice(2, 7)
 
   const draft = await createGmailDraftInThread({
-    to: [to], 
+    to, 
     from,
     subject: `${r}`, 
     text: `Print the word ${r}`, 
@@ -72,35 +72,50 @@ const liveGmailTest = async ({
   expect(replies.every((r: any) => r)).toBe(true)
 }
 
+const from = 'amonecho1@gmail.com'
+// this allows us to send emails to getreply, pc or laptop
+const emailRoutingTag = process.env.EMAIL_ROUTING_TAG || ''
+
 describe('e2e', () => {
-  let profile: Profile
-  const from = 'amonecho1@gmail.com'
-
-  // this allows us to send emails to getreply, pc or laptop
-  const emailRoutingTag = process.env.EMAIL_ROUTING_TAG || ''
-
-  beforeAll(async () => {
-    profile = await getProfileFromEmail(from)
+  it.concurrent('should use gmail to hit the reply sequence then check for reply in inbox', async () => {
+    const profile: Profile = await getProfileFromEmail(from)
     if (!profile) {
       throw new Error('No profile found')
     }
-  })
 
-  it('should use gmail to hit the reply sequence then check for reply in inbox', async () => {
     await liveGmailTest({
-      to: `reply${emailRoutingTag}@getreply.app`,
+      to: [`reply${emailRoutingTag}@getreply.app`],
       from,
       google_refresh_token: profile.google_refresh_token!,
       expectedReplies: ['reply']
     })
   }, 1000 * 60) // wait 1 minute
 
-  it('should use gmail to hit the fastfollowup sequence then check for in inbox', async () => {
+  it.concurrent('should use gmail to hit the fastfollowup sequence then check for in inbox', async () => {
+    const profile: Profile = await getProfileFromEmail(from)
+    if (!profile) {
+      throw new Error('No profile found')
+    }
+
     await liveGmailTest({
-      to: `fastfollowup${emailRoutingTag}@getreply.app`,
+      to: [`fastfollowup${emailRoutingTag}@getreply.app`],
       from,
       google_refresh_token: profile.google_refresh_token!,
       expectedReplies: ['draft', 'draft']
+    })
+  }, 1000 * 60) // wait 1 minute
+
+  it.only('should use gmail to hit the collab sequence', async () => {
+    const profile: Profile = await getProfileFromEmail(from)
+    if (!profile) {
+      throw new Error('No profile found')
+    }
+
+    await liveGmailTest({
+      to: [`collab${emailRoutingTag}@getreply.app`, 'me@eoinmurray.eu'],
+      from,
+      google_refresh_token: profile.google_refresh_token!,
+      expectedReplies: ['reply']
     })
   }, 1000 * 60) // wait 1 minute
 })

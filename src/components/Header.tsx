@@ -7,6 +7,8 @@ import { LuMailPlus } from 'react-icons/lu'
 import { cookies } from 'next/headers'
 import Link from 'next/link'
 import { Database } from '~/db-admin/database.types'
+import GoogleAuth from './GoogleAuth'
+import AzureAuth from './AzureAuth'
 
 export default function Header(props: { user?: object | null }) {
   const supabase = createClientComponentClient<Database>()
@@ -53,34 +55,10 @@ export default function Header(props: { user?: object | null }) {
             </>
           )}
           {!user && (
-            // <Link
-            //   href="/login"
-            //   className="items-center space-x-2 flex font-bold sm:inline-block hover:underline"
-            // >
-            //   Login
-            // </Link>
-            <Auth 
-              supabaseClient={supabase} 
-              showLinks={false}
-              providers={['google']}
-              redirectTo={`${process.env.NEXT_PUBLIC_SITE_URL}/callback/google`}
-              queryParams={{
-                access_type: 'offline',
-                prompt: 'consent',
-                scopes: 'https://www.googleapis.com/auth/gmail.readonly  https://www.googleapis.com/auth/gmail.modify  https://www.googleapis.com/auth/gmail.compose'
-              }}
-              onlyThirdPartyProviders={true}
-              appearance={{
-                extend: false, // necessary in order to not render default styles
-                className: {
-                  button: classNames(
-                    "inline-flex flex-row gap-2 border items-center ",
-                    "hover:bg-blue-50 focus:bg-slate-200 ",
-                    "text-sm font-semibold text-[#3c4043] rounded px-3 py-2"
-                  ),
-                }
-              }}
-            />
+            <div className="flex flex-row gap-2">
+              <GoogleAuth />
+              <AzureAuth />
+            </div>
           )}
         </nav>
       </div>
