@@ -92,7 +92,6 @@ export default async function sendOrDraft(action_id: string): Promise<Action>{
   try {
     if (action.type === 'send') {
       
-
       const reply = await sendMail({
         from: `${sequence.name}@getreply.app`,
         to: (log.from as any).address,
@@ -102,8 +101,6 @@ export default async function sendOrDraft(action_id: string): Promise<Action>{
       })
   
       action = await appendToAction(action, {
-        threadId: thread.id,
-        mailId: reply.id,
         status: 'sent',
       })
   
