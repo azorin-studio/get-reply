@@ -51,7 +51,7 @@ export default async function reply(action_id: string): Promise<Action>{
 
   const profile: Profile = await getProfileFromEmail((log.from as any).address)
 
-  if (!profile.google_refresh_token) {
+  if (!profile.refresh_token) {
     action = await appendToAction(action, {
       status: 'error',
       errorMessage: 'No google refresh token found for this email'
@@ -80,7 +80,7 @@ Here an email draft to get you started:
 
 ${action.generation as string}`
   
-  if (action.type === 'send' || action.type === 'reply') {
+  if (action.type === 'send') {
     text = 
 `Here's your reply from ChatGPT:
 

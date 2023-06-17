@@ -1,7 +1,7 @@
 import supabaseAdminClient from "~/db-admin/server-admin-client"
 import { Action } from "~/db-admin/types"
 
-export default async function getActionById (id: string): Promise<Action> {
+export default async function getActionById (id: string): Promise<Action | null> {
   const { error, data: actions } = await supabaseAdminClient
     .from('actions')
     .select()

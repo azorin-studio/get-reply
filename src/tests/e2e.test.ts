@@ -22,12 +22,12 @@ const watch = async (predicate: Function, ms: number) => {
 const liveGmailTest = async ({
   to, 
   from,
-  google_refresh_token,
+  refresh_token,
   expectedReplies
 }: {
   to: string[],
   from: string,
-  google_refresh_token: string
+  refresh_token: string
   expectedReplies: string[]
 }) => {
   const r = Math.random().toString(36).slice(2, 7)
@@ -38,15 +38,15 @@ const liveGmailTest = async ({
     subject: `${r}`, 
     text: `Print the word ${r}`, 
     threadId: null,
-    google_refresh_token: google_refresh_token
+    refresh_token: refresh_token
   })
 
-  const { data } = await sendDraft(draft.id!, google_refresh_token)
+  const { data } = await sendDraft(draft.id!, refresh_token)
   if (!data.threadId) {
     throw new Error('Cant find thread after sending draft.')
   }
 
-  const thread = await getThreadById(data.threadId, google_refresh_token)
+  const thread = await getThreadById(data.threadId, refresh_token)
   const mail = thread.messages.find((m: any) => m.id === data.id)
 
   if (!mail) {
@@ -60,10 +60,10 @@ const liveGmailTest = async ({
     expectedReplies.map(async (type: string) => {
       return watch(async () => {      
         if (type === 'draft') {
-          return checkForDraft(threadId, messageId, google_refresh_token)
+          return checkForDraft(threadId, messageId, refresh_token)
         }
         // or type is reply
-        return checkForReply(threadId, messageId, google_refresh_token)
+        return checkForReply(threadId, messageId, refresh_token)
       }, 1000)
     })
   )
@@ -86,7 +86,7 @@ describe('e2e', () => {
     await liveGmailTest({
       to: [`reply${emailRoutingTag}@getreply.app`],
       from,
-      google_refresh_token: profile.google_refresh_token!,
+      refresh_token: profile.refresh_token!,
       expectedReplies: ['reply']
     })
   }, 1000 * 60) // wait 1 minute
@@ -100,7 +100,7 @@ describe('e2e', () => {
     await liveGmailTest({
       to: [`fastfollowup${emailRoutingTag}@getreply.app`],
       from,
-      google_refresh_token: profile.google_refresh_token!,
+      refresh_token: profile.refresh_token!,
       expectedReplies: ['draft', 'draft']
     })
   }, 1000 * 60) // wait 1 minute
@@ -114,7 +114,7 @@ describe('e2e', () => {
     await liveGmailTest({
       to: [`collab${emailRoutingTag}@getreply.app`, 'me@eoinmurray.eu'],
       from,
-      google_refresh_token: profile.google_refresh_token!,
+      refresh_token: profile.refresh_token!,
       expectedReplies: ['reply']
     })
   }, 1000 * 60) // wait 1 minute

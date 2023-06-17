@@ -7,7 +7,7 @@ import { Database } from '~/db-admin/database.types'
 
 export const revalidate = 0
 
-export default async function Page(props) {
+export default async function Page(props: any) {
   const supabase = createServerComponentClient<Database>({
     cookies,
   })
@@ -17,19 +17,22 @@ export default async function Page(props) {
   } = await supabase.auth.getSession()
 
   if(session) {
+    console.log(session)
     const { error, data: profile } = await supabase
       .from('profiles')
       .upsert({ 
-        google_refresh_token: session.provider_refresh_token,
+        refresh_token: session.provider_refresh_token,
+        provider: session.user.app_metadata.provider,
         email: session.user.email,
         id: session.user.id,
       })
       .eq('id', session.user.id)
       .select('*')
       .single()
-
-    if (!profile) throw new Error('No profile found')
+    
     if (error) throw new Error((error as any).message)
+    if (!profile) throw new Error('No profile found')
+    
     return redirect('/logs')
   }
 

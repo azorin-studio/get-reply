@@ -71,7 +71,7 @@ const inngestSchedule = inngest.createFunction(
 
     action = await step.run('Schedule', async () => {
       console.log(`[action_id: ${event.data.action_id}]: in queue/schedule - schedule`)
-      if (action.type === 'draft' || action.type === 'send' || action.type === 'reply') {
+      if (action.type === 'draft' || action.type === 'send') {
         await inngest.send({ 
           id: `queue/reply-${event.data.action_id}`,
           name: 'queue/reply', 

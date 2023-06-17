@@ -22,12 +22,12 @@ export function makeBody(to: string[], from: string, subject: string, message: s
     return encodedMail
 }
 
-export const refreshAccessToken = async (google_refresh_token: string) => {
+export const refreshAccessToken = async (refresh_token: string) => {
   const form = new URLSearchParams()
   form.append('client_id', process.env.GOOGLE_CLIENT_ID!)
   form.append('client_secret', process.env.GOOGLE_CLIENT_SECRET!)
   form.append('grant_type', 'refresh_token')
-  form.append('refresh_token', google_refresh_token)
+  form.append('refresh_token', refresh_token)
 
   const authResponse = await fetch('https://oauth2.googleapis.com/token', {
     method: "POST",
@@ -43,15 +43,15 @@ export const refreshAccessToken = async (google_refresh_token: string) => {
   }
 
   const tokens = {
-    refresh_token: google_refresh_token,
+    refresh_token: refresh_token,
     access_token: newTokens.access_token
   }
 
   return tokens
 }
 
-export const createDriveFolder = async (name: string, google_refresh_token: string) => {
-  const tokens = await refreshAccessToken(google_refresh_token)
+export const createDriveFolder = async (name: string, refresh_token: string) => {
+  const tokens = await refreshAccessToken(refresh_token)
   oauth2Client.setCredentials(tokens)
 
   const drive = google.drive({ version: 'v3', auth: oauth2Client })
@@ -68,20 +68,20 @@ export const createDriveFolder = async (name: string, google_refresh_token: stri
 
 interface ICreateGmailDriveFile {
   text: string,
-  google_refresh_token: string
+  refresh_token: string
 }
 
 export const createDriveFile = async ({
   text, 
-  google_refresh_token,
+  refresh_token,
 }: ICreateGmailDriveFile) => {
-  const tokens = await refreshAccessToken(google_refresh_token)
+  const tokens = await refreshAccessToken(refresh_token)
   oauth2Client.setCredentials(tokens)
 
   const docs = google.docs({ version: 'v1', auth: oauth2Client })
   const drive = google.drive({ version: 'v3', auth: oauth2Client })
 
-  const parent = await createDriveFolder('GetReplyCollab', google_refresh_token)
+  const parent = await createDriveFolder('GetReplyCollab', refresh_token)
 
   const createFileRes = await docs.documents.create({
     requestBody: {
@@ -152,7 +152,7 @@ interface ICreateGmailDraftInThread {
   subject: string,
   text: string,
   threadId: string | null | undefined,
-  google_refresh_token: string
+  refresh_token: string
 }
 
 
@@ -162,9 +162,9 @@ export const createGmailDraftInThread = async ({
   subject, 
   text, 
   threadId, 
-  google_refresh_token,
+  refresh_token,
 }: ICreateGmailDraftInThread) => {
-  const tokens = await refreshAccessToken(google_refresh_token)
+  const tokens = await refreshAccessToken(refresh_token)
   oauth2Client.setCredentials(tokens)
   const gmail = google.gmail({ version: 'v1', auth: oauth2Client })
   const raw = makeBody(to, from, subject, text)
@@ -180,8 +180,8 @@ export const createGmailDraftInThread = async ({
   return res.data
 }
 
-export const deleteDraft = async (draftId: string, google_refresh_token: string) => {
-  const tokens = await refreshAccessToken(google_refresh_token)
+export const deleteDraft = async (draftId: string, refresh_token: string) => {
+  const tokens = await refreshAccessToken(refresh_token)
   oauth2Client.setCredentials(tokens)
   const gmail = google.gmail({ version: 'v1', auth: oauth2Client })
   const res = await gmail.users.drafts.delete({
@@ -191,8 +191,8 @@ export const deleteDraft = async (draftId: string, google_refresh_token: string)
   return res.data
 }
 
-export const findThread = async (subject: string, to: string[], google_refresh_token: string) => {
-  const tokens = await refreshAccessToken(google_refresh_token)
+export const findThread = async (subject: string, to: string[], refresh_token: string) => {
+  const tokens = await refreshAccessToken(refresh_token)
   oauth2Client.setCredentials(tokens)
   const gmail = google.gmail({ version: 'v1', auth: oauth2Client })
   const q = `${subject} to: ${to.join(', ')}`
@@ -210,8 +210,8 @@ export const findThread = async (subject: string, to: string[], google_refresh_t
   return threads.data.threads[0] as any
 }
 
-export const getThreadById = async (id: string, google_refresh_token: string) => {
-  const tokens = await refreshAccessToken(google_refresh_token)
+export const getThreadById = async (id: string, refresh_token: string) => {
+  const tokens = await refreshAccessToken(refresh_token)
   oauth2Client.setCredentials(tokens)
   const gmail = google.gmail({ version: 'v1', auth: oauth2Client })
 
@@ -228,8 +228,8 @@ export const getThreadById = async (id: string, google_refresh_token: string) =>
   return thread.data as any
 }
 
-export const getMessageById = async (id: string, google_refresh_token: string) => {
-  const tokens = await refreshAccessToken(google_refresh_token)
+export const getMessageById = async (id: string, refresh_token: string) => {
+  const tokens = await refreshAccessToken(refresh_token)
   oauth2Client.setCredentials(tokens)
   const gmail = google.gmail({ version: 'v1', auth: oauth2Client })
 
@@ -247,8 +247,8 @@ export const getMessageById = async (id: string, google_refresh_token: string) =
 }
 
 
-export const makeUnreadInInbox = async (draftId: string, google_refresh_token: string) => {
-  const tokens = await refreshAccessToken(google_refresh_token)
+export const makeUnreadInInbox = async (draftId: string, refresh_token: string) => {
+  const tokens = await refreshAccessToken(refresh_token)
   oauth2Client.setCredentials(tokens)
   
   const gmail = google.gmail({ version: 'v1', auth: oauth2Client })
@@ -262,8 +262,8 @@ export const makeUnreadInInbox = async (draftId: string, google_refresh_token: s
   })
 }
 
-export const sendDraft = async (draftId: string, google_refresh_token: string) => {
-  const tokens = await refreshAccessToken(google_refresh_token)
+export const sendDraft = async (draftId: string, refresh_token: string) => {
+  const tokens = await refreshAccessToken(refresh_token)
   oauth2Client.setCredentials(tokens)
   
   const gmail = google.gmail({ version: 'v1', auth: oauth2Client })
@@ -276,10 +276,10 @@ export const sendDraft = async (draftId: string, google_refresh_token: string) =
   })
 }
 
-export const checkForReply = async (threadId: string, messageId: string, google_refresh_token: string): Promise<object | null> => {
+export const checkForReply = async (threadId: string, messageId: string, refresh_token: string): Promise<object | null> => {
   let thread
   try {
-    thread = await getThreadById(threadId, google_refresh_token)
+    thread = await getThreadById(threadId, refresh_token)
   }
   catch (e) {
     return null
@@ -296,10 +296,10 @@ export const checkForReply = async (threadId: string, messageId: string, google_
   return replyMessage
 }
 
-export const checkForDraft = async (threadId: string, messageId: string, google_refresh_token: string): Promise<object | null> => {
+export const checkForDraft = async (threadId: string, messageId: string, refresh_token: string): Promise<object | null> => {
   let thread
   try {
-    thread = await getThreadById(threadId, google_refresh_token)
+    thread = await getThreadById(threadId, refresh_token)
   }
   catch (e) {
     return null

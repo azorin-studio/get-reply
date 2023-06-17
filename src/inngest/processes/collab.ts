@@ -52,7 +52,7 @@ export default async function reply(action_id: string): Promise<Action>{
 
   const profile: Profile = await getProfileFromEmail((log.from as any).address)
 
-  if (!profile.google_refresh_token) {
+  if (!profile.refresh_token) {
     action = await appendToAction(action, {
       status: 'error',
       errorMessage: 'No google refresh token found for this email'
@@ -83,7 +83,7 @@ ${log.text as string}
 
   const { webViewLink } = await createDriveFile({
     text: googleDocText,
-    google_refresh_token: profile.google_refresh_token!,
+    refresh_token: profile.refresh_token!,
   })
 
 let text = `
