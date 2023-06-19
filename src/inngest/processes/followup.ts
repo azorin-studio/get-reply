@@ -4,13 +4,13 @@ import sendMail from "~/lib/send-mail"
 import appendToLog from "~/db-admin/append-to-log"
 import fetchAllPiecesFromActionId from "~/lib/fetch-all-pieces-from-action-id"
 
-export const introText = `Here is your reply from ChatGPT:`
+export const introText = `This is a follow up reminder from GetReply. If they have not replied yet send a follow up to:`
 
-export default async function reply(action_id: string): Promise<Action>{
+export default async function followup(action_id: string): Promise<Action>{
   let { action, log, sequence } = await fetchAllPiecesFromActionId(action_id)
 
-  let text = `${introText}\n\n${action.generation as string}`
-
+  const text = `${introText}\n\n${log.to?.map(t => t.address).join(', ')}\n${log.cc ? `(cc: ${log.cc?.map(t => t.address).join(', ')})` : ''}\nHere is an email draft to get you started:\n\n${action.generation as string}`
+  
   await sendMail({
     from: `${sequence.name}@getreply.app`,
     to: (log.from as any).address,
@@ -19,8 +19,8 @@ export default async function reply(action_id: string): Promise<Action>{
     messageId: log.messageId
   })
 
-  await appendToAction(action, { status: 'sent' })
-  await appendToLog(log, {status: 'complete' })
+  action = await appendToAction(action, { status: 'sent' })
+  log = await appendToLog(log, {status: 'complete' })
 
   return action    
 }

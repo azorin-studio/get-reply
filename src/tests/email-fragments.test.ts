@@ -7,5 +7,4 @@ describe('email-fragment-parser (efp)', () => {
     const messages = replyParser(testEmail.text).getFragments().map((fragment: any) => fragment.getContent().replace(/>/g, ''))
     expect(messages.length).toBe(4)
   })
-
 })

@@ -1,4 +1,4 @@
-import processIncomingEmail from '~/inngest/process-incoming-email'
+import processIncomingEmail from '~/inngest/processes/create-actions'
 import generate from '~/inngest/processes/generate'
 import reply from '~/inngest/processes/reply'
 import { inngest } from '~/inngest/client'
@@ -8,15 +8,18 @@ import appendToLog from '~/db-admin/append-to-log'
 import appendToAction from '~/db-admin/append-to-action'
 import getLogById from '~/db-admin/get-log-by-id'
 import collab from './processes/collab'
+import fetchAllPiecesFromActionId from '~/lib/fetch-all-pieces-from-action-id'
+import followup from './processes/followup'
 
 const inngestProcessIncomingEmail = inngest.createFunction(
-  { name: "process incoming email", retries: 0 },
-  { event: "queue/process-incoming-email" },
+  { name: "create-actions", retries: 0 },
+  { event: "queue/create-actions" },
   async ({ event }: { event: any, step: any }) => {
     console.log(`[log_id: ${event.data.log_id}]: runnng process email`)
-    const log = await processIncomingEmail(event.data.log_id)
-    
-    log.action_ids?.forEach(async (action_id: string) => {
+    await processIncomingEmail(event.data.log_id)
+
+    const log = await getLogById(event.data.log_id)
+    log?.action_ids?.forEach(async (action_id: string) => {
       console.log(`[action_id: ${action_id}]: sending to queue/generate`)
       await inngest.send({ 
         id: `queue/generate-${action_id}`,
@@ -34,7 +37,7 @@ const inngestGenerate = inngest.createFunction(
   { event: "queue/generate" },
   async ({ event }: { event: any, step: any }) => {
     console.log(`[action_id: ${event.data.action_id}]: in queue/generate`)
-    const action = await generate(event.data.action_id)
+    await generate(event.data.action_id)
 
     console.log(`[action_id: ${event.data.action_id}]: Sending to queue/schedule`)
     await inngest.send({ 
@@ -43,7 +46,7 @@ const inngestGenerate = inngest.createFunction(
       data: { action_id: event.data.action_id, log_id: event.data.log_id }
     })
     
-    return { event, body: action }
+    return { event }
   }
 )
 
@@ -71,22 +74,31 @@ const inngestSchedule = inngest.createFunction(
 
     action = await step.run('Schedule', async () => {
       console.log(`[action_id: ${event.data.action_id}]: in queue/schedule - schedule`)
-      if (action.type === 'draft' || action.type === 'send') {
-        await inngest.send({ 
-          id: `queue/reply-${event.data.action_id}`,
-          name: 'queue/reply', 
-          data: { action_id: event.data.action_id, log_id: event.data.log_id }
-        })
-      } if (action.type === 'collab') {
+      const { sequence } = await fetchAllPiecesFromActionId(event.data.action_id)
+
+      if (sequence.name === 'collab') {
         await inngest.send({ 
           id: `queue/collab-${event.data.action_id}`,
           name: 'queue/collab', 
           data: { action_id: event.data.action_id, log_id: event.data.log_id }
         })
+      } else if (sequence.name === 'reply') {
+        await inngest.send({ 
+          id: `queue/reply-${event.data.action_id}`,
+          name: 'queue/reply', 
+          data: { action_id: event.data.action_id, log_id: event.data.log_id }
+        })
+      } else {
+        await inngest.send({ 
+          id: `queue/followup-${event.data.action_id}`,
+          name: 'queue/followup', 
+          data: { action_id: event.data.action_id, log_id: event.data.log_id }
+        })
       }
     })
+
     console.log(`[action_id: ${event.data.action_id}]: finished queue/schedule`)
-    return { event, body: action }
+    return { event }
   }
 )
 
@@ -95,8 +107,8 @@ const inngestReply = inngest.createFunction(
   { event: "queue/reply" },
   async ({ event }: { event: any, step: any }) => {
     console.log(`[action_id: ${event.data.action_id}]: in queue/reply`)
-    const action = await reply(event.data.action_id)
-    return { event, body: action }
+    await reply(event.data.action_id)
+    return { event }
   }
 )
 
@@ -105,8 +117,19 @@ const inngestCollab = inngest.createFunction(
   { event: "queue/collab" },
   async ({ event }: { event: any, step: any }) => {
     console.log(`[action_id: ${event.data.action_id}]: in queue/collab`)
-    const action = await collab(event.data.action_id)
-    return { event, body: action }
+    await collab(event.data.action_id)
+    return { event }
+  }
+)
+
+
+const inngestFollowup = inngest.createFunction(
+  { name: "followup", retries: 0 },
+  { event: "queue/followup" },
+  async ({ event }: { event: any, step: any }) => {
+    console.log(`[action_id: ${event.data.action_id}]: in queue/followup`)
+    await followup(event.data.action_id)
+    return { event }
   }
 )
 
@@ -124,20 +147,14 @@ const inngestFailure = inngest.createFunction(
       if (log_id) {
         const log = await getLogById(log_id)
         if (log) {
-          await appendToLog(log, {
-            status: "error",
-            errorMessage: error.message,
-          })
+          await appendToLog(log, { status: "error", errorMessage: error.message })
         }
       }
 
       if (action_id) {
         const action = await getActionById(action_id)
-        if (action){
-          await appendToAction(action, {
-            status: "error",
-            errorMessage: error.message,
-          })
+        if (action){ 
+          await appendToAction(action, { status: "error", errorMessage: error.message })
         }
       }
 
@@ -155,5 +172,6 @@ export const ingestFns = [
   inngestSchedule,
   inngestFailure,
   inngestReply,
-  inngestCollab
+  inngestCollab,
+  inngestFollowup
 ]

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { callGPT35Api } from "~/chat-gpt"
+import { callGPT35Api } from "~/lib/chat-gpt"
 
 export const revalidate = 0
 

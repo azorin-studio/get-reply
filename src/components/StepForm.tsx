@@ -38,28 +38,8 @@ export default function StepForm(props: {
           </option>
         ))}
       </select>
-      <div>will</div>
-      <select
-        id="prompt-selector"
-        name="prompt-selector"
-        className="rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 text-sm"
-        value={step.type}
-        onChange={(e) => {
-          const newStep = {
-            ...step,
-            type: e.target.value,
-          }
-          setStep(newStep)
-          onChange(newStep)
-        }}
-      >
-        {[{label: 'setup a collab document', value: 'collab'}, {label: 'reply to the email', value: 'send'}].map((type) => (
-          <option key={type.value} value={type.value}>
-            {type.label}
-          </option>
-        ))}
-      </select>
-      <div>after</div>
+      <div>will send a reminder with a follow up after</div>
+
       <select
         id="prompt-selector"
         name="prompt-selector"

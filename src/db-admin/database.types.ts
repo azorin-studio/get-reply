@@ -21,7 +21,6 @@ export interface Database {
           run_date: string | null
           status: string | null
           threadId: string | null
-          type: string | null
           user_id: string | null
         }
         Insert: {
@@ -35,7 +34,6 @@ export interface Database {
           run_date?: string | null
           status?: string | null
           threadId?: string | null
-          type?: string | null
           user_id?: string | null
         }
         Update: {
@@ -49,7 +47,6 @@ export interface Database {
           run_date?: string | null
           status?: string | null
           threadId?: string | null
-          type?: string | null
           user_id?: string | null
         }
         Relationships: [

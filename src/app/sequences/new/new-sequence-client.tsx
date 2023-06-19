@@ -172,7 +172,6 @@ export default function DemoPage(props: any) {
                   ...sequence.steps,
                   {
                     prompt_id: null,
-                    type: 'send',
                     delay: 0,
                     delayUnit: 'days',
                   }

@@ -83,7 +83,7 @@ const UnpureAction = (props: {
         <div className="flex flex-col">
           <div className="text-sm">
             Will{' '} 
-            <span className="font-bold">{action.type}</span> on {' '}
+            send a reminder containing a draft follow up on {' '}
             { action.created_at && 
               <span>
                 {format(new Date(action.created_at as string), 'LLLL dd, yyyy, HH:mm')}  {' '}

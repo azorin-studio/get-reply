@@ -24,8 +24,8 @@ export async function POST (request: Request) {
   try {
     let log: Log | null = await createLog(json as IncomingEmail)
     await inngest.send({ 
-      id: `queue/process-incoming-email-${json.messageId}`,
-      name: 'queue/process-incoming-email', 
+      id: `queue/create-actions-${json.messageId}`,
+      name: 'queue/create-actions',
       data: { log_id: log.id }
     })
     return NextResponse.json({ success: true })
