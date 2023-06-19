@@ -8,11 +8,14 @@ import emailToPrompt from "~/lib/email-to-prompt"
 describe('email-parser', () => {
   it('should split the thread intro a list of messages', () => {    
     const fullPrompt = emailToPrompt(testEmail.text, `{email}`)
+    
+    // expect(fullPrompt.trim().startsWith('---------- Forwarded message ---------')).toEqual(false)
   })
 
   it('should split the forwarded thread intro a list of messages', () => {    
     const fullPrompt = emailToPrompt(forwardedText, `{email}`)
     console.log(fullPrompt)
+    // expect(fullPrompt.trim().startsWith('---------- Forwarded message ---------')).toEqual(false)
   })
 
   it('should parse the sequence name from the address', () => {
