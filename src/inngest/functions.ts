@@ -54,25 +54,17 @@ const inngestSchedule = inngest.createFunction(
   { name: "schedule", retries: 0 },
   { event: "queue/schedule" },
   async ({ event, step }: { event: any, step: any }) => {   
-    console.log(`[action_id: ${event.data.action_id}]: in queue/schedule`)
-
-    let action = await step.run('Get action', async () => {
-      console.log(`[action_id: ${event.data.action_id}]: in queue/schedule - get action`)
-      let action = await getActionById(event.data.action_id)
-      if (!action) {
-        throw new Error(`Action ${event.data.action_id} not found`)
-      }
-      return action
+    const runDate = await step.run('Calculate sleep', async () => {
+      console.log(`[action_id: ${event.data.action_id}]: in queue/schedule - sleep`)
+      const action = await getActionById(event.data.action_id)
+      if (!action) throw new Error(`Action ${event.data.action_id} not found`)
+      return action.run_date
     })
-    
-    let ms = differenceInMilliseconds(new Date(action.run_date as string), new Date())
-    if (ms <= 0) {
-      ms = 5000
-    }
-    console.log(`[action_id: ${event.data.action_id}]: sleeping ${ms} ms`)
-    await step.sleep(ms)
 
-    action = await step.run('Schedule', async () => {
+    console.log(`[action_id: ${event.data.action_id}]: sleeping until ${runDate} ms`)
+    await step.sleepUntil(runDate)
+
+    await step.run('Schedule', async () => {
       console.log(`[action_id: ${event.data.action_id}]: in queue/schedule - schedule`)
       const { sequence } = await fetchAllPiecesFromActionId(event.data.action_id)
 
@@ -97,8 +89,7 @@ const inngestSchedule = inngest.createFunction(
       }
     })
 
-    console.log(`[action_id: ${event.data.action_id}]: finished queue/schedule`)
-    return { event }
+    // return { event }
   }
 )
 
@@ -159,8 +150,7 @@ const inngestFailure = inngest.createFunction(
       }
 
       console.error(error)
-
-      return { message: "Event sent successfully", data: event.data }
+      return { message: "Error event processed successfully", data: event.data }
     })
   }
 )

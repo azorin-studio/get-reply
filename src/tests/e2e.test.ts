@@ -8,7 +8,6 @@ const wait = (ms: number) =>
   new Promise(resolve => setTimeout(resolve, ms))
 ;
 
-
 const watch = async (predicate: Function, ms: number) => {
   for (;; await wait(ms)) {
     const result = await predicate();
@@ -19,12 +18,10 @@ const watch = async (predicate: Function, ms: number) => {
   }
 }
 
-
 const liveGmailTest = async ({
   to, 
   from,
   refresh_token,
-  expectedReplies
 }: {
   to: string[],
   from: string,
@@ -58,12 +55,11 @@ const liveGmailTest = async ({
   return { messageId, threadId }
 }
 
-const from = 'amonecho1@gmail.com'
-// this allows us to send emails to getreply, pc or laptop
+const from = 'me@eoinmurray.eu'
 const emailRoutingTag = process.env.EMAIL_ROUTING_TAG || ''
 
-describe('e2e', () => {
-  it.concurrent('should use gmail to hit the reply sequence then check for reply in inbox', async () => {
+describe('e2e will use gmail to send email to GetReply then poll gmail for responses', () => {
+  it.concurrent('reply', async () => {
     const profile: Profile = await getProfileFromEmail(from)
     if (!profile) throw new Error('No profile found')
 
@@ -81,11 +77,10 @@ describe('e2e', () => {
         }, 1000)
       })
     )
-  
     replies.forEach((r: any) => expect(r.snippet).toContain(replyIntroText))
-  }, 1000 * 60) // wait 1 minute
+  }, 1000 * 60 * 2)
 
-  it.concurrent('should use gmail to hit the fastfollowup sequence then check for in inbox', async () => {
+  it.concurrent('fastfollowup', async () => {
     const profile: Profile = await getProfileFromEmail(from)
     if (!profile) throw new Error('No profile found')
 
@@ -103,21 +98,111 @@ describe('e2e', () => {
         }, 1000)
       })
     )
-  
     replies.forEach((r: any) => expect(r.snippet).toContain(followupIntroText))
-  }, 1000 * 60) // wait 1 minute
-  
-  // it.only('should use gmail to hit the collab sequence', async () => {
-  //   const profile: Profile = await getProfileFromEmail(from)
-  //   if (!profile) {
-  //     throw new Error('No profile found')
-  //   }
+  }, 1000 * 60)
 
-  //   await liveGmailTest({
-  //     to: [`collab${emailRoutingTag}@getreply.app`, 'me@eoinmurray.eu'],
-  //     from,
-  //     refresh_token: profile.refresh_token!,
-  //     expectedReplies: ['reply']
-  //   })
-  // }, 1000 * 60) // wait 1 minute
+  it.concurrent('24seconds', async () => {
+    const profile: Profile = await getProfileFromEmail(from)
+    if (!profile) throw new Error('No profile found')
+
+    const { messageId, threadId } = await liveGmailTest({
+      to: [`24seconds${emailRoutingTag}@getreply.app`],
+      from,
+      refresh_token: profile.refresh_token!,
+      expectedReplies: ['reply', 'reply']
+    })
+
+    const replies = await Promise.all(
+      [1, 2].map(async () => {
+        return watch(async () => {      
+          return checkForReply(threadId, messageId, profile.refresh_token!)
+        }, 1000)
+      })
+    )
+    replies.forEach((r: any) => expect(r.snippet).toContain(followupIntroText))
+  }, 1000 * 60 * 2)
+
+  it.concurrent('1minute', async () => {
+    const profile: Profile = await getProfileFromEmail(from)
+    if (!profile) throw new Error('No profile found')
+
+    const { messageId, threadId } = await liveGmailTest({
+      to: [`1minute${emailRoutingTag}@getreply.app`],
+      from,
+      refresh_token: profile.refresh_token!,
+      expectedReplies: ['reply', 'reply']
+    })
+
+    const replies = await Promise.all(
+      [1, 2].map(async () => {
+        return watch(async () => {      
+          return checkForReply(threadId, messageId, profile.refresh_token!)
+        }, 1000)
+      })
+    )
+    replies.forEach((r: any) => expect(r.snippet).toContain(followupIntroText))
+  }, 1000 * 60 * 2)
+
+  it.concurrent('5minutes', async () => {
+    const profile: Profile = await getProfileFromEmail(from)
+    if (!profile) throw new Error('No profile found')
+
+    const { messageId, threadId } = await liveGmailTest({
+      to: [`5minutes${emailRoutingTag}@getreply.app`],
+      from,
+      refresh_token: profile.refresh_token!,
+      expectedReplies: ['reply', 'reply']
+    })
+
+    const replies = await Promise.all(
+      [1, 2].map(async () => {
+        return watch(async () => {      
+          return checkForReply(threadId, messageId, profile.refresh_token!)
+        }, 1000)
+      })
+    )
+    replies.forEach((r: any) => expect(r.snippet).toContain(followupIntroText))
+  }, 1000 * 60 * 7)
+
+  it.skip('24minutes', async () => {
+    const profile: Profile = await getProfileFromEmail(from)
+    if (!profile) throw new Error('No profile found')
+
+    const { messageId, threadId } = await liveGmailTest({
+      to: [`24minutes${emailRoutingTag}@getreply.app`],
+      from,
+      refresh_token: profile.refresh_token!,
+      expectedReplies: ['reply', 'reply']
+    })
+
+    const replies = await Promise.all(
+      [1, 2].map(async () => {
+        return watch(async () => {      
+          return checkForReply(threadId, messageId, profile.refresh_token!)
+        }, 1000)
+      })
+    )
+    replies.forEach((r: any) => expect(r.snippet).toContain(followupIntroText))
+  }, 1000 * 60 * 30) 
+
+  it.skip('1hour', async () => {
+    const profile: Profile = await getProfileFromEmail(from)
+    if (!profile) throw new Error('No profile found')
+
+    const { messageId, threadId } = await liveGmailTest({
+      to: [`1hour${emailRoutingTag}@getreply.app`],
+      from,
+      refresh_token: profile.refresh_token!,
+      expectedReplies: ['reply', 'reply']
+    })
+
+    const replies = await Promise.all(
+      [1, 2].map(async () => {
+        return watch(async () => {      
+          return checkForReply(threadId, messageId, profile.refresh_token!)
+        }, 1000)
+      })
+    )
+    replies.forEach((r: any) => expect(r.snippet).toContain(followupIntroText))
+  }, 1000 * 60 * 65)
 })

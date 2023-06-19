@@ -14,7 +14,7 @@ describe('email-parser', () => {
 
   it('should split the forwarded thread intro a list of messages', () => {    
     const fullPrompt = emailToPrompt(forwardedText, `{email}`)
-    console.log(fullPrompt)
+    // console.log(fullPrompt)
     // expect(fullPrompt.trim().startsWith('---------- Forwarded message ---------')).toEqual(false)
   })
 
