@@ -5,6 +5,6 @@ dotenv.config({ path: './.env.local' })
 import { TextEncoder, TextDecoder } from 'util'
 
 global.TextEncoder = TextEncoder
-global.TextDecoder = TextDecoder
-global.setImmediate = jest.useRealTimers
+global.TextDecoder = TextDecoder as any
+global.setImmediate = jest.useRealTimers as any
 
