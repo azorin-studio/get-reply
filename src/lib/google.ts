@@ -293,6 +293,8 @@ export const checkForReply = async (threadId: string, messageId: string, refresh
     })
   })
 
+  console.log({ thread, p: messages })
+
   return replyMessage
 }
 

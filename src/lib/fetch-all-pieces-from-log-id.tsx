@@ -4,6 +4,9 @@ import { Log, Profile, Sequence } from "~/db-admin/types"
 import getLogById from "~/db-admin/get-log-by-id"
 import appendToLog from "~/db-admin/append-to-log"
 import parseSequenceName from "~/inngest/parse-sequence-name"
+import { render } from "@react-email/render"
+import SequenceNotFound from "~/components/emails/sequence-not-found"
+import sendMail from "./send-mail"
 
 export default async function fetchAllPiecesFromLogId(log_id: string): Promise<{ 
   log: Log,
@@ -30,7 +33,23 @@ export default async function fetchAllPiecesFromLogId(log_id: string): Promise<{
   const sequence = await getSequenceFromLog(log)
 
   if (!sequence) {
-    throw new Error('Could not find sequence')
+    const { sequenceName } = parseSequenceName(log)
+    const html = render(
+      <SequenceNotFound
+        sequenceName={sequenceName}
+      />, {
+        pretty: true,
+      })
+      
+      let to = [ ...[(log.from as any).address]]
+      await sendMail({
+        from: 'support@getreply.app',
+        to: to.join(', '),
+        subject: 'GetReply: Sequence not found',
+        html,
+        messageId: log.messageId,
+      })
+      throw new Error(`Sequence ${sequenceName} not found`)
   }
 
   if (!sequence.steps || sequence.steps.length === 0) {
@@ -41,7 +60,6 @@ export default async function fetchAllPiecesFromLogId(log_id: string): Promise<{
     })
     throw new Error(`[sequence:${sequenceName}] has no steps`)
   }
-
 
   return {
     log,
