@@ -45,7 +45,7 @@ export default async function fetchAllPiecesFromLogId(log_id: string): Promise<{
       await sendMail({
         from: 'support@getreply.app',
         to: to.join(', '),
-        subject: 'GetReply: Sequence not found',
+        subject: `re: ${log.subject}`,
         html,
         messageId: log.messageId,
       })

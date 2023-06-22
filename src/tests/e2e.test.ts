@@ -4,8 +4,7 @@ import { liveGmailTest, waitForReplies } from '~/tests/utils'
 const EMAIL_ROUTING_TAG = process.env.EMAIL_ROUTING_TAG || ''
 
 describe('e2e will use gmail to send email to GetReply then poll gmail for responses', () => {
-
-  it.only('will test sequence not found', async () => {
+  it.concurrent('will test sequence not found', async () => {
     const testName = '404'
 
     const to = [
@@ -19,11 +18,11 @@ describe('e2e will use gmail to send email to GetReply then poll gmail for respo
       numberOfExpectedReplies: 1,
     })
 
-    replies.forEach((r: any) => expect(r.snippet).toContain('Error from GetReply'))
+    replies.forEach((r: any) => expect(r.snippet).toContain('GetReply Sequence not found'))
   }, 1000 * 60 * 1)
 
-  it.concurrent('0min', async () => {
-    const testName = '0min'
+  it.concurrent('will test the now@getreply.app sequence', async () => {
+    const testName = 'now'
     const to = [
       `${testName}${EMAIL_ROUTING_TAG}@getreply.app`
     ]
@@ -33,6 +32,23 @@ describe('e2e will use gmail to send email to GetReply then poll gmail for respo
       threadId,
       messageId,
       numberOfExpectedReplies: 1,
+    })
+
+    replies.forEach((r: any) => expect(r.snippet).toContain(followupIntroText))
+  }, 1000 * 60 * 1)
+
+  it.concurrent('should test both now@getreply.app and 24seconds@getreply.app', async () => {
+    const to = [
+      `now${EMAIL_ROUTING_TAG}@getreply.app`,
+      `24seconds${EMAIL_ROUTING_TAG}@getreply.app`,
+
+    ]
+
+    const { messageId, threadId } = await liveGmailTest({ to })
+    const replies = await waitForReplies({
+      threadId,
+      messageId,
+      numberOfExpectedReplies: 2,
     })
 
     replies.forEach((r: any) => expect(r.snippet).toContain(followupIntroText))

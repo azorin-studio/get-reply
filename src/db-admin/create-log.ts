@@ -2,7 +2,6 @@ import supabaseAdminClient from "~/db-admin/server-admin-client"
 import { IncomingEmail, Log } from "~/db-admin/types"
 
 export default async function createLog (incomingEmail: IncomingEmail) {
-  // check if log already exists with message id
   const { data: existingLogs, error: existingLogsError } = await supabaseAdminClient
     .from('logs')
     .select()

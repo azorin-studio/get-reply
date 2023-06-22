@@ -12,6 +12,7 @@ export default function parseSequenceName (log: Log | IncomingEmail): { sequence
     allToEmails = [...allToEmails, ...log.bcc.map((to) => to.address)]
   }
 
+  // we should process all emails, but for now we'll just do the first one
   const toGetReply = allToEmails.find((email) => email.endsWith('getreply.app'))
   if (!toGetReply) {
     return { sequenceName: null, tags: [] }
