@@ -1,0 +1,112 @@
+{
+  "headers": [
+    {
+      "key": "received",
+      "value": "from mail-oa1-x36.google.com (2001:4860:4864:20::36) by email.cloudflare.net (unknown) id EZGmPph5zDAI for <24seconds+laptop@getreply.app>; Thu, 22 Jun 2023 14:52:27 +0000"
+    },
+    {
+      "key": "received-spf",
+      "value": "pass (mx.cloudflare.net: domain of amonecho1@gmail.com designates 2001:4860:4864:20::36 as permitted sender) helo=\"mail-oa1-x36.google.com\"; envelope-from=\"amonecho1@gmail.com\";"
+    },
+    {
+      "key": "authentication-results",
+      "value": "mx.cloudflare.net; spf=pass; dkim=pass; dmarc=pass;"
+    },
+    {
+      "key": "arc-seal",
+      "value": "i=1; a=rsa-sha256; s=2022; d=email.cloudflare.net; cv=none; b=Ob0/LO5Wt/LUXPedwn/XZ2jAaNYfIh/4p7/ANrO7WuOilory/epkoeAcnBCWv8fUmYmfnDMEy DW63+pQBYkL1c30xAfhwAHBiA6w1wbgPkOwX5jRePeagZOWV05kkhSNRzDqjVDS6fxo8aqeBCeX 66ldWUJ8V6T7uOe63kNKElRZwNp/XmODey+FUBKH0HBtrm1A/efKiPAbXko9PJPEvvRsYKYmWSy KAkaBfCP+PZyacF/8QyBYuTjceu0/MdfauSiHPSkVAoabNl9DluV6didj14OxuB72/kMJ/WmVru QSWEdJfB1S5tUg36YOcFO45L1IT+3ID+Mo2s70LxQsZg==;"
+    },
+    {
+      "key": "arc-message-signature",
+      "value": "i=1; a=rsa-sha256; s=2022; d=email.cloudflare.net; c=relaxed/relaxed; h=To:Subject:Date:from:reply-to:cc:resent-date:resent-from:resent-to :resent-cc:in-reply-to:references:list-id:list-help:list-unsubscribe :list-subscribe:list-post:list-owner:list-archive; t=1687445547; bh=ANMixZ3 6FwZkOihvz/5IyoHrK2ZNxlgPFeAHCJ5igCc=; b=ES4JslYMOMy0Oq3puiXKgGG6Vhw7567uVG zRCbBwhaxcCOd40HJ5T8ig88SxSMShc5+3Ge1972vycoGU9ikNVqxGA0SdPRCdpCye/iTqzyC1o 35gWAolr3vSp9FeEvmgh3vZcirk3dkSAotKpPZh9cKmZpky8KbznqbqBSQUzpaZANEQa1+xLvkT HY4tCDAJ8kFHgUoFkTGBtqjfFERnhfop+WwwlGszi8N2Fb+5GA/zmItQkzsb9FvBGSggDjfNbFT C50PiE4C4Jl+la4z2J/Sp43SMxpbeD+ceb7vigGxAxYagpmY8pmHmUN9L7yzFA7oJWsheSGRF6Y qJmvn8iA==;"
+    },
+    {
+      "key": "arc-authentication-results",
+      "value": "i=1; mx.cloudflare.net; dkim=pass header.d=gmail.com header.s=20221208 header.b=o1zKKwPL; dmarc=pass header.from=gmail.com policy.dmarc=none; spf=none (mx.cloudflare.net: no SPF records found for postmaster@mail-oa1-x36.google.com) smtp.helo=mail-oa1-x36.google.com; spf=pass (mx.cloudflare.net: domain of amonecho1@gmail.com designates 2001:4860:4864:20::36 as permitted sender) smtp.mailfrom=amonecho1@gmail.com; arc=none smtp.remote-ip=2001:4860:4864:20::36"
+    },
+    {
+      "key": "dkim-signature",
+      "value": "v=1; a=rsa-sha256; s=2022; d=email.cloudflare.net; c=relaxed/relaxed; h=To:Subject:Date:from:reply-to:cc:resent-date:resent-from:resent-to :resent-cc:in-reply-to:references:list-id:list-help:list-unsubscribe :list-subscribe:list-post:list-owner:list-archive; t=1687445547; bh=ANMixZ3 6FwZkOihvz/5IyoHrK2ZNxlgPFeAHCJ5igCc=; b=bhnFYbO90UgADEu0CksH0FG5K6+dtLgIiy kpsjLSraqWVeDS7T/81q+kN89Nw1plLN84MFBJeDv/O37600TRhMC4CZLzxJueO5Nq+MquZIsJ2 eUL1msJtyeh9U1/ekC28mFmaJO4eylCTJAwHQdmdZ2hwzWDLzVM2f+yAe8utvRROTFWpWx2UuDB tmYvzZEJ5MPfa8dKH/hmRM1/O3Jt/Et2phtKbetvx38Echm6pjfojCDFFOyWxGkLjL++JvXQXp8 wLx38XVDF2NlhMeCxt8PVelUrXB9xXp4NNrkPBfN8+G9f3EfSzg3hAf/4g0deHgK8yH+5mjfytg 1DnR5MBg==;"
+    },
+    {
+      "key": "received",
+      "value": "by mail-oa1-x36.google.com with SMTP id 586e51a60fabf-1a9ae7cc01dso5117133fac.3; Thu, 22 Jun 2023 07:52:27 -0700 (PDT)"
+    },
+    {
+      "key": "dkim-signature",
+      "value": "v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmail.com; s=20221208; t=1687445547; x=1690037547; h=to:subject:message-id:date:from:mime-version:from:to:cc:subject :date:message-id:reply-to; bh=ANMixZ36FwZkOihvz/5IyoHrK2ZNxlgPFeAHCJ5igCc=; b=o1zKKwPLjD93ueXZmfaifsAly+bpEKj/g1BaNp19im5x17gQOd0LX9fEKygp+Hogon ooEAD+od7Pc01OTpzz9w2O2LRs7tIk42VuSL+6S8iPIZPxlNpurm3VJpPCj19tOclMjY I8x7kP7LDDRKSI9gezBAGb9SpGItFPQDnK96Lj4oFcPxi35RUXM07FOv2byFCtbmpEP8 fbDo82HBwHKw4EmZ026v9gnUFbZEW2qRlFGtADigj4BtWalFXRVapEn7XIB2kId5KuT9 yprkywunsV5eHJosy1wxlJ9XQpZMXAIxRQaFw5i3j/q57xIJuI/aqliIRuV1DiJLAYmu 9Pmw=="
+    },
+    {
+      "key": "x-google-dkim-signature",
+      "value": "v=1; a=rsa-sha256; c=relaxed/relaxed; d=1e100.net; s=20221208; t=1687445547; x=1690037547; h=to:subject:message-id:date:from:mime-version:x-gm-message-state :from:to:cc:subject:date:message-id:reply-to; bh=ANMixZ36FwZkOihvz/5IyoHrK2ZNxlgPFeAHCJ5igCc=; b=add2KRqRsg8H0zX6XQwt6cuP7gB0J7n8D7bcywQ8B0xfbFSy1XuYJLDJDZRE1AHLuj o9L5nBSYkYz92g8cmXiuY7QoUNaIA9lSCVvLxEm0jb+/49gb7LxpAsdzglCsRW7A/mU1 kVePLaxiC1GWNli3jKFHMiT+MI9826zjXRWZQb6qyccWALaKr1BZAOJtjl2aJEH22Cpx I1iV3q3Ab12JYXXLEmXlCpvYS4Pjp5wcwmUvwLI4OtmeqQLrohu/kIW6rcwFJvqnk+j5 U54MSPHBu/0myWdJb7lEbBxdCB/6bOWhhMoayLZT/KU+/35QM5iBaVjple5dHpkWGCHu jALA=="
+    },
+    {
+      "key": "x-gm-message-state",
+      "value": "AC+VfDwdNyVkynMY/jcvDr0klqBMYLxAwjcZ67DLng6CbMQ7rM5aILMO cNIzFbPlwanR7d6+QPPKLd1HsEZ7NhlwGRjm0KmYmKiYN/s="
+    },
+    {
+      "key": "x-google-smtp-source",
+      "value": "ACHHUZ74ikizp7G5ePjhAcjoYgfktONYX6zuLnTGAlB57C+NnFoVZLWsIHWZIKkI0G5Yb09pqbCaYpQfQajNxcJ8GIM="
+    },
+    {
+      "key": "x-received",
+      "value": "by 2002:a05:6870:9712:b0:1a6:9a34:9acb with SMTP id n18-20020a056870971200b001a69a349acbmr16407332oaq.55.1687445546975; Thu, 22 Jun 2023 07:52:26 -0700 (PDT)"
+    },
+    {
+      "key": "received",
+      "value": "from 643874583166 named unknown by gmailapi.google.com with HTTPREST; Thu, 22 Jun 2023 07:52:26 -0700"
+    },
+    {
+      "key": "received",
+      "value": "from 643874583166 named unknown by gmailapi.google.com with HTTPREST; Thu, 22 Jun 2023 07:52:25 -0700"
+    },
+    {
+      "key": "mime-version",
+      "value": "1.0"
+    },
+    {
+      "key": "from",
+      "value": "amonecho1@gmail.com"
+    },
+    {
+      "key": "date",
+      "value": "Thu, 22 Jun 2023 07:52:26 -0700"
+    },
+    {
+      "key": "message-id",
+      "value": "<CAG9yPc1UvvrdQbF8K9MDzGPTG3WdV5mSM4CaWtb-wPsNpoxb6A@mail.gmail.com>"
+    },
+    {
+      "key": "subject",
+      "value": "pl70s"
+    },
+    {
+      "key": "to",
+      "value": "now+laptop@getreply.app, 24seconds+laptop@getreply.app"
+    },
+    {
+      "key": "content-type",
+      "value": "text/plain; charset=\"UTF-8\""
+    }
+  ],
+  "from": {
+    "address": "amonecho1@gmail.com",
+    "name": ""
+  },
+  "to": [
+    {
+      "address": "now+laptop@getreply.app",
+      "name": ""
+    },
+    {
+      "address": "24seconds+laptop@getreply.app",
+      "name": ""
+    }
+  ],
+  "cc": [],
+  "bcc": [],
+  "subject": "pl70s",
+  "messageId": "<CAG9yPc1UvvrdQbF8K9MDzGPTG3WdV5mSM4CaWtb-wPsNpoxb6A@mail.gmail.com>",
+  "date": "2023-06-22T14:52:26.000Z",
+  "text": "Print the word pl70s\n"
+}

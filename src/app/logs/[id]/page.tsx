@@ -1,9 +1,8 @@
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
-import { cookies, headers } from 'next/headers'
+import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import LogBody from '~/components/LogBody'
 import { Database } from '~/db-admin/database.types'
-import getSequenceById from '~/db-admin/get-sequence-by-id'
 import { Log, Sequence } from '~/db-admin/types'
 
 export const revalidate = 0
@@ -34,8 +33,6 @@ export default async function Page(props: { params: { id: string } }) {
     log = data[0] as Log
   }
 
-  const sequence = await getSequenceById(log!, supabase)
-
   return (
     <main className="p-2 flex flex-col gap-4">
       <h1 className="text-2xl font-bold">
@@ -44,7 +41,7 @@ export default async function Page(props: { params: { id: string } }) {
       {log && 
         <LogBody
           log={log} 
-          sequence={sequence as Sequence}
+          sequence={log.sequence as Sequence}
         />
       }
     </main>

@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
-import createLog from '~/db-admin/create-log'
-import { IncomingEmail, Log } from '~/db-admin/types'
-import { inngest } from '~/inngest/client'
+import { IncomingEmail } from '~/db-admin/types'
+import { processIncomingEmail } from '~/inngest/functions'
+import { writeFile } from 'fs/promises'
 
 export const revalidate = 0
 
@@ -21,14 +21,11 @@ export async function POST (request: Request) {
     delete json.attachments
   }
 
+  // writeFile(`./src/tests/fixtures/${json.messageId}.json`, JSON.stringify(json, null, 2))
+
   try {
-    let log: Log | null = await createLog(json as IncomingEmail)
-    await inngest.send({ 
-      id: `queue/create-actions-${json.messageId}`,
-      name: 'queue/create-actions',
-      data: { log_id: log.id }
-    })
-    return NextResponse.json({ success: true })
+    const logs = await processIncomingEmail(json as IncomingEmail)
+    return NextResponse.json({ logs })
   } catch (err: any) {
     console.error(err)
     return NextResponse.json({ error: err.message })

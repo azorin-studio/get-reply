@@ -1,4 +1,4 @@
-import processIncomingEmail from '~/inngest/processes/create-actions'
+import createActions from '~/inngest/processes/create-actions'
 import generate from '~/inngest/processes/generate'
 import reply from '~/inngest/processes/reply'
 import { inngest } from '~/inngest/client'
@@ -9,17 +9,41 @@ import getLogById from '~/db-admin/get-log-by-id'
 import collab from './processes/collab'
 import fetchAllPiecesFromActionId from '~/lib/fetch-all-pieces-from-action-id'
 import followup from './processes/followup'
+import { IncomingEmail, Log } from '~/db-admin/types'
+import parseSequenceName from '~/lib/parse-sequence-name'
+import createLog from '~/db-admin/create-log'
 
-const inngestProcessIncomingEmail = inngest.createFunction(
+export const processIncomingEmail = async (incomingEmail: IncomingEmail) => {
+  console.log(`Running process incoming email`)
+  const { sequenceName } = parseSequenceName(incomingEmail as IncomingEmail)
+  console.log(`Incoming email has sequence ${sequenceName}`)
+
+  if (!sequenceName) {
+    throw new Error('No sequence found')
+  }
+
+  let log: Log | null = await createLog(incomingEmail as IncomingEmail, sequenceName)
+  await inngest.send({ 
+    id: `queue/create-actions-${log.id}`,
+    name: 'queue/create-actions',
+    data: { log_id: log.id }
+  })
+  return log
+}
+
+const inngestCreateActions = inngest.createFunction(
   { name: "create-actions", retries: 0 },
   { event: "queue/create-actions" },
   async ({ event }: { event: any, step: any }) => {
-    console.log(`[log_id: ${event.data.log_id}]: runnng process email`)
-    await processIncomingEmail(event.data.log_id)
+    console.log(`[log_id: ${event.data.log_id}]: running create actions`)
+
+    // side effect
+    await createActions(event.data.log_id)
 
     const log = await getLogById(event.data.log_id)
     log?.action_ids?.forEach(async (action_id: string) => {
       console.log(`[action_id: ${action_id}]: sending to queue/generate`)
+      // side effect
       await inngest.send({ 
         id: `queue/generate-${action_id}`,
         name: 'queue/generate', 
@@ -37,6 +61,7 @@ const inngestGenerate = inngest.createFunction(
   async ({ event }: { event: any, step: any }) => {
     console.log(`[action_id: ${event.data.action_id}]: in queue/generate`)
     await generate(event.data.action_id)
+
 
     console.log(`[action_id: ${event.data.action_id}]: Sending to queue/schedule`)
     await inngest.send({ 
@@ -87,9 +112,7 @@ const inngestSchedule = inngest.createFunction(
         })
       }
     })
-
-    // return { event }
-  }
+ }
 )
 
 const inngestReply = inngest.createFunction(
@@ -156,7 +179,7 @@ const inngestFailure = inngest.createFunction(
 
 
 export const ingestFns = [
-  inngestProcessIncomingEmail,
+  inngestCreateActions,
   inngestGenerate,
   inngestSchedule,
   inngestFailure,

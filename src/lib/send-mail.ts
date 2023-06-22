@@ -46,8 +46,6 @@ export default async function sendMail (props: {
     ]
   }
 
-  console.log(opts)
-
   const response = await fetch('https://api.postmarkapp.com/email', {
     method: "POST",
     headers: { 

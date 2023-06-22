@@ -1,7 +1,7 @@
 
 import PostalMime from 'postal-mime';
 import { IncomingEmail } from '~/db-admin/types';
-import parseSequenceName from '~/inngest/parse-sequence-name';
+import parseSequenceName from '~/lib/parse-sequence-name';
 
 export interface Env {
   GETREPLY_BOT_AUTH_TOKEN: string;
@@ -23,7 +23,7 @@ const worker = {
       body: JSON.stringify(email)
     }
     
-    const { sequenceName, tags } = parseSequenceName(email)
+    const { tags } = parseSequenceName(email)
 
     // if pc is in the tags send the email to https://pc.azorin.studio
     // if laptop is in the tags send the email to https://laptop.azorin.studio

@@ -276,7 +276,8 @@ export const sendDraft = async (draftId: string, refresh_token: string) => {
   })
 }
 
-export const checkForReply = async (threadId: string, messageId: string, refresh_token: string): Promise<object | null> => {
+export const checkForReply = async (threadId: string, messageId: string, refresh_token: string): 
+  Promise<object[] | null> => {
   let thread
   try {
     thread = await getThreadById(threadId, refresh_token)
@@ -287,13 +288,13 @@ export const checkForReply = async (threadId: string, messageId: string, refresh
 
   const { messages } = thread
 
-  const replyMessage = messages.find((message: any) => {
+  const replyMessages = messages.filter((message: any) => {
     return message.payload.headers.find((header: any) => {
       return header.name.toLowerCase() === 'in-reply-to' && header.value === messageId
     })
   })
 
-  return replyMessage
+  return replyMessages
 }
 
 export const checkForDraft = async (threadId: string, messageId: string, refresh_token: string): Promise<object | null> => {

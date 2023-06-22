@@ -1,12 +1,11 @@
 import appendToAction from "~/db-admin/append-to-action"
 import getProfileFromEmail from "~/db-admin/get-profile-from-email"
-import getSequenceFromLog from "~/db-admin/get-sequence-by-id"
 import { Action, Log, Profile, Prompt, Sequence } from "~/db-admin/types"
 import getActionById from "~/db-admin/get-action-by-id"
 import getLogById from "~/db-admin/get-log-by-id"
 import getPromptById from "~/db-admin/get-prompt-by-id"
 import appendToLog from "~/db-admin/append-to-log"
-import parseSequenceName from "~/inngest/parse-sequence-name"
+import parseSequenceName from "~/lib/parse-sequence-name"
 
 export default async function fetchAllPiecesFromActionId(action_id: string): Promise<{ 
   action: Action, 
@@ -40,7 +39,7 @@ export default async function fetchAllPiecesFromActionId(action_id: string): Pro
     throw new Error('No google refresh token found for this email')
   }
 
-  const sequence = await getSequenceFromLog(log)
+  const sequence = log.sequence
   if (!sequence) throw new Error('Could not find sequence')
   
   if (!sequence.steps || sequence.steps.length === 0) {

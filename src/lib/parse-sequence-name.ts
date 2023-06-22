@@ -12,8 +12,26 @@ export default function parseSequenceName (log: Log | IncomingEmail): { sequence
     allToEmails = [...allToEmails, ...log.bcc.map((to) => to.address)]
   }
 
-  // we should process all emails, but for now we'll just do the first one
-  const toGetReply = allToEmails.find((email) => email.endsWith('getreply.app'))
+  const toGetReplyEmails = allToEmails.filter((email) => email.endsWith('getreply.app'))
+
+  // we check them against the headers to see which sequence this particular
+  // email was sent to, this is to stop duplicates when multiple sequences
+  // are hit at once
+  const toGetReply = toGetReplyEmails.find((email) => {
+    const header = log.headers && 
+      (log.headers as any[]).find((header) => {
+
+        if (header?.key === 'received') {
+          // console.log(header.key, header?.value, email)
+          if (header?.value.includes(email)) {
+            return true
+          }
+        }
+      })
+    return !!header
+  })
+
+
   if (!toGetReply) {
     return { sequenceName: null, tags: [] }
   }

@@ -69,13 +69,13 @@ export const waitForReplies = async ({
   const profile: Profile = await getProfileFromEmail(FROM)
   if (!profile) throw new Error('No profile found')
 
-  const replies = await Promise.all(
-    Array.from(Array(numberOfExpectedReplies).keys()).map(async () => {
-      return watch(async () => {
-        return checkForReply(threadId, messageId, profile.refresh_token!)
-      }, 1000)
-    })
-  )
+  const replies = watch(async () => {
+    const replies = await checkForReply(threadId, messageId, profile.refresh_token!)
+    if (replies && replies.length === numberOfExpectedReplies) {
+      return replies
+    }
+    return null
+  }, 1000)
 
   return replies
 }
