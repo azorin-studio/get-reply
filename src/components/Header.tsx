@@ -1,18 +1,10 @@
 "use client"
-import { createClientComponentClient, createServerComponentClient } from '@supabase/auth-helpers-nextjs'
-import { Auth } from '@supabase/auth-ui-react'
-import { ThemeSupa } from '@supabase/auth-ui-shared'
-import classNames from 'classnames'
 import { LuMailPlus } from 'react-icons/lu'
-import { cookies } from 'next/headers'
 import Link from 'next/link'
-import { Database } from '~/db-admin/database.types'
 import GoogleAuth from './GoogleAuth'
 import AzureAuth from './AzureAuth'
 
 export default function Header(props: { user?: object | null }) {
-  const supabase = createClientComponentClient<Database>()
-
   const { user = null } = props
   return (
     <header className="w-full sticky top-0 z-40 bg-white mx-auto">

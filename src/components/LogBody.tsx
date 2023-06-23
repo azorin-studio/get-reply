@@ -1,7 +1,7 @@
 'use client'
 
 import { format } from 'date-fns'
-import { Log, Sequence } from '~/db-admin/types'
+import { Log, Sequence } from '~/lib/types'
 import StatusBadge from './StatusBadge'
 import StepBody from './StepBody'
 import classNames from 'classnames'

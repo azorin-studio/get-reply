@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
-import { IncomingEmail } from '~/db-admin/types'
-import { processIncomingEmail } from '~/inngest/functions'
+import { IncomingEmail } from '~/lib/types'
+import { processIncomingEmail } from '~/lib/functions'
 import { writeFile } from 'fs/promises'
 
 export const revalidate = 0

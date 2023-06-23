@@ -1,5 +1,5 @@
-import getProfileFromEmail from '~/db-admin/get-profile-from-email';
-import { Profile } from '~/db-admin/types';
+import getProfileFromEmail from '~/lib/get-profile-from-email';
+import { Profile } from '~/lib/types';
 import { checkForReply, createGmailDraftInThread, getThreadById, sendDraft } from '~/lib/google'
 
 export const wait = (ms: number) =>

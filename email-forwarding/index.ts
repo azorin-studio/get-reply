@@ -1,6 +1,6 @@
 
 import PostalMime from 'postal-mime';
-import { IncomingEmail } from '~/db-admin/types';
+import { IncomingEmail } from '~/lib/types';
 import parseSequenceName from '~/lib/parse-sequence-name';
 
 export interface Env {

@@ -1,23 +1,18 @@
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import classNames from 'classnames'
-import { cookies, headers } from 'next/headers'
+import { cookies } from 'next/headers'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { LuPlus } from 'react-icons/lu'
 import SequenceBadge from '~/components/SequenceBadge'
-import { Database } from '~/db-admin/database.types'
-import { Sequence } from '~/db-admin/types'
+import { Database } from '~/lib/database.types'
+import { Sequence } from '~/lib/types'
 
 export const revalidate = 0
 
 export default async function Page() {
-  const supabase = createServerComponentClient<Database>({
-    cookies,
-  })
-
-  const {
-    data: { session },
-  } = await supabase.auth.getSession()
+  const supabase = createServerComponentClient<Database>({ cookies })
+  const { data: { session } } = await supabase.auth.getSession()
 
   if (!session) {
     console.log('My Account: session does not exist, redirecting to /')
@@ -30,8 +25,6 @@ export default async function Page() {
     .order('created_at', { ascending: false })
 
   const sequences: Sequence[] = res.data || []
-
-  console.log(res)
 
   return (
     <main className="p-2 flex flex-col gap-4">

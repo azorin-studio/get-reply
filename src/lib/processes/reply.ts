@@ -1,7 +1,7 @@
-import appendToAction from "~/db-admin/append-to-action"
-import { Action } from "~/db-admin/types"
+import appendToAction from "~/lib/append-to-action"
+import { Action } from "~/lib/types"
 import sendMail from "~/lib/send-mail"
-import appendToLog from "~/db-admin/append-to-log"
+import appendToLog from "~/lib/append-to-log"
 import fetchAllPiecesFromActionId from "~/lib/fetch-all-pieces-from-action-id"
 
 export const introText = `Here is your reply from ChatGPT:`

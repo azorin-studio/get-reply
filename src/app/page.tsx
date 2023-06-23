@@ -9,19 +9,13 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import ExampleSelector from '~/components/ExampleSelector';
 import NewsletterForm from '~/components/NewsletterForm';
-import { Database } from '~/db-admin/database.types';
+import { Database } from '~/lib/database.types';
 
 export const revalidate = 0
 
 export default async function Page() {
-
-  const supabase = createServerComponentClient<Database>({
-    cookies,
-  })
-
-  const {
-    data: { session },
-  } = await supabase.auth.getSession()
+  const supabase = createServerComponentClient<Database>({ cookies })
+  const { data: { session } } = await supabase.auth.getSession()
 
   if (session) {
     console.log('session exists, redirecting to /logs')

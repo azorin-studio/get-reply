@@ -4,19 +4,14 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import CopyToClipboardBadge from '~/components/CopyToClipboardBadge'
 import LogBadge from '~/components/LogBadge'
-import { Database } from '~/db-admin/database.types'
-import { Log } from '~/db-admin/types'
+import { Database } from '~/lib/database.types'
+import { Log } from '~/lib/types'
 
 export const revalidate = 0
 
 export default async function Page() {
-  const supabase = createServerComponentClient<Database>({
-    cookies,
-  })
-
-  const {
-    data: { session },
-  } = await supabase.auth.getSession()
+  const supabase = createServerComponentClient<Database>({ cookies })
+  const { data: { session } } = await supabase.auth.getSession()
 
   if (!session) {
     console.log('My Account: session does not exist, redirecting to /')
@@ -65,7 +60,7 @@ export default async function Page() {
           </div>
         )}
 
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-2">
           {logs.map((log) => (
             <LogBadge key={log.id} log={log} />
           ))}

@@ -1,5 +1,4 @@
-import supabaseAdminClient from "~/db-admin/server-admin-client"
-import { Log } from "~/db-admin/types"
+import supabaseAdminClient from "~/lib/server-admin-client"
 
 export default async function deleteLogById (id: string): Promise<void> {
   const { error, data: logs } = await supabaseAdminClient

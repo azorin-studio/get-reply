@@ -1,15 +1,31 @@
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"
 import classNames from "classnames"
-import { useState } from "react"
-import usePrompts from "~/hooks/use-prompts"
+import { useEffect, useState } from "react"
+import { Prompt } from "~/lib/types"
 
 export default function StepForm(props: { 
   step: any, 
   onRemoveStep: any,
   onChange: any,
 }) {
+  const supabase = createClientComponentClient()
   const { onRemoveStep, onChange } = props
   const [step, setStep] = useState(props.step)
-  const prompts = usePrompts()
+  const [prompts, setPrompts] = useState<Prompt[]>([])
+
+  useEffect(() => {
+    const fetchPrompts = async () => {
+      const { data: prompts, error } = await supabase
+        .from('prompts')
+        .select('*')
+        .order('id', { ascending: true })
+        .limit(10)
+
+      if (error) console.error(error)
+      if (prompts) setPrompts(prompts)
+    }
+    fetchPrompts()
+  }, [])
   
   return (
     <div key={step.id} className='flex flex-row gap-2 items-center justify-between'>
@@ -25,6 +41,7 @@ export default function StepForm(props: {
             const newStep = {
               ...step,
               prompt_id: prompt.id,
+              prompt_name: prompt.name,
             }
             setStep(newStep)
             onChange(newStep)

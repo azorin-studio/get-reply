@@ -7,10 +7,8 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useState } from "react"
 import classNames from 'classnames'
 import PromptSelector from '~/components/PromptSelector'
-import { Prompt } from '~/db-admin/types'
-import usePrompts from "~/hooks/use-prompts"
-import { useSupabase } from '~/hooks/use-supabase'
-import useUser from '~/hooks/use-user'
+import { Prompt } from '~/lib/types'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 
 const DEFAULT_EMAIL = `Dear Hiring Manager, 
 
@@ -24,10 +22,7 @@ Mike Smith`
 const DEFAULT_RESULT = null
 
 export default function NewPromptClient(props: any) {
-  console.log({ props })
-  const { supabase } = useSupabase()
-  const prompts = usePrompts()  
-
+  const supabase = createClientComponentClient()
   const router = useRouter()
 
   const [creatingNew, setCreatingNew] = useState<boolean>(false)
@@ -44,8 +39,30 @@ export default function NewPromptClient(props: any) {
   const [error, setError] = useState<null | string>(null)
 
   const [saveBusy, setSaveBusy] = useState<string>('Save')
+  const [user, setUser] = useState<any>(null)
+  const [prompts, setPrompts] = useState<Prompt[]>([])
 
-  const user = useUser()
+  useEffect(() => {
+    const fetchPrompts = async () => {
+      const { data: prompts, error } = await supabase
+        .from('prompts')
+        .select('*')
+        .order('id', { ascending: true })
+        .limit(10)
+
+      if (error) console.error(error)
+      if (prompts) setPrompts(prompts)
+    }
+    fetchPrompts()
+  }, [])
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const { data: { user }, error } = await supabase.auth.getUser()
+      setUser(user)
+    }
+    fetchUser()
+  }, [])
 
   useEffect(() => {
     if (!props.params) {

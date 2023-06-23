@@ -2,7 +2,7 @@
   "headers": [
     {
       "key": "received",
-      "value": "from mail-oa1-x36.google.com (2001:4860:4864:20::36) by email.cloudflare.net (unknown) id EZGmPph5zDAI for <24seconds+laptop@getreply.app>; Thu, 22 Jun 2023 14:52:27 +0000"
+      "value": "from mail-oa1-x36.google.com (2001:4860:4864:20::36) by email.cloudflare.net (unknown) id EZGmPph5zDAI for <30sec+laptop@getreply.app>; Thu, 22 Jun 2023 14:52:27 +0000"
     },
     {
       "key": "received-spf",
@@ -82,7 +82,7 @@
     },
     {
       "key": "to",
-      "value": "now+laptop@getreply.app, 24seconds+laptop@getreply.app"
+      "value": "now+laptop@getreply.app, 30sec+laptop@getreply.app"
     },
     {
       "key": "content-type",
@@ -99,7 +99,7 @@
       "name": ""
     },
     {
-      "address": "24seconds+laptop@getreply.app",
+      "address": "30sec+laptop@getreply.app",
       "name": ""
     }
   ],

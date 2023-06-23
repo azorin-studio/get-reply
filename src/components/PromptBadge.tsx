@@ -1,15 +1,16 @@
 'use client'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { formatDistance } from 'date-fns'
 import Link from 'next/link'
 import { useRef } from 'react'
 import { useHover } from 'usehooks-ts'
-import { Prompt } from '~/db-admin/types'
-import { useSupabase } from '~/hooks/use-supabase'
+import { Database } from '~/lib/database.types'
+import { Prompt } from '~/lib/types'
 
 export const revalidate = 0
 
 export default function PromptBadge(props: { prompt: Prompt }) {
-  const { supabase } = useSupabase()
+  const supabase = createClientComponentClient<Database>()
   const { prompt } = props
 
   const hoverRef = useRef(null)

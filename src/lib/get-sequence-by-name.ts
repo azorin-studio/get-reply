@@ -1,4 +1,4 @@
-import supabaseAdminClient from "~/db-admin/server-admin-client"
+import supabaseAdminClient from "~/lib/server-admin-client"
 
 export default async function getSequenceByName (sequenceName: string, passedSupabase?: any) {
   let supabase = supabaseAdminClient

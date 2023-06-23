@@ -1,5 +1,5 @@
-import supabaseAdminClient from "~/db-admin/server-admin-client"
-import { IncomingEmail, Log } from "~/db-admin/types"
+import supabaseAdminClient from "~/lib/server-admin-client"
+import { IncomingEmail, Log } from "~/lib/types"
 import getSequenceByName from "./get-sequence-by-name"
 import { render } from "@react-email/render"
 import SequenceNotFound from "~/components/emails/sequence-not-found"

@@ -1,21 +1,27 @@
 "use client"
 
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import classNames from "classnames"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import slugify from "slugify"
 import CopyToClipboardBadge from "~/components/CopyToClipboardBadge"
 import StepForm from "~/components/StepForm"
-import { Sequence } from "~/db-admin/types"
-import usePrompts from "~/hooks/use-prompts"
-import { useSupabase } from '~/hooks/use-supabase'
-import useUser from "~/hooks/use-user"
+import { Sequence } from "~/lib/types"
 
 export default function DemoPage(props: any) {
-  const { supabase } = useSupabase()
-  const prompts = usePrompts()
+  const supabase = createClientComponentClient()
   const router = useRouter()
-  const user = useUser()
+  const [user, setUser] = useState<any>(null)
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const { data: { user }, error } = await supabase.auth.getUser()
+      setUser(user)
+    }
+    fetchUser()
+  }, [])
+
 
   const [sequence, setSequence] = useState<Sequence>({
     name: '',
@@ -172,6 +178,7 @@ export default function DemoPage(props: any) {
                   ...sequence.steps,
                   {
                     prompt_id: null,
+                    prompt_name: null,
                     delay: 0,
                     delayUnit: 'days',
                   }

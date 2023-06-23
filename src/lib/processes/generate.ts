@@ -1,7 +1,7 @@
 import replyParser from "node-email-reply-parser"
 import { callGPT35Api } from "~/lib/chat-gpt"
-import appendToAction from "~/db-admin/append-to-action"
-import appendToLog from "~/db-admin/append-to-log"
+import appendToAction from "~/lib/append-to-action"
+import appendToLog from "~/lib/append-to-log"
 import fetchAllPieces from "~/lib/fetch-all-pieces-from-action-id"
 import emailToPrompt from "~/lib/email-to-prompt"
 

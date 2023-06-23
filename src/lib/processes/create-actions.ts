@@ -1,7 +1,7 @@
 import { addMilliseconds, parseISO } from "date-fns"
-import appendToLog from "~/db-admin/append-to-log"
-import supabaseAdminClient from "~/db-admin/server-admin-client"
-import { Log } from "~/db-admin/types"
+import appendToLog from "~/lib/append-to-log"
+import supabaseAdminClient from "~/lib/server-admin-client"
+import { Log } from "~/lib/types"
 import fetchAllPiecesFromLogId from "~/lib/fetch-all-pieces-from-log-id"
 
 export default async function createActions (log_id: string): Promise<Log> {
@@ -39,6 +39,7 @@ export default async function createActions (log_id: string): Promise<Log> {
           // delay needs to be in ms
           run_date: addMilliseconds(parseISO(log!.date!), msDelay).toISOString(),
           prompt_id: step.prompt_id,
+          prompt_name: step.prompt_name,
           generation: '', // placeholder
           mailId: '', // placeholder 
           log_id: log!.id,

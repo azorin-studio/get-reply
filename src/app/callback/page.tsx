@@ -3,21 +3,15 @@ import 'server-only'
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from "next/headers"
 import { redirect } from 'next/navigation'
-import { Database } from '~/db-admin/database.types'
+import { Database } from '~/lib/database.types'
 
 export const revalidate = 0
 
 export default async function Page(props: any) {
-  const supabase = createServerComponentClient<Database>({
-    cookies,
-  })
-  
-  const {
-    data: { session },
-  } = await supabase.auth.getSession()
+  const supabase = createServerComponentClient<Database>({ cookies })
+  const { data: { session } } = await supabase.auth.getSession()
 
   if(session) {
-    console.log(session)
     const { error, data: profile } = await supabase
       .from('profiles')
       .upsert({ 

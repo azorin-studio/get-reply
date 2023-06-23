@@ -1,7 +1,7 @@
-import getProfileFromEmail from "~/db-admin/get-profile-from-email"
-import { Log, Profile, Sequence } from "~/db-admin/types"
-import getLogById from "~/db-admin/get-log-by-id"
-import appendToLog from "~/db-admin/append-to-log"
+import getProfileFromEmail from "~/lib/get-profile-from-email"
+import { Log, Profile, Sequence } from "~/lib/types"
+import getLogById from "~/lib/get-log-by-id"
+import appendToLog from "~/lib/append-to-log"
 
 export default async function fetchAllPiecesFromLogId(log_id: string): Promise<{ 
   log: Log,

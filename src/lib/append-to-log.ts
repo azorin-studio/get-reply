@@ -1,5 +1,5 @@
-import supabaseAdminClient from "~/db-admin/server-admin-client"
-import { Log } from "~/db-admin/types"
+import supabaseAdminClient from "~/lib/server-admin-client"
+import { Log } from "~/lib/types"
 
 export default async function appendToLog (log: Log, newTerms: object): Promise<Log> {
   const { error, data: newLogs } = await supabaseAdminClient
