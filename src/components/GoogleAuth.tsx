@@ -4,8 +4,15 @@ import { Auth } from '@supabase/auth-ui-react'
 import classNames from 'classnames'
 import { Database } from '~/lib/database.types'
 
-export default function GoogleAuth() {
+export default function GoogleAuth({ admin = false }: { admin: boolean }) {
   const supabase = createClientComponentClient<Database>()
+
+  let scopes = 'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile'
+
+  if (admin) {
+    // this next scopes are only for the automation account for e2e tests
+    scopes = 'https://www.googleapis.com/auth/gmail.readonly  https://www.googleapis.com/auth/gmail.modify  https://www.googleapis.com/auth/gmail.compose https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/documents'
+  }
 
   return (
     <Auth 
@@ -16,7 +23,7 @@ export default function GoogleAuth() {
       queryParams={{
         access_type: 'offline',
         prompt: 'consent',
-        scopes: 'https://www.googleapis.com/auth/gmail.readonly  https://www.googleapis.com/auth/gmail.modify  https://www.googleapis.com/auth/gmail.compose https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/documents'
+        scopes,
       }}
       onlyThirdPartyProviders={true}
       appearance={{

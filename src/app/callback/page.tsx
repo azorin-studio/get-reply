@@ -27,7 +27,7 @@ export default async function Page(props: any) {
     if (error) throw new Error((error as any).message)
     if (!profile) throw new Error('No profile found')
     
-    return redirect('/logs')
+    return redirect('/sequences')
   }
 
   return (

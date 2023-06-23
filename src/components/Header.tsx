@@ -21,10 +21,10 @@ export default function Header(props: { user?: object | null }) {
           {user && (
             <>
               <Link
-                href="/logs"
+                href="/sequences"
                 className="items-center space-x-2 flex font-bold sm:inline-block hover:underline"
               >
-                Logs
+                Sequences
               </Link>
               <Link
                 href="/prompts"
@@ -32,11 +32,12 @@ export default function Header(props: { user?: object | null }) {
               >
                 Prompts
               </Link>
+              
               <Link
-                href="/sequences"
+                href="/logs"
                 className="items-center space-x-2 flex font-bold sm:inline-block hover:underline"
               >
-                Sequences
+                Logs
               </Link>
               <Link
                 href="/logout"
