@@ -2,7 +2,7 @@ import Head from 'next/head'
 import Header from '~/components/Header'
 import Footer from '~/components/Footer'
 
-const policy = `
+const terms = `
 Terms and Conditions:
 By accessing and using our demo website, you agree to be bound by the following terms and conditions:
 
@@ -24,6 +24,7 @@ We shall not be liable for any damages arising out of or in connection with the 
 Changes to These Terms:
 We reserve the right to modify these terms and conditions at any time, and any changes will be effective immediately upon posting.
 `
+
 export default function TermsPage() {
   return (
     <>
