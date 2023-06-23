@@ -8,6 +8,11 @@ describe('process email', () => {
   let log: any
   
   it('should process one email', async () => {
+    if (!process.env.INNGEST_EVENT_KEY) {
+      console.log('INNGEST_EVENT_KEY not set, skipping test')
+      return
+    }
+
     log = await processIncomingEmail(fullEmail as IncomingEmail)
     log = await getLogById(log.id)
     expect(log).toBeTruthy()

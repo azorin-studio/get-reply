@@ -8,7 +8,7 @@ const options: {
   name: "get-reply-dev",
 }
 
-if (process.env.NODE_ENV === "development") {
+if (process.env.INNGEST_EVENT_KEY && process.env.INNGEST_EVENT_KEY === "local") {
   options.inngestBaseUrl = "http://localhost:8288/"
   options.eventKey = "dev"
 }
