@@ -11,11 +11,11 @@ import {
 import * as React from 'react';
 
 interface SequenceNotFoundProps {
-  sequenceName?: string | null;
+  sequenceName: string | null;
 }
 
 export const SequenceNotFound = ({
-  sequenceName = 'sequence@getreply.app',
+  sequenceName = 'placeholder-for-testing@getreply.app',
 }: SequenceNotFoundProps) => (
   <Html>
     <Head />
@@ -51,17 +51,17 @@ export const SequenceNotFound = ({
 
 export default SequenceNotFound;
 
-const main = {
+export const main = {
   backgroundColor: '#ffffff',
 };
 
-const container = {
+export const container = {
   paddingLeft: '12px',
   paddingRight: '12px',
   margin: '0 auto',
 };
 
-const h1 = {
+export const h1 = {
   color: '#333',
   fontFamily:
     "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif",
@@ -71,7 +71,7 @@ const h1 = {
   padding: '0',
 };
 
-const link = {
+export const link = {
   color: '#2754C5',
   fontFamily:
     "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif",
@@ -79,7 +79,7 @@ const link = {
   textDecoration: 'underline',
 };
 
-const text = {
+export const text = {
   color: '#333',
   fontFamily:
     "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif",
@@ -87,7 +87,7 @@ const text = {
   margin: '24px 0',
 };
 
-const footer = {
+export const footer = {
   color: '#898989',
   fontFamily:
     "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif",
@@ -97,7 +97,7 @@ const footer = {
   marginBottom: '24px',
 };
 
-const code = {
+export const code = {
   display: 'inline-block',
   padding: '16px 4.5%',
   width: '90.5%',

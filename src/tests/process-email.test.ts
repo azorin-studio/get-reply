@@ -9,7 +9,7 @@ describe('process email', () => {
   it('should parse 1second delay', async () => {
     const now = new Date()
     const email = createTestEmail({
-      toAddresses: ['reply+1second@getreply.app'],
+      toAddresses: [`f+1second+${process.env.EMAIL_ROUTING_TAG}@getreply.app`],
       date: now.toISOString()
     })
 
@@ -25,7 +25,7 @@ describe('process email', () => {
   it('should parse 5seconds delay', async () => {
     const now = new Date()
     const email = createTestEmail({
-      toAddresses: ['reply+5seconds@getreply.app'],
+      toAddresses: [`f+5seconds+${process.env.EMAIL_ROUTING_TAG}@getreply.app`],
       date: now.toISOString()
     })
 
@@ -41,7 +41,7 @@ describe('process email', () => {
   it('should parse 10sec delay', async () => {
     const now = new Date()
     const email = createTestEmail({
-      toAddresses: ['reply+10sec@getreply.app'],
+      toAddresses: [`f+10sec+${process.env.EMAIL_ROUTING_TAG}@getreply.app`],
       date: now.toISOString()
     })
 
@@ -57,7 +57,7 @@ describe('process email', () => {
   it('should parse 7s delay', async () => {
     const now = new Date()
     const email = createTestEmail({
-      toAddresses: ['reply+7s@getreply.app'],
+      toAddresses: [`f+7s+${process.env.EMAIL_ROUTING_TAG}@getreply.app`],
       date: now.toISOString()
     })
 
@@ -73,7 +73,7 @@ describe('process email', () => {
   it('should parse 1minute delay', async () => {
     const now = new Date()
     const email = createTestEmail({
-      toAddresses: ['reply+1minute@getreply.app'],
+      toAddresses: [`f+1minute+${process.env.EMAIL_ROUTING_TAG}@getreply.app`],
       date: now.toISOString()
     })
 
@@ -89,7 +89,7 @@ describe('process email', () => {
   it('should parse 5minutes delay', async () => {
     const now = new Date()
     const email = createTestEmail({
-      toAddresses: ['reply+5minutes@getreply.app'],
+      toAddresses: [`f+5minutes+${process.env.EMAIL_ROUTING_TAG}@getreply.app`],
       date: now.toISOString()
     })
 
@@ -105,7 +105,7 @@ describe('process email', () => {
   it('should parse 19min delay', async () => {
     const now = new Date()
     const email = createTestEmail({
-      toAddresses: ['reply+19min@getreply.app'],
+      toAddresses: [`f+19min+${process.env.EMAIL_ROUTING_TAG}@getreply.app`],
       date: now.toISOString()
     })
 
@@ -121,7 +121,7 @@ describe('process email', () => {
   it('should parse 2m delay', async () => {
     const now = new Date()
     const email = createTestEmail({
-      toAddresses: ['reply+2m@getreply.app'],
+      toAddresses: [`f+2m+${process.env.EMAIL_ROUTING_TAG}@getreply.app`],
       date: now.toISOString()
     })
 
@@ -137,7 +137,7 @@ describe('process email', () => {
   it('should parse 1hour delay', async () => {
     const now = new Date()
     const email = createTestEmail({
-      toAddresses: ['reply+1hour@getreply.app'],
+      toAddresses: [`f+1hour+${process.env.EMAIL_ROUTING_TAG}@getreply.app`],
       date: now.toISOString()
     })
 
@@ -153,7 +153,7 @@ describe('process email', () => {
   it('should parse 2hours delay', async () => {
     const now = new Date()
     const email = createTestEmail({
-      toAddresses: ['reply+2hours@getreply.app'],
+      toAddresses: [`f+2hours+${process.env.EMAIL_ROUTING_TAG}@getreply.app`],
       date: now.toISOString()
     })
 
@@ -169,7 +169,7 @@ describe('process email', () => {
   it('should parse 4hrs delay', async () => {
     const now = new Date()
     const email = createTestEmail({
-      toAddresses: ['reply+4hrs@getreply.app'],
+      toAddresses: [`f+4hrs+${process.env.EMAIL_ROUTING_TAG}@getreply.app`],
       date: now.toISOString()
     })
 
@@ -185,7 +185,7 @@ describe('process email', () => {
   it('should parse 7h delay', async () => {
     const now = new Date()
     const email = createTestEmail({
-      toAddresses: ['reply+7h@getreply.app'],
+      toAddresses: [`f+7h+${process.env.EMAIL_ROUTING_TAG}@getreply.app`],
       date: now.toISOString()
     })
 
@@ -201,7 +201,7 @@ describe('process email', () => {
   it('should parse 1day delay', async () => {
     const now = new Date()
     const email = createTestEmail({
-      toAddresses: ['reply+1day@getreply.app'],
+      toAddresses: [`f+1day+${process.env.EMAIL_ROUTING_TAG}@getreply.app`],
       date: now.toISOString()
     })
 
@@ -217,7 +217,7 @@ describe('process email', () => {
   it('should parse 3days delay', async () => {
     const now = new Date()
     const email = createTestEmail({
-      toAddresses: ['reply+3days@getreply.app'],
+      toAddresses: [`f+3days+${process.env.EMAIL_ROUTING_TAG}@getreply.app`],
       date: now.toISOString()
     })
 
@@ -233,7 +233,7 @@ describe('process email', () => {
   it('should parse 8d delay', async () => {
     const now = new Date()
     const email = createTestEmail({
-      toAddresses: ['reply+8d@getreply.app'],
+      toAddresses: [`f+8d+${process.env.EMAIL_ROUTING_TAG}@getreply.app`],
       date: now.toISOString()
     })
 

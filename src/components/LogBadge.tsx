@@ -19,8 +19,8 @@ export default function LogBadge(props: { log: Log }) {
       href={`/logs/${log.id}`}
       legacyBehavior
     >
-      <div className='border rounded-sm divide-y hover:cursor-pointer group'>
-        <div className="w-full p-2 flex flex-row items-center justify-between bg-slate-50 group-hover:bg-slate-100">
+      <div className='rounded-sm divide-y hover:cursor-pointer group'>
+        <div className="w-full p-2 flex flex-row items-center justify-between group-hover:bg-slate-50">
           <div className="flex flex-row gap-4 items-center">
             <div className="flex flex-col text-sm">
               <div className="font-bold">

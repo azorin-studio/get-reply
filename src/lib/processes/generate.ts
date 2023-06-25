@@ -30,7 +30,10 @@ export default async function generate (action_id: string) {
 
   try {
     const generation: string = await callGPT35Api(fullPrompt, 3)
-    await appendToLog(log, { status: 'generated', generation })
+    await appendToLog(log, { 
+      status: 'generated', 
+      // generation 
+    })
     action = await appendToAction(action, { status: 'generated', fullPrompt, generation })  
     return action
   } catch (error: any) {

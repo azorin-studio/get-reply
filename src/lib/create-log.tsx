@@ -15,7 +15,7 @@ export default async function createLog (incomingEmail: IncomingEmail, throwOnEx
     headers: incomingEmail.headers
   })
 
-  console.log(`Incoming email has sequence ${sequenceName}`)
+  console.log(`Incoming email has sequence ${sequenceName} and tags ${tags}`)
 
   if (!sequenceName) {
     throw new Error('No sequence found')

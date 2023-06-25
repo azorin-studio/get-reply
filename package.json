@@ -8,7 +8,7 @@
     "dev:inngest": "npx inngest-cli@latest dev --port 8288",
     "dev:download-types": "supabase gen types typescript --project-id 'dwtrraqsrjkkheqloopn' --schema public > src/lib/database.types.ts",
     "dev:pull-secrets": "vercel env pull .env.vercel.local",
-    "dev:email": "email dev -d ./src/components/emails",
+    "dev:email-templates": "email dev -d ./src/components/emails",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",

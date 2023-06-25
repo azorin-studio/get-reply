@@ -4,7 +4,7 @@ export default async function sendMail (props: {
   from: string,
   to: string,
   subject: string,
-  textBody?: string,
+  text?: string,
   html?: string,
   messageId?: string | null | undefined,
   }) {
@@ -13,7 +13,7 @@ export default async function sendMail (props: {
     from,
     to,
     subject,
-    textBody,
+    text,
     html,
     messageId
   } = props
@@ -25,8 +25,8 @@ export default async function sendMail (props: {
     MessageStream: "outbound",
   }
 
-  if (textBody) {
-    opts.TextBody = textBody
+  if (text) {
+    opts.TextBody = text
   } 
   
   if (html) {

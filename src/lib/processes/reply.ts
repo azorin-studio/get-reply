@@ -15,7 +15,7 @@ export default async function reply(action_id: string): Promise<Action>{
     from: `${sequence.name}@getreply.app`,
     to: (log.from as any).address,
     subject: `re: ${log.subject}`,
-    textBody: text,
+    text,
     messageId: log.messageId
   })
 

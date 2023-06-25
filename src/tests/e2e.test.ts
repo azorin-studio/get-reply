@@ -1,6 +1,6 @@
 import getProfileFromEmail from '~/lib/get-profile-from-email'
 import { trashThreadById } from '~/lib/google'
-import { introText as followupIntroText } from '~/lib/processes/followup'
+import { introText as followupIntroText } from '~/components/emails/followup-reminder'
 import { Profile } from '~/lib/types'
 import { liveGmailTest, waitForReplies } from '~/tests/utils'
 
@@ -31,9 +31,10 @@ describe('e2e using gmail', () => {
     threadIds.push(threadId)
   }, TIMEOUT)
 
-  it('will test the now@getreply.app sequence', async () => {
-    const testName = 'now'
+  it('will test the f+30s@getreply.app sequence', async () => {
+    const testName = 'f+30s'
     const to = [`${testName}${EMAIL_ROUTING_TAG}@getreply.app`]
+    console.log('to', to)
     const { messageId, threadId } = await liveGmailTest({ to })
     const replies = await waitForReplies({
       threadId,
@@ -44,10 +45,10 @@ describe('e2e using gmail', () => {
     threadIds.push(threadId)
   }, TIMEOUT)  
 
-  it('should test both now@getreply.app and 30sec@getreply.app', async () => {
+  it('should test both f+30s@getreply.app and f+15s@getreply.app', async () => {
     const to = [
-      `now${EMAIL_ROUTING_TAG}@getreply.app`,
-      `30sec${EMAIL_ROUTING_TAG}@getreply.app`
+      `f+30s${EMAIL_ROUTING_TAG}@getreply.app`,
+      `f+15s${EMAIL_ROUTING_TAG}@getreply.app`
     ]
     const { messageId, threadId } = await liveGmailTest({ to })
     const replies = await waitForReplies({
