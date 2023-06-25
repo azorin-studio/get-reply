@@ -24,16 +24,14 @@ export const SequenceNotFound = ({
       <Container style={container}>
         <Heading style={h1}>Error from GetReply</Heading>
         
-        <Text style={{ ...text, marginBottom: '14px' }}>
+        <Text style={{ ...text }}>
           You tried to email the following GetReply sequence, but it doesn&apos;t exist.
         </Text>
-        <code style={code}>{sequenceName}@getreply.app</code>
+        <code style={{...code, margin: '12px 0'}}>{sequenceName}@getreply.app</code>
         <Text
           style={{
             ...text,
             color: '#ababab',
-            marginTop: '14px',
-            marginBottom: '16px',
           }}
         >
           Check out the list of sequences in <Link
@@ -67,7 +65,6 @@ export const h1 = {
     "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif",
   fontSize: '24px',
   fontWeight: 'bold',
-  margin: '40px 0',
   padding: '0',
 };
 
@@ -84,17 +81,7 @@ export const text = {
   fontFamily:
     "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif",
   fontSize: '14px',
-  margin: '24px 0',
-};
-
-export const footer = {
-  color: '#898989',
-  fontFamily:
-    "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif",
-  fontSize: '12px',
-  lineHeight: '22px',
-  marginTop: '12px',
-  marginBottom: '24px',
+  margin: '0',
 };
 
 export const code = {
