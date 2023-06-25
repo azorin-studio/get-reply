@@ -4,8 +4,22 @@ import getSequenceByName from "./get-sequence-by-name"
 import { render } from "@react-email/render"
 import SequenceNotFound from "~/components/emails/sequence-not-found"
 import sendMail from "~/lib/send-mail"
+import parseSequenceName from "./parse-sequence-name"
 
-export default async function createLog (incomingEmail: IncomingEmail, sequenceName: string, throwOnExisting?: boolean) {
+export default async function createLog (incomingEmail: IncomingEmail, throwOnExisting?: boolean) {
+  console.log(`Running process incoming email`)
+  const { sequenceName, tags } = parseSequenceName({
+    to: incomingEmail.to,
+    cc: incomingEmail.cc,
+    bcc: incomingEmail.bcc,
+    headers: incomingEmail.headers
+  })
+
+  console.log(`Incoming email has sequence ${sequenceName}`)
+
+  if (!sequenceName) {
+    throw new Error('No sequence found')
+  }
 
   if (throwOnExisting) {
     const { data: existingLogs, error: existingLogsError } = await supabaseAdminClient
@@ -32,10 +46,10 @@ export default async function createLog (incomingEmail: IncomingEmail, sequenceN
         pretty: true,
       })
       
-      let to = [ ...[(incomingEmail.from as any).address]]
+      let from = [ ...[(incomingEmail.from as any).address]]
       await sendMail({
         from: 'support@getreply.app',
-        to: to.join(', '),
+        to: from.join(', '),
         subject: `re: ${incomingEmail.subject}`,
         html,
         messageId: incomingEmail.messageId,
@@ -49,6 +63,7 @@ export default async function createLog (incomingEmail: IncomingEmail, sequenceN
     provider: 'unknown',
     errorMessage: null,
     sequence_id: sequence.id,
+    tags,
     threadId: null,
     action_ids: [],
   }
@@ -67,5 +82,8 @@ export default async function createLog (incomingEmail: IncomingEmail, sequenceN
     throw new Error('Could not create log')
   }
 
-  return newLogs[0] as Log
+  return {
+    ...newLogs[0],
+    sequence,
+  } as Log
 }

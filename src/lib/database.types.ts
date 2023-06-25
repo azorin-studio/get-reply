@@ -13,11 +13,13 @@ export interface Database {
         Row: {
           created_at: string | null
           errorMessage: string | null
+          fullPrompt: string | null
           generation: string | null
           id: string
           log_id: string | null
           mailId: string | null
           prompt_id: string | null
+          prompt_name: string | null
           run_date: string | null
           status: string | null
           threadId: string | null
@@ -26,11 +28,13 @@ export interface Database {
         Insert: {
           created_at?: string | null
           errorMessage?: string | null
+          fullPrompt?: string | null
           generation?: string | null
           id?: string
           log_id?: string | null
           mailId?: string | null
           prompt_id?: string | null
+          prompt_name?: string | null
           run_date?: string | null
           status?: string | null
           threadId?: string | null
@@ -39,11 +43,13 @@ export interface Database {
         Update: {
           created_at?: string | null
           errorMessage?: string | null
+          fullPrompt?: string | null
           generation?: string | null
           id?: string
           log_id?: string | null
           mailId?: string | null
           prompt_id?: string | null
+          prompt_name?: string | null
           run_date?: string | null
           status?: string | null
           threadId?: string | null
@@ -77,6 +83,7 @@ export interface Database {
           sequence_id: string | null
           status: string | null
           subject: string | null
+          tags: string[]
           text: string | null
           threadId: string | null
           to: Json[] | null
@@ -100,6 +107,7 @@ export interface Database {
           sequence_id?: string | null
           status?: string | null
           subject?: string | null
+          tags?: string[]
           text?: string | null
           threadId?: string | null
           to?: Json[] | null
@@ -123,6 +131,7 @@ export interface Database {
           sequence_id?: string | null
           status?: string | null
           subject?: string | null
+          tags?: string[]
           text?: string | null
           threadId?: string | null
           to?: Json[] | null
@@ -217,6 +226,7 @@ export interface Database {
           steps: Json[]
           user_id: string | null
           visibility: string
+          weight: number | null
         }
         Insert: {
           created_at?: string | null
@@ -226,6 +236,7 @@ export interface Database {
           steps: Json[]
           user_id?: string | null
           visibility?: string
+          weight?: number | null
         }
         Update: {
           created_at?: string | null
@@ -235,6 +246,7 @@ export interface Database {
           steps?: Json[]
           user_id?: string | null
           visibility?: string
+          weight?: number | null
         }
         Relationships: [
           {

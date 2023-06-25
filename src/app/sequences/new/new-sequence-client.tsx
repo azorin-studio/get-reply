@@ -7,6 +7,7 @@ import { useEffect, useState } from "react"
 import slugify from "slugify"
 import CopyToClipboardBadge from "~/components/CopyToClipboardBadge"
 import StepForm from "~/components/StepForm"
+import VisibilityToggle from '~/components/VisibilityToggle'
 import { Sequence } from "~/lib/types"
 
 export default function DemoPage(props: any) {
@@ -21,7 +22,6 @@ export default function DemoPage(props: any) {
     }
     fetchUser()
   }, [])
-
 
   const [sequence, setSequence] = useState<Sequence>({
     name: '',
@@ -101,15 +101,21 @@ export default function DemoPage(props: any) {
     router.replace(`/sequences/${sequences[0].id}`)
   }
 
+  console.log(sequence.visibility === 'public')
+
   return (
     <main className="p-2 flex flex-col gap-4">
       <div className="flex flex-row justify-between">
         <h1 className="text-2xl font-bold">
           {!props.params || !props.params.id ? 'New' : 'Update'} Sequence
         </h1>
-        <CopyToClipboardBadge text={`${sequence.name}@getreply.app`} />
+
+        <div className="flex flex-row gap-2 rounded">      
+          <CopyToClipboardBadge text={`${sequence.name}@getreply.app`} />
+        </div>
       </div>
-      <div className="flex flex-col gap-2 rounded">      
+
+      <div className="flex flex-col gap-4">      
         <input 
           type="text"
           className='border p-1 rounded'
@@ -122,8 +128,8 @@ export default function DemoPage(props: any) {
             })
           }}
         />
-        <input 
-          type="text"
+        
+        <textarea 
           className='border p-1 rounded'
           placeholder='Description'
           defaultValue={sequence.description || ''}
@@ -135,7 +141,17 @@ export default function DemoPage(props: any) {
           }}
         />
 
-        <div className="flex flex-col gap-8 py-8">
+        <VisibilityToggle 
+          isPublic={sequence.visibility === 'public'}
+          onChange={(isPublic: boolean) => {
+            setSequence({
+              ...sequence,
+              visibility: isPublic ? 'public' : 'private',
+            })
+          }}
+        />
+
+        <div className="flex flex-col gap-4">
           {sequence.steps?.map((step, index) => (
             <StepForm
               key={step.id}

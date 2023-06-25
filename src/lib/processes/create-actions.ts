@@ -1,10 +1,12 @@
 import { addMilliseconds, parseISO } from "date-fns"
 import appendToLog from "~/lib/append-to-log"
 import supabaseAdminClient from "~/lib/server-admin-client"
-import { Log } from "~/lib/types"
+import { Action, Log } from "~/lib/types"
 import fetchAllPiecesFromLogId from "~/lib/fetch-all-pieces-from-log-id"
+import calculateRunDate from "../calculate-run-date"
+import parseDelayFromTags from "../parse-delay-from-tags"
 
-export default async function createActions (log_id: string): Promise<Log> {
+export default async function createActions (log_id: string): Promise<{log: Log, actions: Action[]}> {
   let { log, profile, sequence } = await fetchAllPiecesFromLogId(log_id!)
 
   await appendToLog(log, {
@@ -21,23 +23,23 @@ export default async function createActions (log_id: string): Promise<Log> {
 
   try {
     const actions = await Promise.all(sequence.steps.map(async (step: any) => {
-      // in days
-      let msDelay = step.delay * 1000 * 60 * 60 * 24
-      if (step.delayUnit === 'hours') {
-        msDelay = step.delay * 1000 * 60 * 60
-      }
-      if (step.delayUnit === 'minutes') {
-        msDelay = step.delay * 1000 * 60
-      }
-      if (step.delayUnit === 'seconds') {
-        msDelay = step.delay * 1000
+      // lets check if there are any delays in the tags
+      const { delay, delayUnit } = parseDelayFromTags(log.tags)
+      // if there is a delay, we need to calculate the run date
+      // otherwise, we can just use the log date
+      let run_date
+      if (delay && delayUnit) {
+        console.log(`[log_id: ${log.id}] found delay: ${delay} ${delayUnit}`)
+        run_date = calculateRunDate(delay, delayUnit, log.date!)
+      } else {
+        console.log(`[log_id: ${log.id}] using step delay: ${step.delay} ${step.delayUnit}`)
+        run_date = calculateRunDate(step.delay, step.delayUnit, log.date!)
       }
 
       const { error, data: action } = await supabaseAdminClient
         .from('actions')
         .insert({
-          // delay needs to be in ms
-          run_date: addMilliseconds(parseISO(log!.date!), msDelay).toISOString(),
+          run_date,
           prompt_id: step.prompt_id,
           prompt_name: step.prompt_name,
           generation: '', // placeholder
@@ -56,7 +58,7 @@ export default async function createActions (log_id: string): Promise<Log> {
     console.log(`[log_id: ${log.id}] made actions: [${actions.map(action => action.id).join(', ')}]`)
     await appendToLog(log, { status: 'verified', action_ids: actions.map(action => action.id), })
 
-    return log
+    return { log, actions }
   } catch (error: any) {
     log = await appendToLog(log, { status: 'error', errorMessage: error.message })
     throw error

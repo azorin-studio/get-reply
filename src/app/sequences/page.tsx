@@ -28,10 +28,21 @@ export default async function Page() {
 
   return (
     <main className="p-2 flex flex-col gap-4">
-      <h1 className="text-2xl font-bold">
-        Sequences
-      </h1>
-
+      <div className='flex flex-row justify-between'>
+        <h1 className="text-2xl font-bold">
+          Sequences
+        </h1>
+        <Link 
+          className={classNames(
+            'text-sm border px-2.5 py-1.5',
+            'bg-blue-500 border-blue-600 text-white rounded border flex flex-row gap-2 items-center',
+            'hover:bg-blue-600'
+          )}
+          href="/sequences/new"
+        >
+          Create new sequence <LuPlus width={16} />
+        </Link>
+      </div>
       <p>
         Sequences are a series of steps that can be used to automate your email outreach. 
         You can create your own sequences or use one of the pre-built sequences below.
@@ -48,24 +59,13 @@ export default async function Page() {
       </div>
 
       <div className="flex flex-col gap-4 mt-6">
-        <div className='flex flex-row justify-between'>
-          <h2 className="text-xl font-bold">
-              My Sequences
-          </h2>
-          <Link 
-            className={classNames(
-              'text-sm border px-2.5 py-1.5',
-              'bg-blue-500 border-blue-600 text-white rounded border flex flex-row gap-2 items-center',
-              'hover:bg-blue-600'
-            )}
-            href="/sequences/new"
-          >
-            Create new sequence <LuPlus width={16} />
-          </Link>
-        </div>
+        <h2 className="text-xl font-bold">
+            My Sequences
+        </h2>  
+
         <div className="flex flex-col gap-4">
           {sequences && sequences
-            .filter((sequence) => sequence.visibility==='private')
+            .filter((sequence) => sequence.visibility === 'private')
             .map((sequence) => 
               <SequenceBadge key={sequence.id} sequence={sequence} />
             )
@@ -74,14 +74,8 @@ export default async function Page() {
           {sequences
             .filter((sequence) => sequence.visibility==='private')
             .length === 0 && (
-              <div className='p-4 text-center text-sm'>
-                You don&apos;t have any sequences yet. {' '}
-                <Link 
-                  href="/sequences/new"
-                  className='text-blue-500 hover:underline'
-                >
-                  Create one!
-                </Link>
+              <div className="flex flex-col gap-2">
+                <div>You have no sequences yet. </div>
               </div>
             )}
         </div>

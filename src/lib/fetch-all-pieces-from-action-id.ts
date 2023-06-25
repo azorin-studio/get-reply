@@ -43,7 +43,12 @@ export default async function fetchAllPiecesFromActionId(action_id: string): Pro
   if (!sequence) throw new Error('Could not find sequence')
   
   if (!sequence.steps || sequence.steps.length === 0) {
-    const { sequenceName } = parseSequenceName(log)
+    const { sequenceName } = parseSequenceName({
+      to: log.to,
+      cc: log.cc,
+      bcc: log.bcc,
+      headers: log.headers
+    })
     await appendToLog(log, { status: 'error', errorMessage: `[sequence:${sequenceName}] has no steps` })
     throw new Error(`[sequence:${sequenceName}] has no steps`)
   }

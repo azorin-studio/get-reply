@@ -10,19 +10,10 @@ import collab from './processes/collab'
 import fetchAllPiecesFromActionId from '~/lib/fetch-all-pieces-from-action-id'
 import followup from './processes/followup'
 import { IncomingEmail, Log } from '~/lib/types'
-import parseSequenceName from '~/lib/parse-sequence-name'
-import createLog from '~/lib/create-log'
+import createLog from './create-log'
 
 export const processIncomingEmail = async (incomingEmail: IncomingEmail) => {
-  console.log(`Running process incoming email`)
-  const { sequenceName } = parseSequenceName(incomingEmail as IncomingEmail)
-  console.log(`Incoming email has sequence ${sequenceName}`)
-
-  if (!sequenceName) {
-    throw new Error('No sequence found')
-  }
-
-  let log: Log | null = await createLog(incomingEmail as IncomingEmail, sequenceName)
+  const log: Log | null = await createLog(incomingEmail as IncomingEmail)
   await inngest.send({ 
     id: `queue/create-actions-${log.id}`,
     name: 'queue/create-actions',
@@ -43,7 +34,7 @@ const inngestCreateActions = inngest.createFunction(
     const log = await getLogById(event.data.log_id)
     log?.action_ids?.forEach(async (action_id: string) => {
       console.log(`[action_id: ${action_id}]: sending to queue/generate`)
-      // side effect
+      // side effect, maybe should split with steps
       await inngest.send({ 
         id: `queue/generate-${action_id}`,
         name: 'queue/generate', 
