@@ -5,8 +5,9 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { LuPlus } from 'react-icons/lu'
 import SequenceBadge from '~/components/SequenceBadge'
+import SequencesWelcomeMessage from '~/components/SequencesWelcomeMessage'
 import { Database } from '~/lib/database.types'
-import { Sequence } from '~/lib/types'
+import { Log, Sequence } from '~/lib/types'
 
 export const revalidate = 0
 
@@ -26,28 +27,21 @@ export default async function Page() {
 
   const sequences: Sequence[] = res.data || []
 
+  const { data } = await supabase
+    .from('logs')
+    .select('*')
+    .order('created_at', { ascending: false })
+
+  const logs: Log[] = data || []
+
   return (
-    <main className="p-2 flex flex-col gap-4">
-      <div className='flex flex-row justify-between'>
-        <h1 className="text-2xl font-bold">
-          Sequences
-        </h1>
-        <Link 
-          className={classNames(
-            'text-sm border px-2.5 py-1.5',
-            'bg-blue-500 border-blue-600 text-white rounded border flex flex-row gap-2 items-center',
-            'hover:bg-blue-600'
-          )}
-          href="/sequences/new"
-        >
-          Create new sequence <LuPlus width={16} />
-        </Link>
-      </div>
-      <p>
-        Sequences are a series of steps that can be used to automate your email outreach. 
-        You can create your own sequences or use one of the pre-built sequences below.
-        Email a sequence to trigger it.
-      </p>
+    <main className="p-2 flex flex-col gap-8 mb-[30%]">
+      {logs.length === 0 && (
+        <SequencesWelcomeMessage />
+      )}
+      <h1 className="text-xl font-bold">
+        Public Sequences
+      </h1>
 
       <div className="flex flex-col gap-4">
         {sequences && sequences
@@ -59,9 +53,21 @@ export default async function Page() {
       </div>
 
       <div className="flex flex-col gap-4 mt-6">
-        <h2 className="text-xl font-bold">
-            My Sequences
-        </h2>  
+        <div className='flex flex-row justify-between'>
+          <h2 className="text-xl font-bold">
+              My Sequences
+          </h2>
+          <Link 
+            className={classNames(
+              'text-sm border px-2.5 py-1.5',
+              'bg-blue-500 border-blue-600 text-white rounded border flex flex-row gap-2 items-center',
+              'hover:bg-blue-600'
+            )}
+            href="/sequences/new"
+          >
+            Create new sequence <LuPlus width={16} />
+          </Link>  
+        </div>
 
         <div className="flex flex-col gap-4">
           {sequences && sequences

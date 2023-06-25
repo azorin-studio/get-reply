@@ -36,11 +36,11 @@ export default async function Page() {
           </div>
         )}
 
-        <div className="flex flex-col divide-y border rounded">
-          {logs.map((log) => (
-            <LogBadge key={log.id} log={log} />
-          ))}
-        </div>
+        {logs && logs.length > 0 && (
+          <div className="flex flex-col divide-y border rounded">
+          {logs.map((log) => ( <LogBadge key={log.id} log={log} /> )
+        )}
+        </div>)}
       </div>
     </main>
   )
