@@ -1,23 +1,19 @@
-'use client'
 
 import { format } from 'date-fns'
 import { Log, Sequence } from '~/lib/types'
+import classNames from 'classnames'
+import Link from 'next/link'
+// import * as Popover from '@radix-ui/react-popover'
+// import { DotsVerticalIcon } from '@radix-ui/react-icons'
+import { statusColors } from './status-colors'
+import EmailBody from './EmailBody'
 import StatusBadge from './StatusBadge'
 import StepBody from './StepBody'
-import classNames from 'classnames'
-import { useState } from 'react'
-import Link from 'next/link'
-
-import * as Popover from '@radix-ui/react-popover'
-import { DotsVerticalIcon } from '@radix-ui/react-icons'
-import { statusColors } from './status-colors'
 
 export default function LogBody(props: { log: Log, sequence: Sequence }) {
   const { log, sequence } = props
 
   const statusColor = (log.status && statusColors[log.status]) || 'blue'
-
-  const [showAll, setShowAll] = useState(false)
 
   return (
     <div className="w-full flex flex-col gap-4">
@@ -48,7 +44,7 @@ export default function LogBody(props: { log: Log, sequence: Sequence }) {
                 </span>
               }
             </div>
-            <Popover.Root>
+            {/* <Popover.Root>
               <Popover.Trigger 
                 className={classNames(
                   'text-slate-700 hover:text-slate-500'
@@ -82,7 +78,7 @@ export default function LogBody(props: { log: Log, sequence: Sequence }) {
                   <Popover.Arrow className="fill-white" />
                 </Popover.Content>
               </Popover.Portal>
-            </Popover.Root>
+            </Popover.Root> */}
           </div>
         </div>
 
@@ -92,25 +88,7 @@ export default function LogBody(props: { log: Log, sequence: Sequence }) {
           </div>
         }
 
-        <div className="flex flex-col gap-2 p-2">
-          <div
-            className={classNames(
-              "whitespace-pre-wrap text-sm max-w-full truncate",
-              showAll ? 'line-clamp-none' : 'line-clamp-[16]',
-            )}
-          >
-            {log.text?.trim()}
-          </div>
-          <button
-            className="text-sm font-medium text-blue-500 hover:text-blue-600"
-            onClick={() => {
-              setShowAll(!showAll)
-            }}
-          >
-            {showAll ? '-' : '+'} Show {showAll ? 'less' : 'all'}
-          </button>
-        </div>
-
+        {log.text && <EmailBody text={log.text} />}
       </div>
 
       {log.action_ids?.map((action_id, index) => (

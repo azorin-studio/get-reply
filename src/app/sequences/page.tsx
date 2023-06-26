@@ -16,7 +16,6 @@ export default async function Page() {
   const { data: { session } } = await supabase.auth.getSession()
 
   if (!session) {
-    console.log('My Account: session does not exist, redirecting to /')
     return redirect('/') 
   }
 

@@ -24,7 +24,6 @@ export default async function Page() {
   const { data: { session } } = await supabase.auth.getSession()
 
   if (session) {
-    console.log('session exists, redirecting to /sequences')
     return redirect('/sequences') 
   }
 

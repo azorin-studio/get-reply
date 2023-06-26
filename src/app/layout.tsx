@@ -8,6 +8,8 @@ import { Database } from "~/lib/database.types"
 import SupabaseProvider from "~/lib/provider"
 import "~/styles/globals.css"
 
+export const dynamic = 'force-dynamic'
+
 export const metadata = {
   title: "GetReply",
   description: "Get Reply helps you follow up on your emails.",

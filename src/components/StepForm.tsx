@@ -25,7 +25,7 @@ export default function StepForm(props: {
       if (prompts) setPrompts(prompts)
     }
     fetchPrompts()
-  }, [])
+  }, [supabase])
   
   return (
     <div key={step.id} className='flex flex-row gap-2 items-center justify-between'>

@@ -10,7 +10,6 @@ import { DotsVerticalIcon } from '@radix-ui/react-icons'
 
 import classNames from 'classnames'
 import Link from 'next/link'
-import { Buffer } from 'buffer';
 import { statusColors } from './status-colors'
 import { Database } from '~/lib/database.types'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
@@ -46,7 +45,7 @@ const UnpureAction = (props: {
       setRefreshing(false)
     }
     fetchAction()
-  }, [])
+  }, [action_id, supabase])
 
   const retryAction = async (action_id: string) => {
     setRefreshing(true)
@@ -116,7 +115,7 @@ const UnpureAction = (props: {
                 )}
               >
                 <Link
-                  href={`/prompts/${action.prompt_id}${logText && `?text=${Buffer.from(logText).toString('base64')}`}`}
+                  href={`/prompts/${action.prompt_id}${logText && `?text=${encodeURIComponent(logText)}`}`}
                   legacyBehavior
                 >
                   <div

@@ -5,11 +5,12 @@ const nextConfig = {
   reactStrictMode: true,
   experimental: {
     appDir: true,
+    serverActions: true,
   },
   webpack: (config) => {
     config.resolve.fallback = { fs: false };
     return config;
-  },
+  }
 }
 
 module.exports = nextConfig

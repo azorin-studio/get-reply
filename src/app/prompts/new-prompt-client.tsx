@@ -32,7 +32,7 @@ export default function NewPromptClient(props: any) {
   const [timer, setTimer] = useState<null | string>(null)
   const [content, setContent] = useState<string | null>(
     props.searchParams?.text ? 
-      Buffer.from(props.searchParams?.text, 'base64').toString('ascii')
+      decodeURIComponent(props.searchParams?.text)
     : 
       DEFAULT_EMAIL
   )
@@ -45,6 +45,7 @@ export default function NewPromptClient(props: any) {
 
   useEffect(() => {
     const fetchPrompts = async () => {
+      const supabase = createClientComponentClient()
       const { data: prompts, error } = await supabase
         .from('prompts')
         .select('*')
@@ -63,7 +64,7 @@ export default function NewPromptClient(props: any) {
       setUser(user)
     }
     fetchUser()
-  }, [])
+  }, [supabase.auth])
 
   useEffect(() => {
     if (!props.params) {
@@ -75,7 +76,7 @@ export default function NewPromptClient(props: any) {
     if (promptIndex > -1) {
       setActivePrompt(prompts[promptIndex])
     } 
-  }, [prompts])
+  }, [prompts, props.params, router])
 
   const deletePrompt = async () => {
     if (!activePrompt || !activePrompt.prompt) {
@@ -386,9 +387,7 @@ export default function NewPromptClient(props: any) {
             'flex flex-row',
             'items-center text-sm justify-end gap-2'
           )}
-      >
-        
-      
+      >     
         <div className="text-red-600">{!busy && error}</div>
 
         <button

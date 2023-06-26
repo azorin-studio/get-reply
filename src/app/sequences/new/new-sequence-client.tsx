@@ -22,7 +22,7 @@ export default function DemoPage(props: any) {
       setUser(user)
     }
     fetchUser()
-  }, [])
+  }, [supabase.auth])
 
   const [sequence, setSequence] = useState<Sequence>({
     name: '',
@@ -62,7 +62,7 @@ export default function DemoPage(props: any) {
     }
 
     fetchSequence()
-  }, [props.params?.id, user])
+  }, [user, supabase, props.params])
 
   const saveSequence = async () => {
     setError(null)

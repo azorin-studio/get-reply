@@ -7,8 +7,6 @@ import { Log, Sequence } from '~/lib/types'
 
 export const revalidate = 0
 
-// ├ λ /logs/[id]                             3.08 kB         147 kB
-
 export default async function Page(props: { params: { id: string } }) {
   const id = props.params.id
   const supabase = createServerComponentClient<Database>({ cookies })

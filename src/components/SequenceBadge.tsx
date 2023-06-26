@@ -19,7 +19,7 @@ export default function SequenceBadge(props: { sequence: Sequence }) {
       setUser(user)
     }
     fetchUser()
-  }, [])
+  }, [supabase.auth])
   
   const handleDelete = async (sequence: Sequence) => {
     const { error } = await supabase
