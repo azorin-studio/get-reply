@@ -77,8 +77,6 @@ const UnpureAction = (props: {
     )
   }
 
-  
-
   return (      
     <div className="w-full flex flex-col border rounded divide-y">
       <div className="w-full p-2 flex flex-row items-center justify-between bg-slate-50">

@@ -1,19 +1,20 @@
+'use server'
+
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
+import LogActionBar from '~/components/LogActionBar'
 import LogBody from '~/components/LogBody'
 import { Database } from '~/lib/database.types'
 import { Log, Sequence } from '~/lib/types'
 
-export const revalidate = 0
+export default async function Page({ params }: { params: { id: string } }) {
+  const id = params.id
 
-export default async function Page(props: { params: { id: string } }) {
-  const id = props.params.id
   const supabase = createServerComponentClient<Database>({ cookies })
   const { data: { session } } = await supabase.auth.getSession()
 
   if (!session) {
-    console.log('My Account: session does not exist, redirecting to /')
     return redirect('/') 
   }
 
@@ -33,7 +34,8 @@ export default async function Page(props: { params: { id: string } }) {
       <div className="flex flex-row justify-between">
         <h1 className="text-2xl font-bold">
           Log
-        </h1>  
+        </h1>
+        {log && log.id && <LogActionBar id={log.id} />}
       </div>
       {log && 
         <LogBody
