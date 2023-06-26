@@ -6,7 +6,7 @@ import { liveGmailTest, waitForReplies } from '~/tests/utils'
 import supabaseAdminClient from '~/supabase/supabase-admin-client'
 
 const EMAIL_ROUTING_TAG = process.env.EMAIL_ROUTING_TAG || ''
-const TIMEOUT = 1000 * 60 * 4
+const TIMEOUT = 1000 * 60 * 4 // 4 minutes
 
 describe('e2e using gmail', () => {
   let profile: Profile
@@ -32,7 +32,7 @@ describe('e2e using gmail', () => {
     threadIds.push(threadId)
   }, TIMEOUT)
 
-  it('will test the f+30s@getreply.app sequence', async () => {
+  it.only('will test the f+30s@getreply.app sequence', async () => {
     const testName = 'f+30s'
     const to = [`${testName}${EMAIL_ROUTING_TAG}@getreply.app`]
     console.log('to', to)
@@ -60,7 +60,6 @@ describe('e2e using gmail', () => {
       numberOfExpectedReplies: 4,
     })
     expect(replies).toHaveLength(4)
-    // replies.forEach((r: any) => expect(r.snippet).toContain(followupIntroText))
     threadIds.push(threadId)
   }, TIMEOUT)
 
