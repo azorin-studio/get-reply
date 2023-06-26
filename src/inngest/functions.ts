@@ -16,10 +16,12 @@ import createLog from '~/db-admin/create-log'
 export const processIncomingEmail = async (incomingEmail: IncomingEmail) => {
   console.log(`Running process incoming email`)
   const { sequenceName } = parseSequenceName(incomingEmail as IncomingEmail)
+  // could check here for timers like 5min@getreply.app
+
   console.log(`Incoming email has sequence ${sequenceName}`)
 
   if (!sequenceName) {
-    throw new Error('No sequence found')
+    throw new Error('No sequence name parsed from incoming email')
   }
 
   let log: Log | null = await createLog(incomingEmail as IncomingEmail, sequenceName)

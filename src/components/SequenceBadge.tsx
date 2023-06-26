@@ -42,16 +42,15 @@ export default function SequenceBadge(props: { sequence: Sequence }) {
             />
           </div>
           <div className='truncate text-slate-500'>
-            {sequence.description}
           </div>
         </div>
 
         <div className="flex flex-row items-center gap-2 justify-between"> 
-          {!isHovered && (user && user.id === sequence.user_id) &&
+          {/* {!isHovered && (user && user.id === sequence.user_id) &&
             <div>
               {sequence.created_at && formatDistance(new Date(sequence.created_at), new Date(), { addSuffix: true }) }
             </div>
-          }
+          } */}
 
           {isHovered && (user && user.id === sequence.user_id) &&
             <button
@@ -70,7 +69,6 @@ export default function SequenceBadge(props: { sequence: Sequence }) {
             <Link
               href={`/sequences/${sequence.id}`}
               className='text-blue-500 hover:underline'
-              // legacyBehavior
             >
               Edit
             </Link>

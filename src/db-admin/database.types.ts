@@ -13,6 +13,7 @@ export interface Database {
         Row: {
           created_at: string | null
           errorMessage: string | null
+          fullPrompt: string | null
           generation: string | null
           id: string
           log_id: string | null
@@ -26,6 +27,7 @@ export interface Database {
         Insert: {
           created_at?: string | null
           errorMessage?: string | null
+          fullPrompt?: string | null
           generation?: string | null
           id?: string
           log_id?: string | null
@@ -39,6 +41,7 @@ export interface Database {
         Update: {
           created_at?: string | null
           errorMessage?: string | null
+          fullPrompt?: string | null
           generation?: string | null
           id?: string
           log_id?: string | null
@@ -217,6 +220,7 @@ export interface Database {
           steps: Json[]
           user_id: string | null
           visibility: string
+          weight: number | null
         }
         Insert: {
           created_at?: string | null
@@ -226,6 +230,7 @@ export interface Database {
           steps: Json[]
           user_id?: string | null
           visibility?: string
+          weight?: number | null
         }
         Update: {
           created_at?: string | null
@@ -235,6 +240,7 @@ export interface Database {
           steps?: Json[]
           user_id?: string | null
           visibility?: string
+          weight?: number | null
         }
         Relationships: [
           {

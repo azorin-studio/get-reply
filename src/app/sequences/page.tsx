@@ -27,7 +27,7 @@ export default async function Page() {
   const res = await supabase
     .from('sequences')
     .select('*')
-    .order('created_at', { ascending: false })
+    .order('weight', { ascending: true })
 
   const sequences: Sequence[] = res.data || []
 
@@ -40,9 +40,7 @@ export default async function Page() {
       </h1>
 
       <p>
-        Sequences are a series of steps that can be used to automate your email outreach. 
-        You can create your own sequences or use one of the pre-built sequences below.
-        Email a sequence to trigger it.
+        Email a sequence and GetReply will response at that time with a draft follow up email. No hassle.
       </p>
 
       <div className="flex flex-col gap-4">

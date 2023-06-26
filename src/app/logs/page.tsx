@@ -40,20 +40,7 @@ export default async function Page() {
       <div>
         {logs.length === 0 && (
           <div className="flex flex-col gap-2">
-            <div>You have no logs yet. </div>
-            <div>
-              
-              To get started send a test email to <CopyToClipboardBadge text="haiku@getreply.app" />. 
-              GetReply will respond with a short
-              <Link
-                href="https://en.wikipedia.org/wiki/Haiku"
-                className="mx-1 items-center text-blue-600 space-x-2 flex font-bold sm:inline-block hover:underline"
-              >
-                haiku
-              </Link>.
-            </div>
-            <div>
-              You can also browse the available {' '}
+            <div>You have no logs yet. You can also browse the available {' '}
               <Link
                 href="/sequences"
                 className="items-center text-blue-600 space-x-2 flex font-bold sm:inline-block hover:underline"
