@@ -1,22 +1,15 @@
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
-import Link from 'next/link'
 import { redirect } from 'next/navigation'
-import CopyToClipboardBadge from '~/components/CopyToClipboardBadge'
 import LogBadge from '~/components/LogBadge'
-import { Database } from '~/db-admin/database.types'
-import { Log } from '~/db-admin/types'
+import { Database } from '~/lib/database.types'
+import { Log } from '~/lib/types'
 
 export const revalidate = 0
 
 export default async function Page() {
-  const supabase = createServerComponentClient<Database>({
-    cookies,
-  })
-
-  const {
-    data: { session },
-  } = await supabase.auth.getSession()
+  const supabase = createServerComponentClient<Database>({ cookies })
+  const { data: { session } } = await supabase.auth.getSession()
 
   if (!session) {
     console.log('My Account: session does not exist, redirecting to /')
@@ -36,27 +29,18 @@ export default async function Page() {
         Logs
       </h1>
 
-
       <div>
         {logs.length === 0 && (
           <div className="flex flex-col gap-2">
-            <div>You have no logs yet. You can also browse the available {' '}
-              <Link
-                href="/sequences"
-                className="items-center text-blue-600 space-x-2 flex font-bold sm:inline-block hover:underline"
-              >
-                sequences
-              </Link>{' '}
-              or make your own.
-            </div>
+            <div>You have no logs yet. </div>
           </div>
         )}
 
-        <div className="flex flex-col gap-4">
-          {logs.map((log) => (
-            <LogBadge key={log.id} log={log} />
-          ))}
-        </div>
+        {logs && logs.length > 0 && (
+          <div className="flex flex-col divide-y border rounded">
+          {logs.map((log) => ( <LogBadge key={log.id} log={log} /> )
+        )}
+        </div>)}
       </div>
     </main>
   )

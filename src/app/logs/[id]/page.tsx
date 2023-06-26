@@ -2,20 +2,17 @@ import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import LogBody from '~/components/LogBody'
-import { Database } from '~/db-admin/database.types'
-import { Log, Sequence } from '~/db-admin/types'
+import { Database } from '~/lib/database.types'
+import { Log, Sequence } from '~/lib/types'
 
 export const revalidate = 0
 
+// ├ λ /logs/[id]                             3.08 kB         147 kB
+
 export default async function Page(props: { params: { id: string } }) {
   const id = props.params.id
-  const supabase = createServerComponentClient<Database>({
-    cookies,
-  })
-
-  const {
-    data: { session },
-  } = await supabase.auth.getSession()
+  const supabase = createServerComponentClient<Database>({ cookies })
+  const { data: { session } } = await supabase.auth.getSession()
 
   if (!session) {
     console.log('My Account: session does not exist, redirecting to /')
@@ -35,9 +32,11 @@ export default async function Page(props: { params: { id: string } }) {
 
   return (
     <main className="p-2 flex flex-col gap-4">
-      <h1 className="text-2xl font-bold">
-        Log
-      </h1>
+      <div className="flex flex-row justify-between">
+        <h1 className="text-2xl font-bold">
+          Log
+        </h1>  
+      </div>
       {log && 
         <LogBody
           log={log} 

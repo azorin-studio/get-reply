@@ -1,16 +1,14 @@
 "use client"
 
 import fetch from 'isomorphic-fetch'
-import { LuLoader, LuPlus } from "react-icons/lu"
 import ms from "ms"
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from "react"
 import classNames from 'classnames'
 import PromptSelector from '~/components/PromptSelector'
-import { Prompt } from '~/db-admin/types'
-import usePrompts from "~/hooks/use-prompts"
-import { useSupabase } from '~/hooks/use-supabase'
-import useUser from '~/hooks/use-user'
+import { Prompt } from '~/lib/types'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { PieChartIcon, PlusIcon } from '@radix-ui/react-icons'
 
 const DEFAULT_EMAIL = `Dear Hiring Manager, 
 
@@ -24,13 +22,11 @@ Mike Smith`
 const DEFAULT_RESULT = null
 
 export default function NewPromptClient(props: any) {
-  console.log({ props })
-  const { supabase } = useSupabase()
-  const prompts = usePrompts()  
-
+  const supabase = createClientComponentClient()
   const router = useRouter()
 
   const [creatingNew, setCreatingNew] = useState<boolean>(false)
+  const [subject, setSubject] = useState<string | null>(null)
   const [busy, setBusy] = useState<boolean>(false)
   const [result, setResult] = useState<null>(DEFAULT_RESULT)
   const [timer, setTimer] = useState<null | string>(null)
@@ -44,12 +40,35 @@ export default function NewPromptClient(props: any) {
   const [error, setError] = useState<null | string>(null)
 
   const [saveBusy, setSaveBusy] = useState<string>('Save')
+  const [user, setUser] = useState<any>(null)
+  const [prompts, setPrompts] = useState<Prompt[]>([])
 
-  const user = useUser()
+  useEffect(() => {
+    const fetchPrompts = async () => {
+      const { data: prompts, error } = await supabase
+        .from('prompts')
+        .select('*')
+        .order('id', { ascending: true })
+        .limit(10)
+
+      if (error) console.error(error)
+      if (prompts) setPrompts(prompts)
+    }
+    fetchPrompts()
+  }, [])
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const { data: { user }, error } = await supabase.auth.getUser()
+      setUser(user)
+    }
+    fetchUser()
+  }, [])
 
   useEffect(() => {
     if (!props.params) {
       setActivePrompt(prompts[0])
+      prompts[0] && router.push(`/prompts/${prompts[0].id}`)
       return 
     }
     const promptIndex = prompts.findIndex((p: any) => p.id === props.params.id)
@@ -138,7 +157,7 @@ export default function NewPromptClient(props: any) {
         fullPrompt = `${fullPrompt}\n\nHere is the email text:\n\n"{email}""`
       }
 
-      fullPrompt = fullPrompt.replace('{email}', content)
+      fullPrompt = fullPrompt.replace('{body}', content).replace('{subject}', subject || '')
 
       setBusy(true)
       const t1 = new Date()
@@ -229,6 +248,7 @@ export default function NewPromptClient(props: any) {
             <button 
               className="text-sm border rounded p-1"
               onClick={(e) => setCreatingNew(true)}
+
             >
               Edit
             </button>
@@ -277,7 +297,7 @@ export default function NewPromptClient(props: any) {
               )}
               onClick={handleNewPromptClick}
             >
-              Create new prompt <LuPlus width={16} />
+              Create new prompt <PlusIcon width={16} />
             </button>
           )}
         </div>
@@ -308,10 +328,23 @@ export default function NewPromptClient(props: any) {
       )} 
     
       <div className="text-sm flex flex-col bg-slate-50 rounded border">
-        <div className="p-2 text-slate-500 border-b">Email</div>
+        <div className="p-2 text-slate-500 border-b">Email subject</div>
+        <div className="whitespace-pre-wrap p-2 bg-white rounded-b">
+          <input
+            name="subject"
+            placeholder="Enter the email subject"
+            className="w-full h-full bg-transparent focus:outline-none"
+            value={subject || ""}
+            onChange={(e) => setSubject(e.target.value)}
+          />
+        </div>
+      </div>
+
+      <div className="text-sm flex flex-col bg-slate-50 rounded border">
+        <div className="p-2 text-slate-500 border-b">Email body</div>
         <div className="whitespace-pre-wrap p-2 bg-white rounded-b">
           <textarea
-            name="email"
+            name="body"
             rows={10}
             placeholder="Enter the email you want follow ups for"
             className="w-full h-full bg-transparent focus:outline-none"
@@ -327,7 +360,7 @@ export default function NewPromptClient(props: any) {
             {!busy && 'Response'}
             {busy && (
               <div className="inline-flex items-center flex-row gap-1">
-                <LuLoader className="h-[16px] animate-spin" />
+                <PieChartIcon className="h-[16px] animate-spin" />
                 Generating, this can take a few seconds...
               </div>
             )} 

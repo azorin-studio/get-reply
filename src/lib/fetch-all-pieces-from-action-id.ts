@@ -1,10 +1,10 @@
-import appendToAction from "~/db-admin/append-to-action"
-import getProfileFromEmail from "~/db-admin/get-profile-from-email"
-import { Action, Log, Profile, Prompt, Sequence } from "~/db-admin/types"
-import getActionById from "~/db-admin/get-action-by-id"
-import getLogById from "~/db-admin/get-log-by-id"
-import getPromptById from "~/db-admin/get-prompt-by-id"
-import appendToLog from "~/db-admin/append-to-log"
+import appendToAction from "~/lib/append-to-action"
+import getProfileFromEmail from "~/lib/get-profile-from-email"
+import { Action, Log, Profile, Prompt, Sequence } from "~/lib/types"
+import getActionById from "~/lib/get-action-by-id"
+import getLogById from "~/lib/get-log-by-id"
+import getPromptById from "~/lib/get-prompt-by-id"
+import appendToLog from "~/lib/append-to-log"
 import parseSequenceName from "~/lib/parse-sequence-name"
 
 export default async function fetchAllPiecesFromActionId(action_id: string): Promise<{ 
@@ -43,7 +43,12 @@ export default async function fetchAllPiecesFromActionId(action_id: string): Pro
   if (!sequence) throw new Error('Could not find sequence')
   
   if (!sequence.steps || sequence.steps.length === 0) {
-    const { sequenceName } = parseSequenceName(log)
+    const { sequenceName } = parseSequenceName({
+      to: log.to,
+      cc: log.cc,
+      bcc: log.bcc,
+      headers: log.headers
+    })
     await appendToLog(log, { status: 'error', errorMessage: `[sequence:${sequenceName}] has no steps` })
     throw new Error(`[sequence:${sequenceName}] has no steps`)
   }

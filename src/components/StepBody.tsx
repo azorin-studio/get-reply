@@ -2,15 +2,18 @@
 
 import { format, formatDistance } from 'date-fns'
 import { useEffect, useState } from 'react'
-import { Action } from '~/db-admin/types'
-import { useSupabase } from "~/hooks/use-supabase"
+import { Action } from '~/lib/types'
 import StatusBadge from './StatusBadge'
+
 import * as Popover from '@radix-ui/react-popover'
+import { DotsVerticalIcon } from '@radix-ui/react-icons'
+
 import classNames from 'classnames'
-import { LuMoreVertical } from 'react-icons/lu'
 import Link from 'next/link'
 import { Buffer } from 'buffer';
 import { statusColors } from './status-colors'
+import { Database } from '~/lib/database.types'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 export const revalidate = 0
 
 const UnpureAction = (props: { 
@@ -20,7 +23,7 @@ const UnpureAction = (props: {
   status?: string | null | undefined
 }) => {
   const { action_id, log_id, logText, status } = props
-  const { supabase } = useSupabase()
+  const supabase = createClientComponentClient<Database>()
   const [action, setAction] = useState<Action | null>(null)
   const [refreshing, setRefreshing] = useState<boolean>(false)
 
@@ -101,7 +104,7 @@ const UnpureAction = (props: {
                 'text-slate-700 hover:text-slate-500'
               )}
             >
-              <LuMoreVertical />
+              <DotsVerticalIcon />
             </Popover.Trigger>
 
             <Popover.Portal>

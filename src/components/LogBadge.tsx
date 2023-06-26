@@ -2,7 +2,7 @@
 
 import { format, formatDistance } from 'date-fns'
 import Link from 'next/link'
-import { Log } from '~/db-admin/types'
+import { Log } from '~/lib/types'
 import StatusBadge from './StatusBadge'
 import classNames from 'classnames'
 import { statusColors } from './status-colors'
@@ -19,8 +19,8 @@ export default function LogBadge(props: { log: Log }) {
       href={`/logs/${log.id}`}
       legacyBehavior
     >
-      <div className='border rounded-sm divide-y hover:cursor-pointer group'>
-        <div className="w-full p-2 flex flex-row items-center justify-between bg-slate-50 group-hover:bg-slate-100">
+      <div className='rounded-sm divide-y hover:cursor-pointer group'>
+        <div className="w-full p-2 flex flex-row items-center justify-between group-hover:bg-slate-50">
           <div className="flex flex-row gap-4 items-center">
             <div className="flex flex-col text-sm">
               <div className="font-bold">
@@ -46,13 +46,13 @@ export default function LogBadge(props: { log: Log }) {
           </div>
         </div>
 
-        {log.errorMessage &&
+        {/* {log.errorMessage &&
           <div className={`bg-${statusColor}-50 p-2 text-xs font-medium text-${statusColor}-500`}>
             {log.errorMessage}
           </div>
-        }
+        } */}
 
-        <div className="flex flex-row gap-4 p-2">
+        {/* <div className="flex flex-row gap-4 p-2">
           <div
             className={classNames(
               "line-clamp-3 whitespace-pre-wrap text-sm max-w-full truncate",
@@ -60,7 +60,7 @@ export default function LogBadge(props: { log: Log }) {
           >
             {log.text?.trim()}
           </div>
-        </div>
+        </div> */}
 
       </div>
 

@@ -1,21 +1,28 @@
 "use client"
 
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import classNames from "classnames"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import slugify from "slugify"
 import CopyToClipboardBadge from "~/components/CopyToClipboardBadge"
 import StepForm from "~/components/StepForm"
-import { Sequence } from "~/db-admin/types"
-import usePrompts from "~/hooks/use-prompts"
-import { useSupabase } from '~/hooks/use-supabase'
-import useUser from "~/hooks/use-user"
+import VisibilityToggle from '~/components/VisibilityToggle'
+import { Database } from '~/lib/database.types'
+import { Sequence } from "~/lib/types"
 
 export default function DemoPage(props: any) {
-  const { supabase } = useSupabase()
-  const prompts = usePrompts()
+  const supabase = createClientComponentClient<Database>()
   const router = useRouter()
-  const user = useUser()
+  const [user, setUser] = useState<any>(null)
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const { data: { user }, error } = await supabase.auth.getUser()
+      setUser(user)
+    }
+    fetchUser()
+  }, [])
 
   const [sequence, setSequence] = useState<Sequence>({
     name: '',
@@ -31,6 +38,7 @@ export default function DemoPage(props: any) {
       if (!props.params || !props.params.id || !user) {
         return
       }
+
       const { data: sequences, error } = await supabase
         .from("sequences")
         .select("*")
@@ -49,7 +57,7 @@ export default function DemoPage(props: any) {
         return
       }
 
-      const sequence = sequences[0]
+      const sequence: Sequence = sequences[0]
       if (sequence) setSequence(sequence)
     }
 
@@ -95,15 +103,21 @@ export default function DemoPage(props: any) {
     router.replace(`/sequences/${sequences[0].id}`)
   }
 
+  console.log(sequence.visibility === 'public')
+
   return (
     <main className="p-2 flex flex-col gap-4">
       <div className="flex flex-row justify-between">
         <h1 className="text-2xl font-bold">
           {!props.params || !props.params.id ? 'New' : 'Update'} Sequence
         </h1>
-        <CopyToClipboardBadge text={`${sequence.name}@getreply.app`} />
+
+        <div className="flex flex-row gap-2 rounded">      
+          <CopyToClipboardBadge text={`${sequence.name}@getreply.app`} />
+        </div>
       </div>
-      <div className="flex flex-col gap-2 rounded">      
+
+      <div className="flex flex-col gap-4">      
         <input 
           type="text"
           className='border p-1 rounded'
@@ -116,8 +130,8 @@ export default function DemoPage(props: any) {
             })
           }}
         />
-        <input 
-          type="text"
+        
+        <textarea 
           className='border p-1 rounded'
           placeholder='Description'
           defaultValue={sequence.description || ''}
@@ -129,7 +143,17 @@ export default function DemoPage(props: any) {
           }}
         />
 
-        <div className="flex flex-col gap-8 py-8">
+        <VisibilityToggle 
+          isPublic={sequence.visibility === 'public'}
+          onChange={(isPublic: boolean) => {
+            setSequence({
+              ...sequence,
+              visibility: isPublic ? 'public' : 'private',
+            })
+          }}
+        />
+
+        <div className="flex flex-col gap-4">
           {sequence.steps?.map((step, index) => (
             <StepForm
               key={step.id}
@@ -172,6 +196,7 @@ export default function DemoPage(props: any) {
                   ...sequence.steps,
                   {
                     prompt_id: null,
+                    prompt_name: null,
                     delay: 0,
                     delayUnit: 'days',
                   }

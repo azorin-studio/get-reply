@@ -11,11 +11,11 @@ import {
 import * as React from 'react';
 
 interface SequenceNotFoundProps {
-  sequenceName?: string | null;
+  sequenceName: string | null;
 }
 
 export const SequenceNotFound = ({
-  sequenceName = 'sequence@getreply.app',
+  sequenceName = 'placeholder-for-testing@getreply.app',
 }: SequenceNotFoundProps) => (
   <Html>
     <Head />
@@ -24,16 +24,14 @@ export const SequenceNotFound = ({
       <Container style={container}>
         <Heading style={h1}>Error from GetReply</Heading>
         
-        <Text style={{ ...text, marginBottom: '14px' }}>
+        <Text style={{ ...text }}>
           You tried to email the following GetReply sequence, but it doesn&apos;t exist.
         </Text>
-        <code style={code}>{sequenceName}@getreply.app</code>
+        <code style={{...code, margin: '12px 0'}}>{sequenceName}@getreply.app</code>
         <Text
           style={{
             ...text,
             color: '#ababab',
-            marginTop: '14px',
-            marginBottom: '16px',
           }}
         >
           Check out the list of sequences in <Link
@@ -51,27 +49,26 @@ export const SequenceNotFound = ({
 
 export default SequenceNotFound;
 
-const main = {
+export const main = {
   backgroundColor: '#ffffff',
 };
 
-const container = {
+export const container = {
   paddingLeft: '12px',
   paddingRight: '12px',
   margin: '0 auto',
 };
 
-const h1 = {
+export const h1 = {
   color: '#333',
   fontFamily:
     "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif",
   fontSize: '24px',
   fontWeight: 'bold',
-  margin: '40px 0',
   padding: '0',
 };
 
-const link = {
+export const link = {
   color: '#2754C5',
   fontFamily:
     "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif",
@@ -79,25 +76,15 @@ const link = {
   textDecoration: 'underline',
 };
 
-const text = {
+export const text = {
   color: '#333',
   fontFamily:
     "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif",
   fontSize: '14px',
-  margin: '24px 0',
+  margin: '0',
 };
 
-const footer = {
-  color: '#898989',
-  fontFamily:
-    "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif",
-  fontSize: '12px',
-  lineHeight: '22px',
-  marginTop: '12px',
-  marginBottom: '24px',
-};
-
-const code = {
+export const code = {
   display: 'inline-block',
   padding: '16px 4.5%',
   width: '90.5%',

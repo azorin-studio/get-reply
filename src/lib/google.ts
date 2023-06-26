@@ -228,6 +228,17 @@ export const getThreadById = async (id: string, refresh_token: string) => {
   return thread.data as any
 }
 
+export const trashThreadById = async (id: string, refresh_token: string) => {
+  const tokens = await refreshAccessToken(refresh_token)
+  oauth2Client.setCredentials(tokens)
+  const gmail = google.gmail({ version: 'v1', auth: oauth2Client })
+
+  await gmail.users.threads.trash({
+    userId: 'me',
+    id,
+  })
+}
+
 export const getMessageById = async (id: string, refresh_token: string) => {
   const tokens = await refreshAccessToken(refresh_token)
   oauth2Client.setCredentials(tokens)

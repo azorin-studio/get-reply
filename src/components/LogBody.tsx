@@ -1,14 +1,15 @@
 'use client'
 
 import { format } from 'date-fns'
-import { Log, Sequence } from '~/db-admin/types'
+import { Log, Sequence } from '~/lib/types'
 import StatusBadge from './StatusBadge'
 import StepBody from './StepBody'
 import classNames from 'classnames'
 import { useState } from 'react'
 import Link from 'next/link'
+
 import * as Popover from '@radix-ui/react-popover'
-import { LuMoreVertical } from 'react-icons/lu'
+import { DotsVerticalIcon } from '@radix-ui/react-icons'
 import { statusColors } from './status-colors'
 
 export default function LogBody(props: { log: Log, sequence: Sequence }) {
@@ -53,7 +54,7 @@ export default function LogBody(props: { log: Log, sequence: Sequence }) {
                   'text-slate-700 hover:text-slate-500'
                 )}
               >
-                <LuMoreVertical />
+                <DotsVerticalIcon />
               </Popover.Trigger>
 
               <Popover.Portal>

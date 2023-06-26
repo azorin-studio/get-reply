@@ -1,14 +1,24 @@
-import { introText as followupIntroText } from '~/inngest/processes/followup'
+import getProfileFromEmail from '~/lib/get-profile-from-email'
+import { trashThreadById } from '~/lib/google'
+import { introText as followupIntroText } from '~/components/emails/followup-reminder'
+import { Profile } from '~/lib/types'
 import { liveGmailTest, waitForReplies } from '~/tests/utils'
 
-
 const EMAIL_ROUTING_TAG = process.env.EMAIL_ROUTING_TAG || ''
-
+const TIMEOUT = 1000 * 60 * 2
 
 describe('e2e using gmail', () => {
+  let profile: Profile
+  let threadIds: string[] = []
 
+  beforeAll(async () => {
+    const FROM = process.env.TEST_GMAIL_USER
+    if (!FROM) throw new Error('No test gmail user found')
+    profile = await getProfileFromEmail(FROM)
+    if (!profile) throw new Error('No profile found')
+  })  
 
-  it.concurrent('should test sequence not found', async () => {
+  it('should test sequence not found', async () => {
     const testName = '404'
     const to = [`${testName}${EMAIL_ROUTING_TAG}@getreply.app`]
     const { messageId, threadId } = await liveGmailTest({ to })
@@ -18,12 +28,13 @@ describe('e2e using gmail', () => {
       numberOfExpectedReplies: 1,
     })
     replies.forEach((r: any) => expect(r.snippet).toContain('GetReply Sequence not found'))
-  }, 1000 * 60 * 1)
+    threadIds.push(threadId)
+  }, TIMEOUT)
 
-
-  it.concurrent('will test the now@getreply.app sequence', async () => {
-    const testName = 'now'
+  it('will test the f+30s@getreply.app sequence', async () => {
+    const testName = 'f+30s'
     const to = [`${testName}${EMAIL_ROUTING_TAG}@getreply.app`]
+    console.log('to', to)
     const { messageId, threadId } = await liveGmailTest({ to })
     const replies = await waitForReplies({
       threadId,
@@ -31,14 +42,13 @@ describe('e2e using gmail', () => {
       numberOfExpectedReplies: 1,
     })
     replies.forEach((r: any) => expect(r.snippet).toContain(followupIntroText))
-  }, 1000 * 60 * 1)
+    threadIds.push(threadId)
+  }, TIMEOUT)  
 
-  
-  it.concurrent('should test both now@getreply.app and 24seconds@getreply.app', async () => {
+  it('should test both f+30s@getreply.app and f+15s@getreply.app', async () => {
     const to = [
-      `now${EMAIL_ROUTING_TAG}@getreply.app`,
-      `24seconds${EMAIL_ROUTING_TAG}@getreply.app`,
-
+      `f+30s${EMAIL_ROUTING_TAG}@getreply.app`,
+      `f+15s${EMAIL_ROUTING_TAG}@getreply.app`
     ]
     const { messageId, threadId } = await liveGmailTest({ to })
     const replies = await waitForReplies({
@@ -47,7 +57,14 @@ describe('e2e using gmail', () => {
       numberOfExpectedReplies: 2,
     })
     replies.forEach((r: any) => expect(r.snippet).toContain(followupIntroText))
-  }, 1000 * 60 * 1)
+    threadIds.push(threadId)
+  }, TIMEOUT)
 
-
+  afterAll(async () => {
+    await Promise.all(
+      threadIds.map(async (threadId: string) => {
+        await trashThreadById(threadId, profile.refresh_token!)
+      })
+    )
+  })
 })

@@ -1,6 +1,6 @@
 
 import PostalMime from 'postal-mime';
-import { IncomingEmail } from '~/db-admin/types';
+import { IncomingEmail } from '~/lib/types';
 import parseSequenceName from '~/lib/parse-sequence-name';
 
 export interface Env {
@@ -23,7 +23,12 @@ const worker = {
       body: JSON.stringify(email)
     }
     
-    const { tags } = parseSequenceName(email)
+    const { tags } = parseSequenceName({
+      to: email.to,
+      cc: email.cc,
+      bcc: email.bcc,
+      headers: email.headers
+    })
 
     // if pc is in the tags send the email to https://pc.azorin.studio
     // if laptop is in the tags send the email to https://laptop.azorin.studio

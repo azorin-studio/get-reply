@@ -1,23 +1,19 @@
+import { PlusIcon } from '@radix-ui/react-icons'
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import classNames from 'classnames'
-import { cookies, headers } from 'next/headers'
+import { cookies } from 'next/headers'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
-import { LuPlus } from 'react-icons/lu'
 import SequenceBadge from '~/components/SequenceBadge'
-import { Database } from '~/db-admin/database.types'
-import { Sequence } from '~/db-admin/types'
+import SequencesWelcomeMessage from '~/components/SequencesWelcomeMessage'
+import { Database } from '~/lib/database.types'
+import { Log, Sequence } from '~/lib/types'
 
 export const revalidate = 0
 
 export default async function Page() {
-  const supabase = createServerComponentClient<Database>({
-    cookies,
-  })
-
-  const {
-    data: { session },
-  } = await supabase.auth.getSession()
+  const supabase = createServerComponentClient<Database>({ cookies })
+  const { data: { session } } = await supabase.auth.getSession()
 
   if (!session) {
     console.log('My Account: session does not exist, redirecting to /')
@@ -31,17 +27,21 @@ export default async function Page() {
 
   const sequences: Sequence[] = res.data || []
 
-  console.log(res)
+  const { data } = await supabase
+    .from('logs')
+    .select('*')
+    .order('created_at', { ascending: false })
+
+  const logs: Log[] = data || []
 
   return (
-    <main className="p-2 flex flex-col gap-4">
-      <h1 className="text-2xl font-bold">
-        Sequences
+    <main className="p-2 flex flex-col gap-8 mb-[30%]">
+      {logs.length === 0 && (
+        <SequencesWelcomeMessage />
+      )}
+      <h1 className="text-xl font-bold">
+        Public Sequences
       </h1>
-
-      <p>
-        Email a sequence and GetReply will response at that time with a draft follow up email. No hassle.
-      </p>
 
       <div className="flex flex-col gap-4">
         {sequences && sequences
@@ -65,12 +65,13 @@ export default async function Page() {
             )}
             href="/sequences/new"
           >
-            Create new sequence <LuPlus width={16} />
-          </Link>
+            Create new sequence <PlusIcon width={16} />
+          </Link>  
         </div>
+
         <div className="flex flex-col gap-4">
           {sequences && sequences
-            .filter((sequence) => sequence.visibility==='private')
+            .filter((sequence) => sequence.visibility === 'private')
             .map((sequence) => 
               <SequenceBadge key={sequence.id} sequence={sequence} />
             )
@@ -79,14 +80,8 @@ export default async function Page() {
           {sequences
             .filter((sequence) => sequence.visibility==='private')
             .length === 0 && (
-              <div className='p-4 text-center text-sm'>
-                You don&apos;t have any sequences yet. {' '}
-                <Link 
-                  href="/sequences/new"
-                  className='text-blue-500 hover:underline'
-                >
-                  Create one!
-                </Link>
+              <div className="flex flex-col gap-2">
+                <div>You have no sequences yet. </div>
               </div>
             )}
         </div>

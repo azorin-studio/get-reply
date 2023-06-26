@@ -1,6 +1,6 @@
 'use client'
-import { LuArrowUpRight } from 'react-icons/lu'
 import Link from 'next/link'
+import { ArrowTopRightIcon } from '@radix-ui/react-icons'
 
 const NewsletterForm = () => {
 
@@ -37,7 +37,7 @@ const NewsletterForm = () => {
           <span className="underline font-bold sm:inline-block">
           Try out the demo
           </span>
-          <LuArrowUpRight />
+          <ArrowTopRightIcon />
         </Link>
         </div>
     </form>

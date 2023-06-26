@@ -1,9 +1,9 @@
 "use client"
 import classNames from 'classnames'
-import { LuCopy, LuCopyCheck } from 'react-icons/lu'
 import React from 'react'
+import { ClipboardCopyIcon, ClipboardIcon } from '@radix-ui/react-icons'
 
-const CopyToClipboardBadge = ({ text }: { text: string }) => {
+const CopyToClipboardBadge = ({ text, className = '' }: { text: string, className?:string }) => {
   const [copied, setCopied] = React.useState(false)
   const copyToClipboard = () => {
     navigator.clipboard.writeText(text);
@@ -17,7 +17,10 @@ const CopyToClipboardBadge = ({ text }: { text: string }) => {
 
   return (
     <button
-      className={classNames("bg-slate-100 p-1 border rounded inline-flex flex-row gap-2 items-center")} 
+      className={classNames(
+        "bg-slate-100 p-1 border rounded inline-flex flex-row gap-2 items-center",
+        className
+      )} 
       onClick={copyToClipboard}
     >
       <span>
@@ -26,10 +29,10 @@ const CopyToClipboardBadge = ({ text }: { text: string }) => {
 
       <span className='text-xs text-slate-500'>
       {!copied && (
-        <LuCopy {...iconOpts} />
+        <ClipboardIcon {...iconOpts} />
       )}
       {copied && (
-        <LuCopyCheck {...iconOpts} />
+        <ClipboardCopyIcon {...iconOpts} />
       )}
       </span>
       <span className='text-xs text-slate-500'>

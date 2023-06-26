@@ -1,38 +1,30 @@
 "use client"
-import { createClientComponentClient, createServerComponentClient } from '@supabase/auth-helpers-nextjs'
-import { Auth } from '@supabase/auth-ui-react'
-import { ThemeSupa } from '@supabase/auth-ui-shared'
-import classNames from 'classnames'
-import { LuMailPlus } from 'react-icons/lu'
-import { cookies } from 'next/headers'
 import Link from 'next/link'
-import { Database } from '~/db-admin/database.types'
 import GoogleAuth from './GoogleAuth'
 import AzureAuth from './AzureAuth'
+import { EnvelopeClosedIcon } from '@radix-ui/react-icons'
 
 export default function Header(props: { user?: object | null }) {
-  const supabase = createClientComponentClient<Database>()
-
   const { user = null } = props
   return (
-    <header className="w-full sticky top-0 z-40 bg-white mx-auto">
-      <div className="flex h-16 items-center justify-between border-b border-b-slate-200 p-4">
-        <div className="flex gap-6 md:gap-10">
+    <header className="w-full h-auto">
+      <div className="flex bg-slate-100 sm:flex-row flex-col   sm:items-center justify-between border-b border-b-slate-200 p-4">
+        <div className="flex flex-col sm:flex-row gap-6 md:gap-10">
           <Link href="/" className="items-center space-x-2 flex">
-            <LuMailPlus />
+            <EnvelopeClosedIcon />
             <span className="font-bold sm:inline-block">
               Get Reply (ALPHA)
             </span>
           </Link>
         </div>
-        <nav className="flex flex-row gap-4 items-center">
+        <nav className="flex sm:flex-row flex-col gap-4 sm:items-center">
           {user && (
             <>
               <Link
-                href="/logs"
+                href="/sequences"
                 className="items-center space-x-2 flex font-bold sm:inline-block hover:underline"
               >
-                Logs
+                Sequences
               </Link>
               <Link
                 href="/prompts"
@@ -40,11 +32,12 @@ export default function Header(props: { user?: object | null }) {
               >
                 Prompts
               </Link>
+              
               <Link
-                href="/sequences"
+                href="/logs"
                 className="items-center space-x-2 flex font-bold sm:inline-block hover:underline"
               >
-                Sequences
+                Logs
               </Link>
               <Link
                 href="/logout"

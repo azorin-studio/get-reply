@@ -4,8 +4,8 @@ import { Analytics } from '@vercel/analytics/react'
 import { cookies } from "next/headers"
 import Footer from "~/components/Footer"
 import Header from "~/components/Header"
-import { Database } from "~/db-admin/database.types"
-import SupabaseProvider from "~/db-admin/provider"
+import { Database } from "~/lib/database.types"
+import SupabaseProvider from "~/lib/provider"
 import "~/styles/globals.css"
 
 export const metadata = {
@@ -14,13 +14,9 @@ export const metadata = {
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const supabase = createServerComponentClient<Database>({
-    cookies,
-  })
-  
-  const {
-    data: { session },
-  } = await supabase.auth.getSession()
+  const supabase = createServerComponentClient<Database>({ cookies })
+  const { data: { session } } = await supabase.auth.getSession()
+  const user = session && session.user || null
 
   return (
     <html lang="en" className="h-full bg-gray-50">
@@ -28,9 +24,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <SupabaseProvider>
           <div className="min-h-screen bg-white font-sans text-slate-800 antialiased">
             <div className="flex min-h-screen flex-col">
-              <Header 
-                user={session && session.user || null}
-              />
+              <Header user={user} />
               <div className="p-2 w-full max-w-4xl mx-auto grow"> 
                 {children}
               </div>
