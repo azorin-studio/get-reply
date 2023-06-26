@@ -10,7 +10,7 @@ import fetchAllPiecesFromLogId from "~/supabase/fetch-all-pieces-from-log-id"
 export const processIncomingEmail = async (incomingEmail: IncomingEmail) => {
   const log: Log | null = await createLog(supabaseAdminClient, incomingEmail as IncomingEmail)
   
-  if (!log || !log.id) {
+  if (!log || !log.id || !log.sequence) {
     throw new Error('Log not created')
   }
 

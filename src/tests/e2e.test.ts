@@ -6,7 +6,7 @@ import { liveGmailTest, waitForReplies } from '~/tests/utils'
 import supabaseAdminClient from '~/supabase/supabase-admin-client'
 
 const EMAIL_ROUTING_TAG = process.env.EMAIL_ROUTING_TAG || ''
-const TIMEOUT = 1000 * 60 * 2
+const TIMEOUT = 1000 * 60 * 4
 
 describe('e2e using gmail', () => {
   let profile: Profile
