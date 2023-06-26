@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useState } from "react"
 import classNames from 'classnames'
 import PromptSelector from '~/components/PromptSelector'
-import { Prompt } from '~/lib/types'
+import { Prompt } from '~/supabase/types'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { PieChartIcon, PlusIcon } from '@radix-ui/react-icons'
 

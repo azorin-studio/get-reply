@@ -1,4 +1,4 @@
-import { IncomingEmail } from "~/lib/types"
+import { IncomingEmail } from "~/supabase/types"
 
 interface ICreateTestEmail {
   fromAddress?: string,

@@ -1,9 +1,10 @@
-import deleteLogById from '~/lib/delete-log-by-id'
-import { IncomingEmail } from '~/lib/types'
-import createActions from '~/lib/processes/create-actions'
-import createLog from '~/lib/create-log'
+import deleteLogById from '~/supabase/delete-log-by-id'
+import { IncomingEmail } from '~/supabase/types'
+import createActions from '~/inngest/jobs/create-actions'
+import createLog from '~/supabase/create-log'
 import createTestEmail from './create-test-email'
 import { parseISO } from 'date-fns'
+import supabaseAdminClient from '~/supabase/supabase-admin-client'
 
 describe('process email', () => {
   it('should parse 1second delay', async () => {
@@ -13,13 +14,13 @@ describe('process email', () => {
       date: now.toISOString()
     })
 
-    const log: any = await createLog(email as IncomingEmail)
+    const log: any = await createLog(supabaseAdminClient, email as IncomingEmail)
     const { actions } = await createActions(log.id)
 
     expect(actions.length).toBe(1)
     const tagFromNow = new Date(now.getTime() + 1 * 1000)
     expect(parseISO(actions[0].run_date!).getTime()).toEqual(tagFromNow.getTime())
-    await deleteLogById(log.id!)
+    await deleteLogById(supabaseAdminClient, log.id!)
   })
 
   it('should parse 5seconds delay', async () => {
@@ -29,13 +30,13 @@ describe('process email', () => {
       date: now.toISOString()
     })
 
-    const log: any = await createLog(email as IncomingEmail)
+    const log: any = await createLog(supabaseAdminClient, email as IncomingEmail)
     const { actions } = await createActions(log.id)
 
     expect(actions.length).toBe(1)
     const tagFromNow = new Date(now.getTime() + 5 * 1000)
     expect(parseISO(actions[0].run_date!).getTime()).toEqual(tagFromNow.getTime())
-    await deleteLogById(log.id!)
+    await deleteLogById(supabaseAdminClient, log.id!)
   })
 
   it('should parse 10sec delay', async () => {
@@ -45,13 +46,13 @@ describe('process email', () => {
       date: now.toISOString()
     })
 
-    const log: any = await createLog(email as IncomingEmail)
+    const log: any = await createLog(supabaseAdminClient, email as IncomingEmail)
     const { actions } = await createActions(log.id)
 
     expect(actions.length).toBe(1)
     const tagFromNow = new Date(now.getTime() + 10 * 1000)
     expect(parseISO(actions[0].run_date!).getTime()).toEqual(tagFromNow.getTime())
-    await deleteLogById(log.id!)
+    await deleteLogById(supabaseAdminClient, log.id!)
   })
 
   it('should parse 7s delay', async () => {
@@ -61,13 +62,13 @@ describe('process email', () => {
       date: now.toISOString()
     })
 
-    const log: any = await createLog(email as IncomingEmail)
+    const log: any = await createLog(supabaseAdminClient, email as IncomingEmail)
     const { actions } = await createActions(log.id)
 
     expect(actions.length).toBe(1)
     const tagFromNow = new Date(now.getTime() + 7 * 1000)
     expect(parseISO(actions[0].run_date!).getTime()).toEqual(tagFromNow.getTime())
-    await deleteLogById(log.id!)
+    await deleteLogById(supabaseAdminClient, log.id!)
   })
 
   it('should parse 1minute delay', async () => {
@@ -77,13 +78,13 @@ describe('process email', () => {
       date: now.toISOString()
     })
 
-    const log: any = await createLog(email as IncomingEmail)
+    const log: any = await createLog(supabaseAdminClient, email as IncomingEmail)
     const { actions } = await createActions(log.id)
 
     expect(actions.length).toBe(1)
     const tagFromNow = new Date(now.getTime() + 1 * 60000)
     expect(parseISO(actions[0].run_date!).getTime()).toEqual(tagFromNow.getTime())
-    await deleteLogById(log.id!)
+    await deleteLogById(supabaseAdminClient, log.id!)
   })
 
   it('should parse 5minutes delay', async () => {
@@ -93,13 +94,13 @@ describe('process email', () => {
       date: now.toISOString()
     })
 
-    const log: any = await createLog(email as IncomingEmail)
+    const log: any = await createLog(supabaseAdminClient, email as IncomingEmail)
     const { actions } = await createActions(log.id)
 
     expect(actions.length).toBe(1)
     const tagFromNow = new Date(now.getTime() + 5 * 60000)
     expect(parseISO(actions[0].run_date!).getTime()).toEqual(tagFromNow.getTime())
-    await deleteLogById(log.id!)
+    await deleteLogById(supabaseAdminClient, log.id!)
   })
 
   it('should parse 19min delay', async () => {
@@ -109,13 +110,13 @@ describe('process email', () => {
       date: now.toISOString()
     })
 
-    const log: any = await createLog(email as IncomingEmail)
+    const log: any = await createLog(supabaseAdminClient, email as IncomingEmail)
     const { actions } = await createActions(log.id)
 
     expect(actions.length).toBe(1)
     const tagFromNow = new Date(now.getTime() + 19 * 60000)
     expect(parseISO(actions[0].run_date!).getTime()).toEqual(tagFromNow.getTime())
-    await deleteLogById(log.id!)
+    await deleteLogById(supabaseAdminClient, log.id!)
   })
 
   it('should parse 2m delay', async () => {
@@ -125,13 +126,13 @@ describe('process email', () => {
       date: now.toISOString()
     })
 
-    const log: any = await createLog(email as IncomingEmail)
+    const log: any = await createLog(supabaseAdminClient, email as IncomingEmail)
     const { actions } = await createActions(log.id)
 
     expect(actions.length).toBe(1)
     const tagFromNow = new Date(now.getTime() + 2 * 60000)
     expect(parseISO(actions[0].run_date!).getTime()).toEqual(tagFromNow.getTime())
-    await deleteLogById(log.id!)
+    await deleteLogById(supabaseAdminClient, log.id!)
   })
 
   it('should parse 1hour delay', async () => {
@@ -141,13 +142,13 @@ describe('process email', () => {
       date: now.toISOString()
     })
 
-    const log: any = await createLog(email as IncomingEmail)
+    const log: any = await createLog(supabaseAdminClient, email as IncomingEmail)
     const { actions } = await createActions(log.id)
 
     expect(actions.length).toBe(1)
     const tagFromNow = new Date(now.getTime() + 60 * 60000)
     expect(parseISO(actions[0].run_date!).getTime()).toEqual(tagFromNow.getTime())
-    await deleteLogById(log.id!)
+    await deleteLogById(supabaseAdminClient, log.id!)
   })
 
   it('should parse 2hours delay', async () => {
@@ -157,13 +158,13 @@ describe('process email', () => {
       date: now.toISOString()
     })
 
-    const log: any = await createLog(email as IncomingEmail)
+    const log: any = await createLog(supabaseAdminClient, email as IncomingEmail)
     const { actions } = await createActions(log.id)
 
     expect(actions.length).toBe(1)
     const tagFromNow = new Date(now.getTime() + 2 * 60 * 60000)
     expect(parseISO(actions[0].run_date!).getTime()).toEqual(tagFromNow.getTime())
-    await deleteLogById(log.id!)
+    await deleteLogById(supabaseAdminClient, log.id!)
   })
 
   it('should parse 4hrs delay', async () => {
@@ -173,13 +174,13 @@ describe('process email', () => {
       date: now.toISOString()
     })
 
-    const log: any = await createLog(email as IncomingEmail)
+    const log: any = await createLog(supabaseAdminClient, email as IncomingEmail)
     const { actions } = await createActions(log.id)
 
     expect(actions.length).toBe(1)
     const tagFromNow = new Date(now.getTime() + 4 * 60 * 60000)
     expect(parseISO(actions[0].run_date!).getTime()).toEqual(tagFromNow.getTime())
-    await deleteLogById(log.id!)
+    await deleteLogById(supabaseAdminClient, log.id!)
   })
 
   it('should parse 7h delay', async () => {
@@ -189,13 +190,13 @@ describe('process email', () => {
       date: now.toISOString()
     })
 
-    const log: any = await createLog(email as IncomingEmail)
+    const log: any = await createLog(supabaseAdminClient, email as IncomingEmail)
     const { actions } = await createActions(log.id)
 
     expect(actions.length).toBe(1)
     const tagFromNow = new Date(now.getTime() + 7 * 60 * 60000)
     expect(parseISO(actions[0].run_date!).getTime()).toEqual(tagFromNow.getTime())
-    await deleteLogById(log.id!)
+    await deleteLogById(supabaseAdminClient, log.id!)
   })
 
   it('should parse 1day delay', async () => {
@@ -205,13 +206,13 @@ describe('process email', () => {
       date: now.toISOString()
     })
 
-    const log: any = await createLog(email as IncomingEmail)
+    const log: any = await createLog(supabaseAdminClient, email as IncomingEmail)
     const { actions } = await createActions(log.id)
 
     expect(actions.length).toBe(1)
     const tagFromNow = new Date(now.getTime() + 1 * 24 * 60 * 60000)
     expect(parseISO(actions[0].run_date!).getTime()).toEqual(tagFromNow.getTime())
-    await deleteLogById(log.id!)
+    await deleteLogById(supabaseAdminClient, log.id!)
   })
 
   it('should parse 3days delay', async () => {
@@ -221,13 +222,13 @@ describe('process email', () => {
       date: now.toISOString()
     })
 
-    const log: any = await createLog(email as IncomingEmail)
+    const log: any = await createLog(supabaseAdminClient, email as IncomingEmail)
     const { actions } = await createActions(log.id)
 
     expect(actions.length).toBe(1)
     const tagFromNow = new Date(now.getTime() + 3 * 24 * 60 * 60000)
     expect(parseISO(actions[0].run_date!).getTime()).toEqual(tagFromNow.getTime())
-    await deleteLogById(log.id!)
+    await deleteLogById(supabaseAdminClient, log.id!)
   })
 
   it('should parse 8d delay', async () => {
@@ -237,13 +238,13 @@ describe('process email', () => {
       date: now.toISOString()
     })
 
-    const log: any = await createLog(email as IncomingEmail)
+    const log: any = await createLog(supabaseAdminClient, email as IncomingEmail)
     const { actions } = await createActions(log.id)
 
     expect(actions.length).toBe(1)
     const tagFromNow = new Date(now.getTime() + 8 * 24 * 60 * 60000)
     expect(parseISO(actions[0].run_date!).getTime()).toEqual(tagFromNow.getTime())
-    await deleteLogById(log.id!)
+    await deleteLogById(supabaseAdminClient, log.id!)
   })
 
 })

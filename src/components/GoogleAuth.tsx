@@ -2,7 +2,7 @@
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { Auth } from '@supabase/auth-ui-react'
 import classNames from 'classnames'
-import { Database } from '~/lib/database.types'
+import { Database } from '~/supabase/database.types'
 
 export default function GoogleAuth({ admin = false }: { admin?: boolean }) {
   const supabase = createClientComponentClient<Database>()

@@ -1,6 +1,6 @@
 'use client'
 
-import { Prompt } from "~/lib/types"
+import { Prompt } from "~/supabase/types"
 
 
 export default function PromptBody(props: { prompt: Prompt }) {

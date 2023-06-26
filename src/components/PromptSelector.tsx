@@ -1,6 +1,6 @@
 import classNames from 'classnames'
 import * as Popover from '@radix-ui/react-popover'
-import { Prompt } from "~/lib/types"
+import { Prompt } from "~/supabase/types"
 import { ChevronDownIcon } from '@radix-ui/react-icons'
 
 export default function PromptSelector(props: { prompts: Prompt[], activePrompt: Prompt | null }) {

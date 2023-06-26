@@ -6,8 +6,8 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import SequenceBadge from '~/components/SequenceBadge'
 import SequencesWelcomeMessage from '~/components/SequencesWelcomeMessage'
-import { Database } from '~/lib/database.types'
-import { Log, Sequence } from '~/lib/types'
+import { Database } from '~/supabase/database.types'
+import { Log, Sequence } from '~/supabase/types'
 
 export const revalidate = 0
 

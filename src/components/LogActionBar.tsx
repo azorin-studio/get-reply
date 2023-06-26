@@ -1,31 +1,42 @@
 'use client'
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"
+import { Database } from "~/supabase/database.types"
+import { useRouter } from 'next/navigation'
+import { Log } from "~/supabase/types"
+import cancelLogAndActionByLogId from "~/supabase/cancel-log-and-action-by-log-id"
 
-export default function LogActionBar(props: { id: string }) {
-  const { id } = props
-
-  const cancelAction = async () => {
-    await fetch(`/api/cancel`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        log_id: id
-      })
-    })
-    // refresh the page
-    window.location.reload()
-  }
+export default function LogActionBar({ log }: { log: Log }) {
+  const supabase = createClientComponentClient<Database>()
+  const router = useRouter()
 
   return (
-    <div className="flex flex-row gap-4">
-      <button
-        type="submit"
-        onClick={cancelAction}
-        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-      >
-        Cancel
-      </button>
+    <div className="flex flex-row gap-2">
+      {log.status !== 'cancelled' && log.status !== 'complete' && (
+        <button 
+          onClick={async () => {
+            await cancelLogAndActionByLogId(supabase, log.id!)
+            router.refresh()
+          }}
+          className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded"
+        >
+          Cancel
+        </button>
+      )}
+
+      {log.status === 'cancelled' && (
+        <button 
+          onClick={async () => {
+            await supabase
+              .from('logs')
+              .update({ status: 'scheduled' })
+              .eq('id', log.id)
+              router.refresh()
+          }}
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
+        >
+          Resume
+        </button>
+      )}
     </div>
   )
 }

@@ -1,7 +1,8 @@
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"
 import classNames from "classnames"
 import { useEffect, useState } from "react"
-import { Prompt } from "~/lib/types"
+import getPrompts from "~/supabase/get-prompts"
+import { Prompt } from "~/supabase/types"
 
 export default function StepForm(props: { 
   step: any, 
@@ -15,14 +16,12 @@ export default function StepForm(props: {
 
   useEffect(() => {
     const fetchPrompts = async () => {
-      const { data: prompts, error } = await supabase
-        .from('prompts')
-        .select('*')
-        .order('id', { ascending: true })
-        .limit(10)
-
-      if (error) console.error(error)
-      if (prompts) setPrompts(prompts)
+      try {
+        const prompts = await getPrompts(supabase)
+        if (prompts) setPrompts(prompts)
+      } catch (error) {
+        if (error) console.error(error)
+      }
     }
     fetchPrompts()
   }, [supabase])

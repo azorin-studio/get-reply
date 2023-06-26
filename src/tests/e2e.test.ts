@@ -1,8 +1,9 @@
-import getProfileFromEmail from '~/lib/get-profile-from-email'
+import getProfileFromEmail from '~/supabase/get-profile-from-email'
 import { trashThreadById } from '~/lib/google'
 import { introText as followupIntroText } from '~/components/emails/followup-reminder'
-import { Profile } from '~/lib/types'
+import { Profile } from '~/supabase/types'
 import { liveGmailTest, waitForReplies } from '~/tests/utils'
+import supabaseAdminClient from '~/supabase/supabase-admin-client'
 
 const EMAIL_ROUTING_TAG = process.env.EMAIL_ROUTING_TAG || ''
 const TIMEOUT = 1000 * 60 * 2
@@ -14,7 +15,7 @@ describe('e2e using gmail', () => {
   beforeAll(async () => {
     const FROM = process.env.TEST_GMAIL_USER
     if (!FROM) throw new Error('No test gmail user found')
-    profile = await getProfileFromEmail(FROM)
+    profile = await getProfileFromEmail(supabaseAdminClient, FROM)
     if (!profile) throw new Error('No profile found')
   })  
 
@@ -39,11 +40,13 @@ describe('e2e using gmail', () => {
     const replies = await waitForReplies({
       threadId,
       messageId,
-      numberOfExpectedReplies: 1,
+      numberOfExpectedReplies: 2,
     })
-    replies.forEach((r: any) => expect(r.snippet).toContain(followupIntroText))
+    expect(replies).toHaveLength(2)
+    expect(replies[0].snippet).toContain('Confirmation from GetReply')
+    expect(replies[1].snippet).toContain(followupIntroText)
     threadIds.push(threadId)
-  }, TIMEOUT)  
+  }, TIMEOUT)
 
   it('should test both f+30s@getreply.app and f+15s@getreply.app', async () => {
     const to = [
@@ -54,9 +57,10 @@ describe('e2e using gmail', () => {
     const replies = await waitForReplies({
       threadId,
       messageId,
-      numberOfExpectedReplies: 2,
+      numberOfExpectedReplies: 4,
     })
-    replies.forEach((r: any) => expect(r.snippet).toContain(followupIntroText))
+    expect(replies).toHaveLength(4)
+    // replies.forEach((r: any) => expect(r.snippet).toContain(followupIntroText))
     threadIds.push(threadId)
   }, TIMEOUT)
 

@@ -2,7 +2,7 @@
 
 import { format, formatDistance } from 'date-fns'
 import { useEffect, useState } from 'react'
-import { Action } from '~/lib/types'
+import { Action } from '~/supabase/types'
 import StatusBadge from './StatusBadge'
 
 import * as Popover from '@radix-ui/react-popover'
@@ -11,8 +11,9 @@ import { DotsVerticalIcon } from '@radix-ui/react-icons'
 import classNames from 'classnames'
 import Link from 'next/link'
 import { statusColors } from './status-colors'
-import { Database } from '~/lib/database.types'
+import { Database } from '~/supabase/database.types'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import getActionById from '~/supabase/get-action-by-id'
 export const revalidate = 0
 
 const UnpureAction = (props: { 
@@ -31,16 +32,7 @@ const UnpureAction = (props: {
   useEffect(() => {
     const fetchAction = async () => {
       setRefreshing(true)
-      const { data } = await supabase
-        .from('actions')
-        .select('*')
-        .eq('id', action_id)
-        .limit(1)
-        let action = null
-        if (data && data.length > 0) {
-          action = data[0] as Action
-        }
-
+      const action = await getActionById(supabase, action_id)
       setAction(action)
       setRefreshing(false)
     }

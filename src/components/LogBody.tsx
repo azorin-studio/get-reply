@@ -1,10 +1,6 @@
 
 import { format } from 'date-fns'
-import { Log, Sequence } from '~/lib/types'
-import classNames from 'classnames'
-import Link from 'next/link'
-// import * as Popover from '@radix-ui/react-popover'
-// import { DotsVerticalIcon } from '@radix-ui/react-icons'
+import { Log, Sequence } from '~/supabase/types'
 import { statusColors } from './status-colors'
 import EmailBody from './EmailBody'
 import StatusBadge from './StatusBadge'
@@ -44,41 +40,6 @@ export default function LogBody(props: { log: Log, sequence: Sequence }) {
                 </span>
               }
             </div>
-            {/* <Popover.Root>
-              <Popover.Trigger 
-                className={classNames(
-                  'text-slate-700 hover:text-slate-500'
-                )}
-              >
-                <DotsVerticalIcon />
-              </Popover.Trigger>
-
-              <Popover.Portal>
-                <Popover.Content
-                  className={classNames(
-                    'flex flex-col bg-white border rounded',
-                    'outline-none focus:outline-none  shadow',
-                    'divide-y divide-gray-100 py-2'
-                  )}
-                >
-                  <Link
-                    href={`/sequences/${sequence.id}`}
-                    legacyBehavior
-                  >
-                    <div
-                      className={classNames(
-                        "cursor-pointer text-sm",
-                        "px-3 py-1 inline-flex hover:bg-slate-100"
-                      )}
-                    >
-                      Open sequence (followup)
-                    </div>
-                  </Link>
-
-                  <Popover.Arrow className="fill-white" />
-                </Popover.Content>
-              </Popover.Portal>
-            </Popover.Root> */}
           </div>
         </div>
 
@@ -91,15 +52,19 @@ export default function LogBody(props: { log: Log, sequence: Sequence }) {
         {log.text && <EmailBody text={log.text} />}
       </div>
 
-      {log.action_ids?.map((action_id, index) => (
-        <StepBody
-          key={index}
-          action_id={action_id}
-          log_id={log.id!}
-          logText={log.text}
-          status={log.status}
-        />
-      ))}
+      <div
+        className='ml-8'
+      >
+        {log.action_ids?.map((action_id, index) => (
+          <StepBody
+            key={index}
+            action_id={action_id}
+            log_id={log.id!}
+            logText={log.text}
+            status={log.status}
+          />
+        ))}
+      </div>
 
     </div>
   )

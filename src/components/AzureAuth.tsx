@@ -1,8 +1,7 @@
 "use client"
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
-import { Auth } from '@supabase/auth-ui-react'
 import classNames from 'classnames'
-import { Database } from '~/lib/database.types'
+import { Database } from '~/supabase/database.types'
 import MicrosoftLogo from './Microsoft-Logo'
 
 export default function AzureAuth() {

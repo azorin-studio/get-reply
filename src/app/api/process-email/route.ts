@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
-import { IncomingEmail } from '~/lib/types'
-import { processIncomingEmail } from '~/lib/functions'
-import { writeFile } from 'fs/promises'
+import { IncomingEmail } from '~/supabase/types'
+import { processIncomingEmail } from '~/inngest/process-incoming-email'
+// import { writeFile } from 'fs/promises'
 
 export const revalidate = 0
 

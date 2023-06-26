@@ -1,15 +1,6 @@
 
 import { serve } from "inngest/next";
-import { inngest } from "~/lib/client";
-import { ingestFns } from "~/lib/functions";
+import { inngest } from "~/inngest/inngest";
+import { ingestEvents } from "~/inngest/events";
 
-const helloWorld = inngest.createFunction(
-  { name: "Hello World" },
-  { event: "test/hello.world" },
-  async ({ event, step }) => {
-    await step.sleep("1s");
-    return { event, body: "Hello, World!" };
-  }
-);
-
-export const { GET, POST, PUT } = serve(inngest, [...ingestFns, helloWorld]);
+export const { GET, POST, PUT } = serve(inngest, [...ingestEvents]);

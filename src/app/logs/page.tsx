@@ -2,8 +2,8 @@ import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import LogBadge from '~/components/LogBadge'
-import { Database } from '~/lib/database.types'
-import { Log } from '~/lib/types'
+import { Database } from '~/supabase/database.types'
+import { Log } from '~/supabase/types'
 
 export const revalidate = 0
 

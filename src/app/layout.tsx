@@ -4,8 +4,8 @@ import { Analytics } from '@vercel/analytics/react'
 import { cookies } from "next/headers"
 import Footer from "~/components/Footer"
 import Header from "~/components/Header"
-import { Database } from "~/lib/database.types"
-import SupabaseProvider from "~/lib/provider"
+import { Database } from "~/supabase/database.types"
+import SupabaseProvider from "~/app/provider"
 import "~/styles/globals.css"
 
 export const dynamic = 'force-dynamic'

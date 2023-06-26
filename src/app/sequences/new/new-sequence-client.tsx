@@ -8,8 +8,8 @@ import slugify from "slugify"
 import CopyToClipboardBadge from "~/components/CopyToClipboardBadge"
 import StepForm from "~/components/StepForm"
 import VisibilityToggle from '~/components/VisibilityToggle'
-import { Database } from '~/lib/database.types'
-import { Sequence } from "~/lib/types"
+import { Database } from '~/supabase/database.types'
+import { Sequence } from "~/supabase/types"
 
 export default function DemoPage(props: any) {
   const supabase = createClientComponentClient<Database>()

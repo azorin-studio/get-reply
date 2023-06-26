@@ -1,34 +1,19 @@
 'use client'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+
 import { formatDistance } from 'date-fns'
 import Link from 'next/link'
 import { useRef } from 'react'
 import { useHover } from 'usehooks-ts'
-import { Database } from '~/lib/database.types'
-import { Prompt } from '~/lib/types'
+import { Prompt } from '~/supabase/types'
 
 export const revalidate = 0
 
 export default function PromptBadge(props: { prompt: Prompt }) {
-  const supabase = createClientComponentClient<Database>()
   const { prompt } = props
 
   const hoverRef = useRef(null)
   const isHovered = useHover(hoverRef)
   
-  const handleDelete = async (prompt: Prompt) => {
-    const { error } = await supabase
-      .from('prompts')
-      .delete()
-      .eq('id', `${prompt.id}`)
-
-    if (error) {
-      console.error(error)
-    } else {
-      window.location.href = '/sequences'
-    }
-  }
-
   return (
     <Link
       ref={hoverRef} 

@@ -3,7 +3,7 @@ import 'server-only'
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from "next/headers"
 import { redirect } from 'next/navigation'
-import { Database } from '~/lib/database.types'
+import { Database } from '~/supabase/database.types'
 
 export const revalidate = 0
 

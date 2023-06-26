@@ -1,10 +1,9 @@
 'use client'
 
-import { format, formatDistance } from 'date-fns'
+import { format } from 'date-fns'
 import Link from 'next/link'
-import { Log } from '~/lib/types'
+import { Log } from '~/supabase/types'
 import StatusBadge from './StatusBadge'
-import classNames from 'classnames'
 import { statusColors } from './status-colors'
 
 export const revalidate = 0

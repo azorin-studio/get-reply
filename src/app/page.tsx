@@ -7,7 +7,7 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import ExampleSelector from '~/components/ExampleSelector';
 import NewsletterForm from '~/components/NewsletterForm';
-import { Database } from '~/lib/database.types';
+import { Database } from '~/supabase/database.types';
 import { Metadata } from 'next';
 import { ArrowTopRightIcon } from '@radix-ui/react-icons';
 

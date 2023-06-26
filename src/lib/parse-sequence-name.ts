@@ -1,4 +1,4 @@
-import { IncomingEmail, Json, Log } from "~/lib/types"
+import { Json } from "~/supabase/types"
 
 interface IParseSequenceName {
   to: { address: string }[] | null | undefined,

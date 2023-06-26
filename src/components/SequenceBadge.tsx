@@ -1,9 +1,10 @@
 'use client'
 import Link from 'next/link'
-import { Sequence } from '~/lib/types'
+import { Sequence } from '~/supabase/types'
 import CopyToClipboardBadge from './CopyToClipboardBadge'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { useEffect, useState } from 'react'
+import deleteSequenceById from '~/supabase/delete-sequence-by-id'
 
 export const revalidate = 0
 
@@ -15,23 +16,20 @@ export default function SequenceBadge(props: { sequence: Sequence }) {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const { data: { user }, error } = await supabase.auth.getUser()
+      const { data: { user } } = await supabase.auth.getUser()
       setUser(user)
     }
     fetchUser()
   }, [supabase.auth])
   
-  const handleDelete = async (sequence: Sequence) => {
-    const { error } = await supabase
-      .from('sequences')
-      .delete()
-      .eq('id', `${sequence.id}`)
-
-    if (error) {
-      console.error(error)
-    } else {
-      window.location.href = '/sequences'
+  const handleDelete = async () => {
+    if (!sequence.id) return
+    try {
+      await deleteSequenceById(supabase, sequence.id)
+    } catch (error) {
+      if (error) console.error(error)
     }
+    window.location.href = '/sequences'
   }
 
   return (
@@ -72,7 +70,7 @@ export default function SequenceBadge(props: { sequence: Sequence }) {
                   onClick={(e) => {
                     e.preventDefault()
                     if (confirm('Are you sure you want to delete this sequence?')) {
-                      handleDelete(sequence)
+                      handleDelete()
                     }
                   }}
                 >
