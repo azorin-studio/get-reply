@@ -30,9 +30,11 @@ export default async function Page(props: { params: { id: string } }) {
 
   return (
     <main className="p-2 flex flex-col gap-4">
-      <h1 className="text-2xl font-bold">
-        Log
-      </h1>
+      <div className="flex flex-row justify-between">
+        <h1 className="text-2xl font-bold">
+          Log
+        </h1>  
+      </div>
       {log && 
         <LogBody
           log={log} 
