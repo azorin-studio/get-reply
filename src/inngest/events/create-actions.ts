@@ -11,6 +11,7 @@ export default inngest.createFunction(
 
     // side effect
     await createActions(event.data.log_id)
+    console.log(`[log_id: ${event.data.log_id}]: sending to queue/generate`)
 
     const log = await getLogById(supabaseAdminClient, event.data.log_id)
     log?.action_ids?.forEach(async (action_id: string) => {

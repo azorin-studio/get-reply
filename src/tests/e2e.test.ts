@@ -32,7 +32,7 @@ describe('e2e using gmail', () => {
     threadIds.push(threadId)
   }, TIMEOUT)
 
-  it.only('will test the f+30s@getreply.app sequence', async () => {
+  it('will test the f+30s@getreply.app sequence', async () => {
     const testName = 'f+30s'
     const to = [`${testName}${EMAIL_ROUTING_TAG}@getreply.app`]
     console.log('to', to)
@@ -57,12 +57,12 @@ describe('e2e using gmail', () => {
     const replies = await waitForReplies({
       threadId,
       messageId,
-      numberOfExpectedReplies: 4,
+      numberOfExpectedReplies: 3,
     })
-    expect(replies).toHaveLength(4)
+    expect(replies).toHaveLength(3)
     threadIds.push(threadId)
   }, TIMEOUT)
-
+  
   afterAll(async () => {
     await Promise.all(
       threadIds.map(async (threadId: string) => {

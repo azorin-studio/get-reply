@@ -24,7 +24,7 @@ export default async function createLog (client: SupabaseClient, incomingEmail: 
   if (throwOnExisting) {
     const { data: existingLogs, error: existingLogsError } = await client
       .from('logs')
-      .select()
+      .select('*, sequence:sequences(*)')
       .eq('messageId', incomingEmail.messageId)
 
     if (existingLogsError) {

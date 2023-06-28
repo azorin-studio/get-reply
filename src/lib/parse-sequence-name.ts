@@ -13,7 +13,6 @@ export default function parseSequenceName ({
   bcc = [], 
   headers = [] 
 }: IParseSequenceName): { sequenceName: string | null, tags: string[] } {
-
   let allToEmails: any[] = []
   if (to) {
     allToEmails = [...allToEmails, ...to.map((to) => to.address)]

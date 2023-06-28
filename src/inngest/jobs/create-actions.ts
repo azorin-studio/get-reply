@@ -54,11 +54,18 @@ export default async function createActions (log_id: string): Promise<{log: Log,
       return action[0]
     }))
 
-    console.log(`[log_id: ${log.id}] made actions: [${actions.map(action => action.id).join(', ')}]`)
-    await appendToLog(supabaseAdminClient, log, { status: 'verified', action_ids: actions.map(action => action.id), })
+    console.log(`[log_id: ${log.id}] appending new actions: [${actions.map(action => action.id).join(', ')}]`)
+    await appendToLog(supabaseAdminClient, log, { 
+      status: 'verified', 
+      action_ids: [
+        ...log.action_ids || [],
+        ...actions.map(action => action.id)
+      ]
+    })
 
     return { log, actions }
   } catch (error: any) {
+    console.log(error)
     log = await appendToLog(supabaseAdminClient, log, { status: 'error', errorMessage: error.message })
     throw error
   }
