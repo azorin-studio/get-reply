@@ -40,7 +40,7 @@ Best regards,`,
     <Body style={main}>
       <Container style={container}>
         <Text style={{ ...text, margin: '12px 0', }}>
-          Reminder to follow up with: '{to}'
+          Reminder to follow up with: {to}
         </Text>
         
         <Text style={{ 

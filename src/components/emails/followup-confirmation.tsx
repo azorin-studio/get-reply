@@ -39,7 +39,7 @@ const FollowUpConfirmation = ({
             style={link}
           >
             link   
-          </Link>) for '{to}' started on getreply. {' '}
+          </Link>) for {to} started on getreply. {' '}
           <Link
             href={`https://getreply.app/logs/${id}?cancel=`}
             target="_blank"
