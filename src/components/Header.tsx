@@ -26,12 +26,12 @@ export default function Header(props: { user?: object | null }) {
               >
                 Sequences
               </Link>
-              <Link
+              {/* <Link
                 href="/prompts"
                 className="items-center space-x-2 flex font-bold sm:inline-block hover:underline"
               >
                 Prompts
-              </Link>
+              </Link> */}
               
               <Link
                 href="/logs"
