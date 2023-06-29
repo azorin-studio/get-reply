@@ -30,10 +30,10 @@ describe('e2e using gmail', () => {
     })
     replies.forEach((r: any) => expect(r.snippet).toContain('GetReply Sequence not found'))
     threadIds.push(threadId)
-  }, 1 * ONE_MINUTE)
+  }, ONE_MINUTE)
 
-  it('will test the f+30s@getreply.app sequence', async () => {
-    const testName = 'f+30s'
+  it('will test the f+5s@getreply.app sequence', async () => {
+    const testName = 'f+5s'
     const to = [`${testName}${EMAIL_ROUTING_TAG}@getreply.app`]
     console.log('to', to)
     const { messageId, threadId } = await liveGmailTest({ to })
@@ -46,7 +46,7 @@ describe('e2e using gmail', () => {
     expect(replies[0].snippet).toContain('Confirmation from GetReply')
     expect(replies[1].snippet).toContain(followupIntroText)
     threadIds.push(threadId)
-  }, 2 * ONE_MINUTE)
+  }, ONE_MINUTE)
 
   it('will test the f+5m@getreply.app sequence', async () => {
     if (!process.env.LONG_TESTS) {
@@ -70,9 +70,9 @@ describe('e2e using gmail', () => {
     threadIds.push(threadId)
   }, 6 * ONE_MINUTE)
 
-  it('should test both f+30s@getreply.app and f+15s@getreply.app', async () => {
+  it('should test both f+5s@getreply.app and f+15s@getreply.app', async () => {
     const to = [
-      `f+30s${EMAIL_ROUTING_TAG}@getreply.app`,
+      `f+5s${EMAIL_ROUTING_TAG}@getreply.app`,
       `f+15s${EMAIL_ROUTING_TAG}@getreply.app`
     ]
     const { messageId, threadId } = await liveGmailTest({ to })
@@ -83,7 +83,7 @@ describe('e2e using gmail', () => {
     })
     expect(replies).toHaveLength(3)
     threadIds.push(threadId)
-  }, 2 * ONE_MINUTE)
+  }, 1 * ONE_MINUTE)
   
   afterAll(async () => {
     await Promise.all(

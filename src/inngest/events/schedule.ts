@@ -14,14 +14,6 @@ export default inngest.createFunction(
   },
   { event: "queue/schedule" },
   async ({ event, step }: { event: any, step: any }) => {   
-    const runDate = await step.run('Calculate sleep', async () => {
-      console.log(`[action_id: ${event.data.action_id}]: in queue/schedule - sleep`)
-      const action = await getActionById(supabaseAdminClient, event.data.action_id)
-      if (!action) throw new Error(`Action ${event.data.action_id} not found`)
-      await appendToAction(supabaseAdminClient, action, { status: 'pending' })
-      return action.run_date
-    })
-
     await step.run('Send confirmation email', async () => {
       console.log(`[action_id: ${event.data.action_id}]: Sending to queue/confirmation-email`)
       await inngest.send({ 
@@ -29,6 +21,14 @@ export default inngest.createFunction(
         id: `queue/confirmation-email-${event.data.action_id}`,
         data: { action_id: event.data.action_id, log_id: event.data.log_id }
       })
+    })
+
+    const runDate = await step.run('Calculate sleep', async () => {
+      console.log(`[action_id: ${event.data.action_id}]: in queue/schedule - sleep`)
+      const action = await getActionById(supabaseAdminClient, event.data.action_id)
+      if (!action) throw new Error(`Action ${event.data.action_id} not found`)
+      await appendToAction(supabaseAdminClient, action, { status: 'pending' })
+      return action.run_date
     })
 
     console.log(`[action_id: ${event.data.action_id}]: sleeping until ${runDate} ms`)
