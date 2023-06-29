@@ -18,7 +18,8 @@
     "wrangler:logs": "wrangler tail email-forwarding",
     "wrangler:target-pc": "echo 'https://pc.azorin.studio/api/process-email' | wrangler secret put GETREPLY_URL",
     "wrangler:target-laptop": "echo 'https://laptop.azorin.studio/api/process-email' | wrangler secret put GETREPLY_URL",
-    "wrangler:target-prod": "echo 'https://getreply.app/api/process-email' | wrangler secret put GETREPLY_URL"
+    "wrangler:target-prod": "echo 'https://getreply.app/api/process-email' | wrangler secret put GETREPLY_URL",
+    "prepare": "husky install"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "4.20230511.0",
@@ -68,6 +69,7 @@
     "typescript": "5.0.2",
     "usehooks-ts": "2.9.1",
     "vercel": "29.0.0",
-    "wrangler": "3.0.1"
+    "wrangler": "3.0.1",
+    "husky": "^8.0.0"
   }
 }

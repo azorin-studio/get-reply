@@ -17,7 +17,7 @@ describe('e2e using gmail', () => {
     if (!FROM) throw new Error('No test gmail user found')
     profile = await getProfileFromEmail(supabaseAdminClient, FROM)
     if (!profile) throw new Error('No profile found')
-  })  
+  })
 
   it('should test sequence not found', async () => {
     const testName = '404'
@@ -69,7 +69,6 @@ describe('e2e using gmail', () => {
     expect(replies[1].snippet).toContain(followupIntroText)
     threadIds.push(threadId)
   }, 6 * ONE_MINUTE)
-
 
   it('should test both f+30s@getreply.app and f+15s@getreply.app', async () => {
     const to = [

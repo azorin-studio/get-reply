@@ -1,8 +1,6 @@
 import {
   Body,
-  Container,
   Head,
-  Heading,
   Html,
   Link,
   Preview,
@@ -33,7 +31,7 @@ export const SequenceNotFound = ({
           Check out the list of sequences in <Link
             href="https://getreply.app"
             target="_blank"
-            style={...link}
+            style={link}
           >
             GetReply
           </Link> to find what your looking for.
