@@ -19,6 +19,8 @@ export default async function reminder(action_id: string): Promise<Action>{
     <FollowUpReminder 
       to={to}
       cc={cc}
+      delay={action.delay}
+      delayUnit={action.delay_unit}
       subject={log.subject as string}
       body={body}
       promptId={promptId}

@@ -17,6 +17,8 @@ interface IFollowUpReminder {
   subject: string;
   body: string;
   promptId: string;
+  delay?: number | null | undefined;
+  delayUnit?: string;
 }
 
 export const introText = `Reminder to follow up from GetReply`
@@ -25,6 +27,8 @@ const FollowUpReminder = ({
   to = 'placeholder@example.com,someone@example.com', 
   cc = 'other@example.com',
   subject = 'Reminder to follow up from GetReply',
+  delay = 1,
+  delayUnit = 'second',
 body = `Hi there,
 
 I hope this email finds you well. Just wanted to touch base with you regarding my previous email about printing the word "dcc5d." I understand that you might be busy, but if you could take a moment to let me know if you were able to print it, I would greatly appreciate it.
@@ -40,7 +44,7 @@ Best regards,`,
     <Body style={main}>
 
       <Text style={{ ...text }}>
-        Reminder to follow up with: {to}
+        Reminder ({delay}{delayUnit}) to follow up with: {to}
       </Text>
       
       <Text style={{ 

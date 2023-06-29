@@ -13,6 +13,8 @@ export const processIncomingEmail = async (incomingEmail: IncomingEmail) => {
   let log: Log | null 
   
   if (existingLog) {
+    // TO FIX: log.tags isnt getting recalculated
+    // need to run some kind of merge logs function
     log = existingLog
     console.log(`Log ${log.id} already exists`)
   } else {

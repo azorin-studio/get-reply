@@ -15,7 +15,7 @@ export default async function fetchAllPiecesFromActionId(client: SupabaseClient,
   profile: Profile,
   sequence: Sequence
 }>{
-  let action = await getActionById(client, action_id)
+  let action: Action | null = await getActionById(client, action_id)
   if (!action) throw new Error(`Action ${action_id} not found`)
   
   let log = await getLogById(client, action.log_id!)

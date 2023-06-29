@@ -41,6 +41,8 @@ export default async function createActions (log_id: string): Promise<{log: Log,
           run_date,
           prompt_id: step.prompt_id,
           prompt_name: step.prompt_name,
+          delay: delay || step.delay,
+          delay_unit: delayUnit || step.delayUnit,
           generation: '', // placeholder
           mailId: '', // placeholder 
           log_id: log!.id,

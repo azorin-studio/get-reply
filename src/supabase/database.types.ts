@@ -3,7 +3,7 @@ export type Json =
   | number
   | boolean
   | null
-  | { [key: string]: Json }
+  | { [key: string]: Json | undefined }
   | Json[]
 
 export interface Database {
@@ -12,6 +12,8 @@ export interface Database {
       actions: {
         Row: {
           created_at: string | null
+          delay: number | null
+          delay_unit: string
           errorMessage: string | null
           fullPrompt: string | null
           generation: string | null
@@ -27,6 +29,8 @@ export interface Database {
         }
         Insert: {
           created_at?: string | null
+          delay?: number | null
+          delay_unit?: string
           errorMessage?: string | null
           fullPrompt?: string | null
           generation?: string | null
@@ -42,6 +46,8 @@ export interface Database {
         }
         Update: {
           created_at?: string | null
+          delay?: number | null
+          delay_unit?: string
           errorMessage?: string | null
           fullPrompt?: string | null
           generation?: string | null

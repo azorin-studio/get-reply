@@ -7,7 +7,7 @@ import parseSequenceName from "~/lib/parse-sequence-name"
 import { SupabaseClient } from "@supabase/supabase-js"
 
 export default async function createLog (client: SupabaseClient, incomingEmail: IncomingEmail, throwOnExisting?: boolean) {
-  console.log(`Running process incoming email`)
+  console.log(`Running create log`)
   const { sequenceName, tags } = parseSequenceName({
     to: incomingEmail.to,
     cc: incomingEmail.cc,

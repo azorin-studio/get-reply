@@ -6,7 +6,7 @@
     "dev": "concurrently \"npm run dev:next\" \"npm run dev:inngest\"",
     "dev:next": "next dev",
     "dev:inngest": "npx inngest-cli@latest dev --port 8288",
-    "dev:download-types": "supabase gen types typescript --project-id 'dwtrraqsrjkkheqloopn' --schema public > src/lib/database.types.ts",
+    "dev:download-types": "supabase gen types typescript --project-id 'dwtrraqsrjkkheqloopn' --schema public > src/supabase/database.types.ts",
     "dev:pull-secrets": "vercel env pull .env.vercel.local",
     "dev:email-templates": "email dev -d ./src/components/emails",
     "build": "next build",
