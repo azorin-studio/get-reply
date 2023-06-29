@@ -22,28 +22,22 @@ export const SequenceNotFound = ({
     <Head />
     <Preview>GetReply Sequence not found</Preview>
     <Body style={main}>
-      <Container style={container}>
-        <Heading style={h1}>Error from GetReply</Heading>
-        
-        <Text style={{ ...text }}>
-          You tried to email the following GetReply sequence, but it doesn&apos;t exist.
-        </Text>
-        <code style={{...code, margin: '12px 0'}}>{sequenceName}@getreply.app</code>
-        <Text
+      <Text style={{ ...text }}>
+        Error from GetReply. You tried to email theGetReply sequence {sequenceName}@getreply.app, but it doesn&apos;t exist.
+      </Text>
+      <Text
           style={{
             ...text,
-            color: '#ababab',
           }}
         >
           Check out the list of sequences in <Link
             href="https://getreply.app"
             target="_blank"
-            style={{ ...link, color: '#898989' }}
+            style={...link}
           >
             GetReply
           </Link> to find what your looking for.
         </Text>
-      </Container>
     </Body>
   </Html>
 );

@@ -2,12 +2,11 @@
 export const main = {
   backgroundColor: '#ffffff',
   margin: '0',
+  maxWidth: '100%',
 };
 
 export const container = {
-  paddingLeft: '12px',
-  paddingRight: '12px',
-  // margin: '0 auto',
+  width: '100%',
   margin: '0',
 };
 
@@ -39,7 +38,6 @@ export const text = {
 export const code = {
   display: 'inline-block',
   padding: '16px 4.5%',
-  width: '90.5%',
   backgroundColor: '#f4f4f4',
   borderRadius: '5px',
   border: '1px solid #eee',

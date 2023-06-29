@@ -26,29 +26,27 @@ const FollowUpConfirmation = ({
     <Head />
     <Preview>{introText}</Preview>
     <Body style={main}>
-      <Container style={container}>
-        <Text
-          style={{
-            ...text,
-          }}
-        > 
-        New Sequence 
-          (<Link
-            href={`https://getreply.app/logs/${id}`}
-            target="_blank"
-            style={link}
-          >
-            link   
-          </Link>) for {to} started on getreply. {' '}
-          <Link
-            href={`https://getreply.app/logs/${id}?cancel=`}
-            target="_blank"
-            style={link}
-          >
-            Click here to cancel
-          </Link>.
-        </Text>        
-      </Container>
+      <Text
+        style={{
+          ...text,
+        }}
+      > 
+      New Sequence 
+        (<Link
+          href={`https://getreply.app/logs/${id}`}
+          target="_blank"
+          style={link}
+        >
+          link   
+        </Link>) for {to} started on getreply. {' '}
+        <Link
+          href={`https://getreply.app/logs/${id}?cancel=`}
+          target="_blank"
+          style={link}
+        >
+          Click here to cancel
+        </Link>.
+      </Text>        
     </Body>
   </Html>
 );

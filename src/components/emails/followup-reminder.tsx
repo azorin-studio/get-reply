@@ -38,42 +38,36 @@ Best regards,`,
     <Head />
     <Preview>{introText}</Preview>
     <Body style={main}>
-      <Container style={container}>
-        <Text style={{ ...text, margin: '12px 0', }}>
-          Reminder to follow up with: {to}
-        </Text>
-        
-        <Text style={{ 
-          fontFamily:
-            "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif",
-          fontSize: '14px',
-          display: 'inline-block',
-          margin: '0',
-          padding: '8px',
-          width: '90.5%',
-          backgroundColor: '#f4f4f4',
-          borderRadius: '5px',
-          border: '1px solid #eee',
-          color: '#333',
-          whiteSpace: 'pre-line'
-        }}>
-          {body}
-        </Text>
 
-        <Text
-          style={{
-            ...text,
-            color: '#ababab',
-          }}
-        >
-           <Link
-            href={`https://getreply.app/prompts/${promptId}${body && `?text=${encodeURIComponent(body).slice(0, 2000)}`}`}
-            target="_blank"
-            style={link}
-          >Regenerate the message on using ChatGPT on GetReply            
-          </Link>.
-        </Text>
-      </Container>
+      <Text style={{ ...text }}>
+        Reminder to follow up with: {to}
+      </Text>
+      
+      <Text style={{ 
+        ...text,
+        padding: '4px',
+        backgroundColor: '#f4f4f4',
+        borderRadius: '5px',
+        border: '1px solid #eee',
+        color: '#333',
+        whiteSpace: 'pre-line'
+      }}>
+        {body}
+      </Text>
+
+      <Text
+        style={{
+          ...text,
+          color: '#ababab',
+        }}
+      >
+        <Link
+          href={`https://getreply.app/prompts/${promptId}${body && `?text=${encodeURIComponent(body).slice(0, 2000)}`}`}
+          target="_blank"
+          style={link}
+        >Regenerate the message on using ChatGPT on GetReply            
+        </Link>.
+      </Text>
     </Body>
   </Html>
 );
