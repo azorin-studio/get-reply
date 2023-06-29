@@ -1,7 +1,6 @@
 import getActionById from "~/supabase/get-action-by-id"
 import { inngest } from "../inngest"
 import supabaseAdminClient from "~/supabase/supabase-admin-client"
-import fetchAllPiecesFromActionId from "~/supabase/fetch-all-pieces-from-action-id"
 import appendToAction from "~/supabase/append-to-action"
 
 export default inngest.createFunction(
@@ -14,15 +13,6 @@ export default inngest.createFunction(
   },
   { event: "queue/schedule" },
   async ({ event, step }: { event: any, step: any }) => {   
-    await step.run('Send confirmation email', async () => {
-      console.log(`[action_id: ${event.data.action_id}]: Sending to queue/confirmation-email`)
-      await inngest.send({ 
-        name: 'queue/confirmation-email',
-        id: `queue/confirmation-email-${event.data.action_id}`,
-        data: { action_id: event.data.action_id, log_id: event.data.log_id }
-      })
-    })
-
     const runDate = await step.run('Calculate sleep', async () => {
       console.log(`[action_id: ${event.data.action_id}]: in queue/schedule - sleep`)
       const action = await getActionById(supabaseAdminClient, event.data.action_id)
@@ -36,9 +26,10 @@ export default inngest.createFunction(
 
     await step.run('Schedule', async () => {
       console.log(`[action_id: ${event.data.action_id}]: in queue/schedule - schedule`)
-      const { log, action } = await fetchAllPiecesFromActionId(supabaseAdminClient, event.data.action_id)
+      const action = await getActionById(supabaseAdminClient, event.data.action_id)
+      if(!action) throw new Error(`Action ${event.data.action_id} not found`)
 
-      if (log.status === 'cancelled' || action.status === 'cancelled') {
+      if (action.log.status === 'cancelled' || action.status === 'cancelled') {
         console.log(`[action_id: ${event.data.action_id}]: cancelled`)
         return
       }

@@ -1,13 +1,13 @@
 
 import { format } from 'date-fns'
-import { Log, Sequence } from '~/supabase/types'
+import { Action, Log } from '~/supabase/types'
 import { statusColors } from './status-colors'
 import EmailBody from './EmailBody'
 import StatusBadge from './StatusBadge'
-import StepBody from './StepBody'
+import ActionBody from './ActionBody'
 
-export default function LogBody(props: { log: Log, sequence: Sequence }) {
-  const { log, sequence } = props
+export default function LogBody(props: { log: Log, actions: Action[] }) {
+  const { log, actions } = props
 
   const statusColor = (log.status && statusColors[log.status]) || 'blue'
 
@@ -55,10 +55,10 @@ export default function LogBody(props: { log: Log, sequence: Sequence }) {
       <div
         className='ml-8'
       >
-        {log.action_ids?.map((action_id, index) => (
-          <StepBody
+        {actions?.map((action, index) => (
+          <ActionBody
             key={index}
-            action_id={action_id}
+            action={action}
             log_id={log.id!}
             logText={log.text}
             status={log.status}

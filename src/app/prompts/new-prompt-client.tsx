@@ -112,7 +112,7 @@ export default function NewPromptClient(props: any) {
       prompt: activePrompt.prompt, 
       name: activePrompt.name, 
       description: activePrompt.description,
-      user_id: user && user.id,
+      profile_id: user && user.id,
     }
     if (props.params?.id) {
       p.id = props.params.id
@@ -193,7 +193,7 @@ export default function NewPromptClient(props: any) {
       name: 'new',
       prompt: '',
       description: '',
-      user_id: user && user.id,
+      profile_id: user && user.id,
     })
   }
 
@@ -245,7 +245,7 @@ export default function NewPromptClient(props: any) {
           />
         )}
         <div className='flex flex-row gap-2 justify-end'>
-          {!creatingNew && (user && activePrompt?.user_id === user.id) && (
+          {!creatingNew && (user && activePrompt?.profile_id === user.id) && (
             <button 
               className="text-sm border rounded p-1"
               onClick={(e) => setCreatingNew(true)}
@@ -254,7 +254,7 @@ export default function NewPromptClient(props: any) {
               Edit
             </button>
           )}
-          {(user && activePrompt?.user_id === user.id) && (
+          {(user && activePrompt?.profile_id === user.id) && (
             <button 
               className="text-sm border rounded p-1 text-red-500"
               onClick={deletePrompt}

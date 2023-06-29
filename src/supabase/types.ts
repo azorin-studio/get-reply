@@ -21,7 +21,6 @@ export interface Header {
   value: string;
 }
 
-// export type Log = Database['public']['Tables']['logs']['Insert']
 export type Log = Omit<
     Database['public']['Tables']['logs']['Insert'], 
     'from' | 'to' | 'bcc' | 'cc'
@@ -30,9 +29,20 @@ export type Log = Omit<
   to: any[] | null;
   bcc: any[] | null;
   cc: any[] | null;
-  sequence?: Sequence | null;
-  action_ids: string[] | null | undefined
+  profile: Profile;
 }
+
+export type LogRead = Omit<
+    Database['public']['Tables']['logs']['Row'], 
+    'from' | 'to' | 'bcc' | 'cc'
+  > & {
+  from: any;
+  to: any[] | null;
+  bcc: any[] | null;
+  cc: any[] | null;
+  profile: Profile;
+}
+
 
 export type IncomingEmail = Pick<Log, 'bcc' | 'cc' | 'date' | 'from' | 'headers' | 'html' | 'messageId' | 'subject' | 'text' | 'to' > & {
   from: Contact;
@@ -44,15 +54,11 @@ export type IncomingEmail = Pick<Log, 'bcc' | 'cc' | 'date' | 'from' | 'headers'
 
 export type Json = JsonType
 
-export type Action = Database['public']['Tables']['actions']['Insert']
+export type Action = Database['public']['Tables']['actions']['Insert'] & {
+  prompt: Prompt,
+  log: Log
+}
 
 export type Profile = Database['public']['Tables']['profiles']['Row']
 
 export type Prompt = Database['public']['Tables']['prompts']['Insert']
-
-export type Sequence = Omit<
-  Database['public']['Tables']['sequences']['Insert'],
-  'steps'
-> & {
-  steps: any[]
-}

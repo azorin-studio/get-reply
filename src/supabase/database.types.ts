@@ -19,13 +19,10 @@ export interface Database {
           generation: string | null
           id: string
           log_id: string | null
-          mailId: string | null
+          profile_id: string | null
           prompt_id: string | null
-          prompt_name: string | null
           run_date: string | null
           status: string | null
-          threadId: string | null
-          user_id: string | null
         }
         Insert: {
           created_at?: string | null
@@ -36,13 +33,10 @@ export interface Database {
           generation?: string | null
           id?: string
           log_id?: string | null
-          mailId?: string | null
+          profile_id?: string | null
           prompt_id?: string | null
-          prompt_name?: string | null
           run_date?: string | null
           status?: string | null
-          threadId?: string | null
-          user_id?: string | null
         }
         Update: {
           created_at?: string | null
@@ -53,13 +47,10 @@ export interface Database {
           generation?: string | null
           id?: string
           log_id?: string | null
-          mailId?: string | null
+          profile_id?: string | null
           prompt_id?: string | null
-          prompt_name?: string | null
           run_date?: string | null
           status?: string | null
-          threadId?: string | null
-          user_id?: string | null
         }
         Relationships: [
           {
@@ -67,12 +58,23 @@ export interface Database {
             columns: ["log_id"]
             referencedRelation: "logs"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "actions_profile_id_fkey"
+            columns: ["profile_id"]
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "actions_prompt_id_fkey"
+            columns: ["prompt_id"]
+            referencedRelation: "prompts"
+            referencedColumns: ["id"]
           }
         ]
       }
       logs: {
         Row: {
-          action_ids: string[] | null
           bcc: Json[] | null
           cc: Json[] | null
           created_at: string | null
@@ -84,19 +86,14 @@ export interface Database {
           id: string
           inReplyTo: string | null
           messageId: string | null
-          provider: string | null
+          profile_id: string | null
           references: string | null
-          sequence_id: string | null
           status: string | null
           subject: string | null
-          tags: string[]
           text: string | null
-          threadId: string | null
           to: Json[] | null
-          user_id: string | null
         }
         Insert: {
-          action_ids?: string[] | null
           bcc?: Json[] | null
           cc?: Json[] | null
           created_at?: string | null
@@ -108,19 +105,14 @@ export interface Database {
           id?: string
           inReplyTo?: string | null
           messageId?: string | null
-          provider?: string | null
+          profile_id?: string | null
           references?: string | null
-          sequence_id?: string | null
           status?: string | null
           subject?: string | null
-          tags?: string[]
           text?: string | null
-          threadId?: string | null
           to?: Json[] | null
-          user_id?: string | null
         }
         Update: {
-          action_ids?: string[] | null
           bcc?: Json[] | null
           cc?: Json[] | null
           created_at?: string | null
@@ -132,28 +124,18 @@ export interface Database {
           id?: string
           inReplyTo?: string | null
           messageId?: string | null
-          provider?: string | null
+          profile_id?: string | null
           references?: string | null
-          sequence_id?: string | null
           status?: string | null
           subject?: string | null
-          tags?: string[]
           text?: string | null
-          threadId?: string | null
           to?: Json[] | null
-          user_id?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "logs_sequence_id_fkey"
-            columns: ["sequence_id"]
-            referencedRelation: "sequences"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "logs_user_id_fkey"
-            columns: ["user_id"]
-            referencedRelation: "users"
+            foreignKeyName: "logs_profile_id_fkey"
+            columns: ["profile_id"]
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           }
         ]
@@ -195,69 +177,29 @@ export interface Database {
           description: string | null
           id: string
           name: string | null
+          profile_id: string | null
           prompt: string | null
-          user_id: string | null
         }
         Insert: {
           created_at?: string | null
           description?: string | null
           id?: string
           name?: string | null
+          profile_id?: string | null
           prompt?: string | null
-          user_id?: string | null
         }
         Update: {
           created_at?: string | null
           description?: string | null
           id?: string
           name?: string | null
+          profile_id?: string | null
           prompt?: string | null
-          user_id?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "prompts_user_id_fkey"
-            columns: ["user_id"]
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          }
-        ]
-      }
-      sequences: {
-        Row: {
-          created_at: string | null
-          description: string | null
-          id: string
-          name: string | null
-          steps: Json[]
-          user_id: string | null
-          visibility: string
-          weight: number | null
-        }
-        Insert: {
-          created_at?: string | null
-          description?: string | null
-          id?: string
-          name?: string | null
-          steps: Json[]
-          user_id?: string | null
-          visibility?: string
-          weight?: number | null
-        }
-        Update: {
-          created_at?: string | null
-          description?: string | null
-          id?: string
-          name?: string | null
-          steps?: Json[]
-          user_id?: string | null
-          visibility?: string
-          weight?: number | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "sequences_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: "prompts_profile_id_fkey"
+            columns: ["profile_id"]
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           }

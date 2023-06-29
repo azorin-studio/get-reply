@@ -4,7 +4,7 @@ import { Log } from "~/supabase/types"
 export default async function getLogsByStatus (client: SupabaseClient, status: string) {
   const { error, data: logs } = await client
     .from('logs')
-    .select()
+    .select('*, profile:profile_id (*)')
     .eq('status', status)
 
   if (error) {

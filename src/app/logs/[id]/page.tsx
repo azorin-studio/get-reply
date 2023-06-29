@@ -6,8 +6,9 @@ import CancelAlert from '~/components/CancelAlert'
 import LogActionBar from '~/components/LogActionBar'
 import LogBody from '~/components/LogBody'
 import { Database } from '~/supabase/database.types'
+import getActionsByLogId from '~/supabase/get-actions-by-log-id'
 import getLogById from '~/supabase/get-log-by-id'
-import { Log, Sequence } from '~/supabase/types'
+import { Action, Log } from '~/supabase/types'
 
 export default async function Page({ params, searchParams }: { 
   params: { id: string }, 
@@ -20,7 +21,7 @@ export default async function Page({ params, searchParams }: {
   if (!session) redirect('/')
 
   const log: Log | null | undefined = await getLogById(supabase, id)
-
+  const actions: Action[] = await getActionsByLogId(supabase, id)
   if (!log) return (
     <div>Log not found</div>
   )
@@ -44,7 +45,7 @@ export default async function Page({ params, searchParams }: {
       {log && 
         <LogBody
           log={log} 
-          sequence={log.sequence as Sequence}
+          actions={actions}
         />
       }
     </main>

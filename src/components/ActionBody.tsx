@@ -16,28 +16,16 @@ import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import getActionById from '~/supabase/get-action-by-id'
 export const revalidate = 0
 
-const UnpureAction = (props: { 
-  action_id: string,
+const ActionBody = (props: { 
+  action: Action,
   log_id: string,
   logText?: string | null | undefined,
   status?: string | null | undefined
 }) => {
-  const { action_id, log_id, logText, status } = props
-  const supabase = createClientComponentClient<Database>()
-  const [action, setAction] = useState<Action | null>(null)
+  const { action, log_id, logText, status } = props
   const [refreshing, setRefreshing] = useState<boolean>(false)
 
   const statusColor = (status && statusColors[status]) || 'blue'
-
-  useEffect(() => {
-    const fetchAction = async () => {
-      setRefreshing(true)
-      const action = await getActionById(supabase, action_id)
-      setAction(action)
-      setRefreshing(false)
-    }
-    fetchAction()
-  }, [action_id, supabase])
 
   const retryAction = async (action_id: string) => {
     setRefreshing(true)
@@ -154,4 +142,4 @@ const UnpureAction = (props: {
   )
 }
 
-export default UnpureAction
+export default ActionBody

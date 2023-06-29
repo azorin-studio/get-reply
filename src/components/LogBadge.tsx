@@ -4,14 +4,11 @@ import { format } from 'date-fns'
 import Link from 'next/link'
 import { Log } from '~/supabase/types'
 import StatusBadge from './StatusBadge'
-import { statusColors } from './status-colors'
 
 export const revalidate = 0
 
 export default function LogBadge(props: { log: Log }) {
   const { log } = props
-
-  const statusColor = (log.status && statusColors[log.status]) || 'blue'
 
   return (
     <Link
@@ -44,22 +41,6 @@ export default function LogBadge(props: { log: Log }) {
             </div>
           </div>
         </div>
-
-        {/* {log.errorMessage &&
-          <div className={`bg-${statusColor}-50 p-2 text-xs font-medium text-${statusColor}-500`}>
-            {log.errorMessage}
-          </div>
-        } */}
-
-        {/* <div className="flex flex-row gap-4 p-2">
-          <div
-            className={classNames(
-              "line-clamp-3 whitespace-pre-wrap text-sm max-w-full truncate",
-            )}
-          >
-            {log.text?.trim()}
-          </div>
-        </div> */}
 
       </div>
 

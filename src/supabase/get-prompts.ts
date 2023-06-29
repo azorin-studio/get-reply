@@ -3,7 +3,7 @@ import { SupabaseClient } from "@supabase/supabase-js"
 export default async function getPrompts (client: SupabaseClient) {
   const { data: prompts, error } = await client
     .from('prompts')
-    .select('*')
+    .select('*, profile:profile_id (*)')
     .order('id', { ascending: true })
     .limit(10)
 

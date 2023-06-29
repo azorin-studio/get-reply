@@ -4,7 +4,7 @@ import { Log } from "~/supabase/types"
 export default async function getLogByKey (client: SupabaseClient, key: string, value: string): Promise<Log | null | undefined> {
   const { error, data: logs } = await client
     .from('logs')
-    .select('*, sequence:sequences(*)')
+    .select('*, profile:profile_id (*)')
     .eq(key, value)
 
   if (error) {

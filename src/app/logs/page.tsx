@@ -17,10 +17,10 @@ export default async function Page() {
 
   const { data } = await supabase
     .from('logs')
-    .select('*')
+    .select('*, profile:profile_id (*)')
     .order('created_at', { ascending: false })
 
-  const logs: Log[] = data || []
+  const logs: any[] = data || []
 
   return (
     <main className="p-2 flex flex-col gap-4">

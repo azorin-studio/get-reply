@@ -1,70 +1,60 @@
 import testEmail from '~/tests/fixtures/routed-full-email.json'
-import parseSequenceName from '~/lib/parse-sequence-name'
+import parsePromptNamesAndTags from '~/lib/parse-prompt-names-and-tags'
 import parseDelayFromTags from '~/lib/parse-delay-from-tags'
 
 describe('email parser', () => {
   it('should parse the sequence name', () => {
     const address = 'reply@getreply.app'
     testEmail.to = [{ address, name: "" }]
-    const { sequenceName } = parseSequenceName({
+    const promptNamesAndTags = parsePromptNamesAndTags({
       to: testEmail.to,
       cc: testEmail.cc,
-      bcc: testEmail.bcc,
-      headers: testEmail.headers
+      bcc: testEmail.bcc
     })
-    expect(sequenceName).toEqual('reply')
+    expect(promptNamesAndTags[0].promptName).toEqual('reply')
   })
   
   it('should parse the sequence name and tag', () => {
     const address = "reply+pc@getreply.app"
     testEmail.to = [{ address, name: "" }]
-    const { sequenceName, tags } = parseSequenceName({
+    const promptNamesAndTags = parsePromptNamesAndTags({
       to: testEmail.to,
       cc: testEmail.cc,
-      bcc: testEmail.bcc,
-      headers: [{
-        key: "received",
-        value: address
-      }]
+      bcc: testEmail.bcc
     })
-    expect(sequenceName).toEqual('reply')
-    expect(tags).toEqual(['pc'])
+    expect(promptNamesAndTags[0].promptName).toEqual('reply')
+    expect(promptNamesAndTags[0].tags).toEqual(['pc'])
   })
-
-  it('should parse the sequence name and multiple tags', () => {
+    
+  it('should parse the sequence name and tag', () => {
     const address = "reply+pc+4hours@getreply.app"
     testEmail.to = [{ address, name: "" }]
-    const { sequenceName, tags } = parseSequenceName({
+    const promptNamesAndTags = parsePromptNamesAndTags({
       to: testEmail.to,
       cc: testEmail.cc,
-      bcc: testEmail.bcc,
-      headers: [{
-        key: "received",
-        value: address
-      }]
+      bcc: testEmail.bcc
     })
-    expect(sequenceName).toEqual('reply')
-    expect(tags).toEqual(['pc', '4hours'])
+    expect(promptNamesAndTags[0].promptName).toEqual('reply')
+    expect(promptNamesAndTags[0].tags).toContain('pc')
+    expect(promptNamesAndTags[0].tags).toContain('4hours')
   })
 
-  it.only('should parse the multiple sequences', () => {
-    const address = "f+5s+laptop@getreply.app"
+  it('should parse the sequence name and tag', () => {
     testEmail.to = [
       { address: 'f+5s+laptop@getreply.app', name: '' },
-      { address: 'f+15s+laptop@getreply.app', name: '' }
+      { address: 'g+15s+laptop@getreply.app', name: '' }
     ]
-
-    const { sequenceName, tags } = parseSequenceName({
+    const promptNamesAndTags = parsePromptNamesAndTags({
       to: testEmail.to,
       cc: testEmail.cc,
-      bcc: testEmail.bcc,
-      headers: [{
-        key: "received",
-        value: address
-      }]
+      bcc: testEmail.bcc
     })
-    expect(sequenceName).toEqual('f')
-    expect(tags).toEqual(['5s', 'laptop'])
+    expect(promptNamesAndTags[0].promptName).toEqual('f')
+    expect(promptNamesAndTags[0].tags).toContain('laptop')
+    expect(promptNamesAndTags[0].tags).toContain('5s')
+    expect(promptNamesAndTags[1].promptName).toEqual('g')
+    expect(promptNamesAndTags[1].tags).toContain('laptop')
+    expect(promptNamesAndTags[1].tags).toContain('15s')
   })
 
   it('should parse 4hours delay from tags', () => {

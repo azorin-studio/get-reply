@@ -48,6 +48,21 @@ describe('e2e using gmail', () => {
     threadIds.push(threadId)
   }, ONE_MINUTE)
 
+  it('should test both f+5s@getreply.app and f+15s@getreply.app', async () => {
+    const to = [
+      `f+5s${EMAIL_ROUTING_TAG}@getreply.app`,
+      `f+15s${EMAIL_ROUTING_TAG}@getreply.app`
+    ]
+    const { messageId, threadId } = await liveGmailTest({ to })
+    const replies = await waitForReplies({
+      threadId,
+      messageId,
+      numberOfExpectedReplies: 3,
+    })
+    expect(replies).toHaveLength(3)
+    threadIds.push(threadId)
+  }, 2 * ONE_MINUTE)
+
   it('will test the f+5m@getreply.app sequence', async () => {
     if (!process.env.LONG_TESTS) {
       console.log('Skipping long test. Set LONG_TESTS=true to run this test.')
@@ -69,21 +84,6 @@ describe('e2e using gmail', () => {
     expect(replies[1].snippet).toContain(followupIntroText)
     threadIds.push(threadId)
   }, 6 * ONE_MINUTE)
-
-  it.only('should test both f+5s@getreply.app and f+15s@getreply.app', async () => {
-    const to = [
-      `f+5s${EMAIL_ROUTING_TAG}@getreply.app`,
-      `f+15s${EMAIL_ROUTING_TAG}@getreply.app`
-    ]
-    const { messageId, threadId } = await liveGmailTest({ to })
-    const replies = await waitForReplies({
-      threadId,
-      messageId,
-      numberOfExpectedReplies: 3,
-    })
-    expect(replies).toHaveLength(3)
-    threadIds.push(threadId)
-  }, 2 * ONE_MINUTE)
   
   afterAll(async () => {
     await Promise.all(

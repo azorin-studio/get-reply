@@ -1,74 +1,95 @@
 import appendToLog from "~/supabase/append-to-log"
 import supabaseAdminClient from "~/supabase/supabase-admin-client"
 import { Action, Log } from "~/supabase/types"
-import fetchAllPiecesFromLogId from "~/supabase/fetch-all-pieces-from-log-id"
 import calculateRunDate from "~/lib/calculate-run-date"
 import parseDelayFromTags from "~/lib/parse-delay-from-tags"
+import parsePromptNamesAndTags from "~/lib/parse-prompt-names-and-tags"
+import getPromptByName from "~/supabase/get-prompt-by-name"
+import getLogById from "~/supabase/get-log-by-id"
+import { inngest } from "../inngest"
 
-export default async function createActions (log_id: string): Promise<{log: Log, actions: Action[]}> {
-  let { log, profile, sequence } = await fetchAllPiecesFromLogId(supabaseAdminClient, log_id!)
+export default async function createActions (log_id: string): Promise<Action[]> {
+  const log = await getLogById(supabaseAdminClient, log_id)
+  if(!log) throw new Error(`Log ${log_id} not found`)
 
-  await appendToLog(supabaseAdminClient, log, {
-    user_id: profile.id,
+  if (!log.text) {
+    await appendToLog(supabaseAdminClient, log, { status: 'error', errorMessage: 'No text found in incoming email' })
+    throw new Error('No text found in incoming email')
+  }
+    await appendToLog(supabaseAdminClient, log, {
+    profile_id: log.profile.id,
     status: 'verifying',
     errorMessage: null,
     created_at: new Date().toISOString()
   })
 
-  if (!log.text) {
-    await appendToLog(supabaseAdminClient, log, { status: 'error', errorMesaage: 'No text found in incoming email' })
-    throw new Error('No text found in incoming email')
-  }
-
   try {
-    const actions = await Promise.all(sequence.steps.map(async (step: any) => {
-      // lets check if there are any delays in the tags
-      const { delay, delayUnit } = parseDelayFromTags(log.tags)
-      // if there is a delay, we need to calculate the run date
-      // otherwise, we can just use the log date
-      let run_date
-      if (delay && delayUnit) {
-        console.log(`[log_id: ${log.id}] found delay: ${delay} ${delayUnit}`)
-        run_date = calculateRunDate(delay, delayUnit, log.date!)
-      } else {
-        console.log(`[log_id: ${log.id}] using step delay: ${step.delay} ${step.delayUnit}`)
-        run_date = calculateRunDate(step.delay, step.delayUnit, log.date!)
-      }
+    // TODO: this only takes into account the first email
+    // Need to figure out how to handle multiple emails
+    const promptsAndTags = parsePromptNamesAndTags({
+      to: log.to,
+      cc: log.cc,
+      bcc: log.bcc,
+    })
+  
+    if (!promptsAndTags) {
+      await appendToLog(supabaseAdminClient, log, { status: 'error', errorMessage: 'No getreply email found in incoming email' })
+      throw new Error('No getreply email found in incoming email')
+    }
 
-      const { error, data: action } = await supabaseAdminClient
-        .from('actions')
-        .insert({
-          run_date,
-          prompt_id: step.prompt_id,
-          prompt_name: step.prompt_name,
-          delay: delay || step.delay,
-          delay_unit: delayUnit || step.delayUnit,
-          generation: '', // placeholder
-          mailId: '', // placeholder 
-          log_id: log!.id,
-          user_id: profile.id,
-        })
-        .select()
+    const actions = await Promise.all(
+      promptsAndTags.map(async ({ promptName, tags }: { promptName: string, tags: string[] }) => {
+        const prompt = await getPromptByName(supabaseAdminClient, promptName)
 
-      if (error) throw error
+        if (!prompt) {
+          await appendToLog(supabaseAdminClient, log, { status: 'error', errorMessage: `No prompt found with name ${promptName}` })
+          console.log(`[log_id: ${log.id}]: Sending to queue/sequence-not-found-email`)
+          
+          await inngest.send({ 
+            name: 'queue/sequence-not-found-email',
+            id: `queue/sequence-not-found-email-${log.id}`,
+            data: { log_id: log.id, promptName }
+          })
+          
+          throw new Error(`No prompt found with name ${promptName}`)
+          
+        }
 
-      if (!action || action.length === 0) throw new Error('Could not create action')
-      return action[0]
-    }))
+        const { delay, delayUnit } = parseDelayFromTags(tags)
+        const run_date = calculateRunDate(delay || 0, delayUnit || 'seconds', log.date!)
+    
+        const { error, data: actions } = await supabaseAdminClient
+          .from('actions')
+          .insert({
+            profile_id: log.profile.id,
+            log_id: log.id,
+            prompt_id: prompt.id,
+            run_date,
+            delay: delay,
+            delay_unit: delayUnit,
+            generation: '', // placeholder
+          })
+          .select()
+          .limit(1)
+    
+        if (error) throw error
+    
+        if (!actions || actions.length === 0) throw new Error('Could not create action')
+      
+        const action = actions[0]
+        return action
+      })
+    )
 
-    console.log(`[log_id: ${log.id}] appending new actions: [${actions.map(action => action.id).join(', ')}]`)
+    console.log(`[log_id: ${log.id}] appending new actions: [${actions.map((action) => action.id).join(', ')}]`)
     await appendToLog(supabaseAdminClient, log, { 
-      status: 'verified', 
-      action_ids: [
-        ...log.action_ids || [],
-        ...actions.map(action => action.id)
-      ]
+      status: 'verified' 
     })
 
-    return { log, actions }
+    return actions
   } catch (error: any) {
     console.log(error)
-    log = await appendToLog(supabaseAdminClient, log, { status: 'error', errorMessage: error.message })
+    await appendToLog(supabaseAdminClient, log, { status: 'error', errorMessage: error.message })
     throw error
   }
 }

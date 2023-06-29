@@ -20,12 +20,6 @@ export default function Header(props: { user?: object | null }) {
         <nav className="flex sm:flex-row flex-col gap-4 sm:items-center">
           {user && (
             <>
-              <Link
-                href="/sequences"
-                className="items-center space-x-2 flex font-bold sm:inline-block hover:underline"
-              >
-                Sequences
-              </Link>
               {/* <Link
                 href="/prompts"
                 className="items-center space-x-2 flex font-bold sm:inline-block hover:underline"
