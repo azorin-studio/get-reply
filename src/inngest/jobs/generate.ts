@@ -4,6 +4,7 @@ import appendToLog from "~/supabase/append-to-log"
 import fetchAllPieces from "~/supabase/fetch-all-pieces-from-action-id"
 import emailToPrompt from "~/lib/email-to-prompt"
 import supabaseAdminClient from "~/supabase/supabase-admin-client"
+import { inngest } from "../inngest"
 
 export default async function generate (action_id: string) {
   let { action, log, prompt } = await fetchAllPieces(supabaseAdminClient, action_id)
@@ -31,10 +32,6 @@ export default async function generate (action_id: string) {
 
   try {
     const generation: string = await callGPT35Api(fullPrompt, 3)
-    await appendToLog(supabaseAdminClient, log, { 
-      status: 'generated', 
-      // generation 
-    })
     action = await appendToAction(supabaseAdminClient, action, { status: 'generated', fullPrompt, generation })  
     return action
   } catch (error: any) {

@@ -6,7 +6,8 @@ export default inngest.createFunction(
   { event: "queue/generate" },
   async ({ event }: { event: any, step: any }) => {
     console.log(`[action_id: ${event.data.action_id}]: in queue/generate`)
-    await generate(event.data.action_id)
+    const action = await generate(event.data.action_id)
+    console.log({ id: action.id, status: action.status })
 
     console.log(`[action_id: ${event.data.action_id}]: Sending to queue/schedule`)
     await inngest.send({ 

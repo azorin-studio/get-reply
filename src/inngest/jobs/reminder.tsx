@@ -7,7 +7,7 @@ import { render } from "@react-email/render"
 import FollowUpReminder from "~/components/emails/followup-reminder"
 import supabaseAdminClient from "~/supabase/supabase-admin-client"
 
-export default async function followup(action_id: string): Promise<Action>{
+export default async function reminder(action_id: string): Promise<Action>{
   let { action, log, sequence, prompt } = await fetchAllPiecesFromActionId(supabaseAdminClient, action_id)
 
   const to=  log.to?.filter(t => !t.address.endsWith('@getreply.app')).map(t => t.address).join(', ')

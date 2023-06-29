@@ -22,37 +22,32 @@ export default inngest.createFunction(
       return action.run_date
     })
 
+    await step.run('Send confirmation email', async () => {
+      console.log(`[action_id: ${event.data.action_id}]: Sending to queue/confirmation-email`)
+      await inngest.send({ 
+        name: 'queue/confirmation-email',
+        id: `queue/confirmation-email-${event.data.action_id}`,
+        data: { action_id: event.data.action_id, log_id: event.data.log_id }
+      })
+    })
+
     console.log(`[action_id: ${event.data.action_id}]: sleeping until ${runDate} ms`)
     await step.sleepUntil(runDate)
 
     await step.run('Schedule', async () => {
       console.log(`[action_id: ${event.data.action_id}]: in queue/schedule - schedule`)
-      const { sequence, log, action } = await fetchAllPiecesFromActionId(supabaseAdminClient, event.data.action_id)
+      const { log, action } = await fetchAllPiecesFromActionId(supabaseAdminClient, event.data.action_id)
 
       if (log.status === 'cancelled' || action.status === 'cancelled') {
         console.log(`[action_id: ${event.data.action_id}]: cancelled`)
         return
       }
 
-      if (sequence.name === 'collab') {
-        await inngest.send({ 
-          id: `queue/collab-${event.data.action_id}`,
-          name: 'queue/collab', 
-          data: { action_id: event.data.action_id, log_id: event.data.log_id }
-        })
-      } else if (sequence.name === 'reply') {
-        await inngest.send({ 
-          id: `queue/reply-${event.data.action_id}`,
-          name: 'queue/reply', 
-          data: { action_id: event.data.action_id, log_id: event.data.log_id }
-        })
-      } else {
-        await inngest.send({ 
-          id: `queue/followup-${event.data.action_id}`,
-          name: 'queue/followup', 
-          data: { action_id: event.data.action_id, log_id: event.data.log_id }
-        })
-      }
+      await inngest.send({ 
+        id: `queue/reminder-${event.data.action_id}`,
+        name: 'queue/reminder', 
+        data: { action_id: event.data.action_id, log_id: event.data.log_id }
+      })
     })
  }
 )
