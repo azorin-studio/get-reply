@@ -23,6 +23,7 @@ jobs:
       - run: npm ci
       - run: npm test
         env:
+          LONG_TESTS: true
           TEST_GMAIL_USER: ${{ secrets.TEST_GMAIL_USER }}
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
