@@ -23,7 +23,7 @@ export default function createTestEmail ({
     headers: [
       {
         key: "received",
-        value: `<${toAddresses[0]}>;` // when the email is sent to multiple sequences at onces this header tells us which actual sequence we are
+        value: `<${toAddresses[0]}>;` // when the email is sent to multiple at onces this header tells us which actual we are
       },
       {
         key: "received-spf",

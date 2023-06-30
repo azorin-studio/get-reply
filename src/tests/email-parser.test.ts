@@ -3,7 +3,7 @@ import parsePromptNamesAndTags from '~/lib/parse-prompt-names-and-tags'
 import parseDelayFromTags from '~/lib/parse-delay-from-tags'
 
 describe('email parser', () => {
-  it('should parse the sequence name', () => {
+  it('should parse the prompt name', () => {
     const address = 'reply@getreply.app'
     testEmail.to = [{ address, name: "" }]
     const promptNamesAndTags = parsePromptNamesAndTags({
@@ -14,7 +14,7 @@ describe('email parser', () => {
     expect(promptNamesAndTags[0].promptName).toEqual('reply')
   })
   
-  it('should parse the sequence name and tag', () => {
+  it('should parse the prompt name and tag', () => {
     const address = "reply+pc@getreply.app"
     testEmail.to = [{ address, name: "" }]
     const promptNamesAndTags = parsePromptNamesAndTags({
@@ -26,7 +26,7 @@ describe('email parser', () => {
     expect(promptNamesAndTags[0].tags).toEqual(['pc'])
   })
     
-  it('should parse the sequence name and tag', () => {
+  it('should parse the prompt name and tag', () => {
     const address = "reply+pc+4hours@getreply.app"
     testEmail.to = [{ address, name: "" }]
     const promptNamesAndTags = parsePromptNamesAndTags({
@@ -39,7 +39,7 @@ describe('email parser', () => {
     expect(promptNamesAndTags[0].tags).toContain('4hours')
   })
 
-  it('should parse the sequence name and tag', () => {
+  it('should parse the prompt name and tag', () => {
     testEmail.to = [
       { address: 'f+5s+laptop@getreply.app', name: '' },
       { address: 'g+15s+laptop@getreply.app', name: '' }

@@ -43,11 +43,11 @@ export default async function createActions (log_id: string): Promise<Action[]> 
 
         if (!prompt) {
           await appendToLog(supabaseAdminClient, log, { status: 'error', errorMessage: `No prompt found with name ${promptName}` })
-          console.log(`[log_id: ${log.id}]: Sending to queue/sequence-not-found-email`)
+          console.log(`[log_id: ${log.id}]: Sending to queue/prompt-not-found-email`)
           
           await inngest.send({ 
-            name: 'queue/sequence-not-found-email',
-            id: `queue/sequence-not-found-email-${log.id}`,
+            name: 'queue/prompt-not-found-email',
+            id: `queue/prompt-not-found-email-${log.id}`,
             data: { log_id: log.id, promptName }
           })
           

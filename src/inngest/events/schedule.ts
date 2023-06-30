@@ -8,7 +8,7 @@ export default inngest.createFunction(
     name: "schedule", 
     retries: 0, 
     cancelOn: [
-      { event: "log-cancelled", match: "data.action_id" }
+      { event: "queue/cancel", match: "data.log_id" }
     ],
   },
   { event: "queue/schedule" },
@@ -17,6 +17,12 @@ export default inngest.createFunction(
       console.log(`[action_id: ${event.data.action_id}]: in queue/schedule - sleep`)
       const action = await getActionById(supabaseAdminClient, event.data.action_id)
       if (!action) throw new Error(`Action ${event.data.action_id} not found`)
+
+      if (action.status === 'cancelled') {
+        console.log(`[action_id: ${event.data.action_id}]: cancelled`)
+        return
+      }
+
       await appendToAction(supabaseAdminClient, action, { status: 'pending' })
       return action.run_date
     })

@@ -5,7 +5,7 @@ import failure from './events/failure'
 import cancel from './events/cancel'
 import reminder from './events/reminder'
 import confirmationEmail from './events/confirmation-email'
-import sequenceNotFoundEmail from './events/sequence-not-found-email'
+import promptNotFoundEmail from './events/prompt-not-found-email'
 
 export const ingestEvents = [
   createActions,
@@ -13,7 +13,7 @@ export const ingestEvents = [
   schedule,
   failure,
   confirmationEmail,
-  sequenceNotFoundEmail,
+  promptNotFoundEmail,
   reminder,
   cancel
 ]

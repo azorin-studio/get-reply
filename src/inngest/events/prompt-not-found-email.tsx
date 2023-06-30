@@ -1,15 +1,15 @@
 import { render } from "@react-email/render"
-import SequenceNotFound from "~/components/emails/sequence-not-found"
+import PromptNotFound from "~/components/emails/prompt-not-found"
 import sendMail from "~/lib/send-mail"
 import { inngest } from '~/inngest/inngest'
 import supabaseAdminClient from '~/supabase/supabase-admin-client'
 import getLogById from "~/supabase/get-log-by-id"
 
 export default inngest.createFunction(
-  { name: "sequence-not-found-email-", retries: 0 },
-  { event: "queue/sequence-not-found-email" },
+  { name: "prompt-not-found-email-", retries: 0 },
+  { event: "queue/prompt-not-found-email" },
   async ({ event }: { event: any, step: any }) => {
-    console.log(`[action: ${event.data.log_id}]: sending sequence not found email.`)
+    console.log(`[action: ${event.data.log_id}]: sending prompt not found email.`)
 
     const log = await getLogById(supabaseAdminClient, event.data.log_id)
     if (!log) {
@@ -17,8 +17,8 @@ export default inngest.createFunction(
     }
    
     const html = render(
-      <SequenceNotFound
-        sequenceName={event.data.promptName}
+      <PromptNotFound
+        promptName={event.data.promptName}
       />
       , { pretty: true })
 

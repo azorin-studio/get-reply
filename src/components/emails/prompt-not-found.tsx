@@ -9,26 +9,26 @@ import {
 import * as React from 'react';
 import { main, container, h1, text, code, link } from './styles';
 
-interface SequenceNotFoundProps {
-  sequenceName: string | null;
+interface PromptNotFoundProps {
+  promptName: string | null;
 }
 
-export const SequenceNotFound = ({
-  sequenceName = 'placeholder-for-testing@getreply.app',
-}: SequenceNotFoundProps) => (
+export const PromptNotFound = ({
+  promptName = 'placeholder-for-testing@getreply.app',
+}: PromptNotFoundProps) => (
   <Html>
     <Head />
-    <Preview>GetReply Sequence not found</Preview>
+    <Preview>GetReply Prompt not found</Preview>
     <Body style={main}>
       <Text style={{ ...text }}>
-        Error from GetReply. You tried to email theGetReply sequence {sequenceName}@getreply.app, but it doesn&apos;t exist.
+        Error from GetReply. You tried to email theGetReply prompt {promptName}@getreply.app, but it doesn&apos;t exist.
       </Text>
       <Text
           style={{
             ...text,
           }}
         >
-          Check out the list of sequences in <Link
+          Check out the list of prompts in <Link
             href="https://getreply.app"
             target="_blank"
             style={link}
@@ -40,4 +40,4 @@ export const SequenceNotFound = ({
   </Html>
 );
 
-export default SequenceNotFound;
+export default PromptNotFound;
