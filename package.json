@@ -9,6 +9,7 @@
     "dev:download-types": "supabase gen types typescript --project-id 'dwtrraqsrjkkheqloopn' --schema public > src/supabase/database.types.ts",
     "dev:pull-secrets": "vercel env pull .env.vercel.local",
     "dev:email-templates": "email dev -d ./src/components/emails",
+    "prebuild": "node prebuild.js",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
