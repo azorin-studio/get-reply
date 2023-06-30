@@ -126,16 +126,12 @@ export const createDriveFile = async ({
   ];
 
   for (const permission of permissions) {
-    try {
-      const result = await drive.permissions.create({
-        requestBody: permission,
-        fileId: createFileRes.data.documentId!,
-        fields: 'id',
-      });
-      permissionIds.push(result.data.id);
-    } catch (err) {
-      console.error(err);
-    }
+    const result = await drive.permissions.create({
+      requestBody: permission,
+      fileId: createFileRes.data.documentId!,
+      fields: 'id',
+    });
+    permissionIds.push(result.data.id);
   }
 
   const file = await drive.files.get({
@@ -196,14 +192,12 @@ export const findThread = async (subject: string, to: string[], refresh_token: s
   oauth2Client.setCredentials(tokens)
   const gmail = google.gmail({ version: 'v1', auth: oauth2Client })
   const q = `${subject} to: ${to.join(', ')}`
-  console.log('finding thread', q)
   const threads = await gmail.users.threads.list({
     userId: 'me',
     q,
   })
 
   if (!threads.data.threads || threads.data.resultSizeEstimate === 0) {
-    console.log('no threads found')
     return null
   }
 
@@ -221,7 +215,6 @@ export const getThreadById = async (id: string, refresh_token: string) => {
   })
 
   if (!thread || !thread.data) {
-    console.log('no thread found')
     return null
   }
 
@@ -250,7 +243,6 @@ export const getMessageById = async (id: string, refresh_token: string) => {
   })
 
   if (!message) {
-    console.log('no message found')
     return null
   }
 

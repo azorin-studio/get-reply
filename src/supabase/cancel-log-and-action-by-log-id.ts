@@ -9,12 +9,11 @@ export default async function cancelLogAndActionByLogId(client: SupabaseClient, 
     .eq('id', id)
 
   const log = await getLogById(client, id)
-  if (!log) {
-    throw new Error(`No log found with id ${id}`)
-  }
+  if (!log) throw new Error(`No log found with id ${id}`)
 
   const actions = await getActionsByLogId(client, id)
-    
+  if (!actions) throw new Error(`No actions found with log id ${id}`)
+
   await Promise.all(
     actions.map(async (action) => 
       client

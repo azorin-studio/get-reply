@@ -28,9 +28,10 @@ describe('e2e using gmail', () => {
     const replies = await waitForReplies({
       threadId,
       messageId,
-      numberOfExpectedReplies: 1,
+      numberOfExpectedReplies: 2,
     })
-    replies.forEach((r: any) => expect(r.snippet).toContain('GetReply Prompt not found'))
+    const s = replies.map((r: any) => r.snippet).join('')
+    expect(s).toContain('GetReply Prompt not found')
     threadIds.push(threadId)
   }, ONE_MINUTE)
 

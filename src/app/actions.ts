@@ -16,10 +16,8 @@ export async function cancelLog(log_id: string) {
 
 export async function resumeLog(log_id: string) {
   'use server'
-  console.log(`[log_id: ${log_id}]: resuming`)
   const supabase = createServerComponentClient<Database>({ cookies })
   const log = await getLogById(supabase, log_id)
-  console.log(`[log_id: ${log_id}]: log`, log)
   if (!log) return
 
   await appendToLog(supabase, log, { status: 'resume' })

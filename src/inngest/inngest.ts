@@ -10,33 +10,45 @@ import { Action } from "~/supabase/types"
 import reminder from "./jobs/reminder"
 import generate from "./jobs/generate"
 
-const myMiddleware = new InngestMiddleware({
-  name: "My Middleware",
+const loggerMiddleware = new InngestMiddleware({
+  name: "logger",
   init() {
     return {
-      onFunctionRun({ fn }) {
-        console.log(`+ inngest ${fn.trigger.event} has started`)
+      onFunctionRun(props) {
+        const logId = props.ctx.event.data.log_id?.slice(0, 8)
+        const actionId = props.ctx.event.data.action_id?.slice(0, 8)
+
+        // if (logId) console.log(`+ ${props.fn.trigger.event} log ${logId} has started`)
+        // else if (actionId) console.log(`+ ${props.fn.trigger.event} action ${actionId} has started`)
+        // else console.log(`+ ${props.fn.trigger.event} has started`)
+
         return {
           afterExecution() {
-            console.log(`+ inngest ${fn.trigger.event} has finished`)
-          },
+            if (logId) console.log(`+ ${props.fn.trigger.event} log ${logId} has finished`)
+            else if (actionId) console.log(`+ ${props.fn.trigger.event} action ${actionId} has finished`)
+            else {
+              console.log(`+ ${props.fn.trigger.event} has finished`)
+              console.log({ data: props.ctx.event.data })
+              if (props.ctx.event.data.error) {
+                console.error({ error: props.ctx.event.data.error })
+              }
+            }
+          }
         }
       },
     }
   },
 })
 
-export const inngest = new Inngest({ name: "get-reply", middleware: [myMiddleware], })
+export const inngest = new Inngest({ name: "get-reply", middleware: [loggerMiddleware], })
 
-const sleepFn = inngest.createFunction(
-  { 
-    name: "sleep", 
-    retries: 0, 
-    cancelOn: [
-      { event: "queue/cancel", match: "data.log_id" }
-    ],
-  },
-  { 
+const sleepFn = inngest.createFunction({ 
+  name: "sleep", 
+  retries: 0, 
+  cancelOn: [
+    { event: "queue/cancel", match: "data.log_id" }
+  ],
+  }, { 
     event: "queue/sleep" 
   },
   async ({ event, step }: { event: any, step: any }) => {   
@@ -54,7 +66,7 @@ const sleepFn = inngest.createFunction(
 )
 
 const reminderFn = inngest.createFunction(
-  { name: "reminder", retries: 0 },
+  { name: "queue/reminder", retries: 0 },
   { event: "queue/reminder" },
   async ({ event }: { event: any, step: any }) => {
     await reminder(event.data.action_id)
@@ -63,7 +75,7 @@ const reminderFn = inngest.createFunction(
 )
 
 const promptNotFoundEmailFn = inngest.createFunction(
-  { name: "prompt-not-found-email-", retries: 0 },
+  { name: "queue/prompt-not-found-email", retries: 0 },
   { event: "queue/prompt-not-found-email" },
   async ({ event }: { event: any, step: any }) => {
     await sendNotFoundEmail(event.data.log_id, event.data.promptName)
@@ -72,7 +84,7 @@ const promptNotFoundEmailFn = inngest.createFunction(
 )
 
 const generateFn = inngest.createFunction(
-  { name: "generate", retries: 0 },
+  { name: "queue/generate", retries: 0 },
   { event: "queue/generate" },
   async ({ event }: { event: any, step: any }) => {
     const action = await generate(event.data.action_id)
@@ -88,7 +100,7 @@ const generateFn = inngest.createFunction(
 )
 
 const failureFn = inngest.createFunction(
-  { name: "Attached failed event message to log" },
+  { name: "inngest/function.failed" },
   { event: "inngest/function.failed" },
   async ({ event, step }) => {
     await step.run("Add failure to log", async () => {
@@ -96,15 +108,13 @@ const failureFn = inngest.createFunction(
       const originalEvent = event.data.event
       const { log_id, action_id } = originalEvent.data
       handleFailure(log_id, action_id, new Error(error.message))
-      throw error
-      // return { message: "Error event processed successfully", data: event.data }
+      return { message: "Error event processed successfully", data: event.data }
     })
   }
 )
 
-
 const createActionsFn = inngest.createFunction(
-  { name: "create-actions", retries: 0 },
+  { name: "queue/create-actions", retries: 0 },
   { event: "queue/create-actions" },
   async ({ event }: { event: any, step: any }) => {
     const actions = await createActions(event.data.log_id)
@@ -127,7 +137,7 @@ const createActionsFn = inngest.createFunction(
 )
 
 const confirmationEmailFn = inngest.createFunction(
-  { name: "confirmation-email", retries: 0 },
+  { name: "queue/confirmation-email", retries: 0 },
   { event: "queue/confirmation-email" },
   async ({ event }: { event: any, step: any }) => {
     await sendConfirmationEmail(event.data.log_id)
@@ -138,7 +148,7 @@ const confirmationEmailFn = inngest.createFunction(
 const cancelFn = inngest.createFunction(
   { name: "queue/cancel", retries: 0 },
   { event: "queue/cancel" },
-  async ({ event }: { event: any, step: any }) => {
+  async ({ event }: { event: any, step: any }) => { // TODO type this up
     await cancelLogAndActionByLogId(supabaseAdminClient, event.data.log_id)
     return { event }
   }

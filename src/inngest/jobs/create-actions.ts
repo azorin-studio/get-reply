@@ -16,7 +16,8 @@ export default async function createActions (log_id: string): Promise<Action[]> 
     await appendToLog(supabaseAdminClient, log, { status: 'error', errorMessage: 'No text found in incoming email' })
     throw new Error('No text found in incoming email')
   }
-    await appendToLog(supabaseAdminClient, log, {
+  
+  await appendToLog(supabaseAdminClient, log, {
     profile_id: log.profile.id,
     status: 'recieved' as Status,
     errorMessage: null,
@@ -42,13 +43,14 @@ export default async function createActions (log_id: string): Promise<Action[]> 
         if (!prompt) {
           await appendToLog(supabaseAdminClient, log, { status: 'error', errorMessage: `No prompt found with name ${promptName}` })
 
-          await inngest.send({ 
+          await inngest.send({
             name: 'queue/prompt-not-found-email',
             id: `queue/prompt-not-found-email-${log.id}`,
             data: { log_id: log.id, promptName }
           })
-
-          throw new Error(`No prompt found with name ${promptName}`)
+          // TODO break out of this function and return early, don't throw error
+          // throw new Error(`No prompt found with name ${promptName}`)
+          return null
         }
 
         const { delay, delayUnit } = parseDelayFromTags(tags)
@@ -63,7 +65,7 @@ export default async function createActions (log_id: string): Promise<Action[]> 
             run_date,
             delay: delay,
             delay_unit: delayUnit,
-            generation: '', // placeholder
+            generation: '',
           })
           .select()
           .limit(1)
@@ -76,7 +78,7 @@ export default async function createActions (log_id: string): Promise<Action[]> 
     )
 
     await appendToLog(supabaseAdminClient, log, { status: 'verified' })
-    return actions
+    return actions.filter(action => action !== null) as Action[]
   } catch (error: any) {
     await appendToLog(supabaseAdminClient, log, { status: 'error', errorMessage: error.message })
     throw error

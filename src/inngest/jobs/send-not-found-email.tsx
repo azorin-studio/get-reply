@@ -6,10 +6,8 @@ import getLogById from "~/supabase/get-log-by-id"
 
 export default async function sendNotFoundEmail (log_id: string, promptName: string) {
   const log = await getLogById(supabaseAdminClient, log_id)
-  if (!log) {
-    throw new Error(`[action: ${log_id}]: log not found.`)
-  }
- 
+  if (!log) throw new Error(`[action: ${log_id}]: log not found.`)
+
   const html = render(
     <PromptNotFound
       promptName={promptName}

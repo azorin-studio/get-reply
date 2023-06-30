@@ -52,7 +52,7 @@ export default function NewPromptClient(props: any) {
         .order('id', { ascending: true })
         .limit(10)
 
-      if (error) console.error(error)
+      if (error) throw error
       if (prompts) setPrompts(prompts)
     }
     fetchPrompts()
@@ -182,7 +182,6 @@ export default function NewPromptClient(props: any) {
       setBusy(false)
     } catch(error: any) {
       setBusy(false)
-      console.warn(error)
       setError(error.message)
     }
   }
