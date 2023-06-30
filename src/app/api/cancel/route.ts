@@ -7,8 +7,10 @@ export async function GET (request: Request) {
   const log_id = new URL(request.url).searchParams.get('log_id') || null
   if (!log_id) return NextResponse.json({ error: 'No log_id found' })
 
-  console.log(`[log_id: ${log_id}] sending to queue/cancel`)
-  inngest.send('queue/cancel', { data: { log_id } })
-
+  await inngest.send({ 
+    // id: `queue/cancel-${event.data.action_id}`,
+    name: 'queue/cancel', 
+    data: { action_id: log_id }
+  })
   return NextResponse.json({ success: true })
 }

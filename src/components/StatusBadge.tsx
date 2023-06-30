@@ -7,8 +7,6 @@ export default function StatusBadge(props: { status: string }) {
   const { status } = props
   const statusColor = statusColors[status]
 
-  console.log({ status, statusColor })
-
   return (
     <div 
       className={classNames(

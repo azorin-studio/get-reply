@@ -8,7 +8,7 @@ import LogBody from '~/components/LogBody'
 import { Database } from '~/supabase/database.types'
 import getActionsByLogId from '~/supabase/get-actions-by-log-id'
 import getLogById from '~/supabase/get-log-by-id'
-import { Action, Log } from '~/supabase/types'
+import { Action, Log, LogRead } from '~/supabase/types'
 
 export default async function Page({ params, searchParams }: { 
   params: { id: string }, 
@@ -44,7 +44,7 @@ export default async function Page({ params, searchParams }: {
       </div>
       {log && 
         <LogBody
-          log={log} 
+          log={log as LogRead} 
           actions={actions}
         />
       }
