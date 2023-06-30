@@ -6,7 +6,8 @@ export type Status =
   'generated' |
   'sleeping' |
   'complete' | 
-  'error'
+  'error' |
+  'cancelled' 
 
 
 export interface Contact {

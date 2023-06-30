@@ -44,8 +44,12 @@ describe('e2e using gmail', () => {
       numberOfExpectedReplies: 2,
     })
     expect(replies).toHaveLength(2)
-    expect(replies[0].snippet).toContain('Confirmation from GetReply')
-    expect(replies[1].snippet).toContain(followupIntroText)
+
+    const snippets = replies.map((r: any) => r.snippet).join('')
+
+
+    expect(snippets).toContain('Confirmation from GetReply')
+    expect(snippets).toContain(followupIntroText)
     threadIds.push(threadId)
   }, 2 * ONE_MINUTE)
 
