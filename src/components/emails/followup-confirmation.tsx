@@ -12,7 +12,7 @@ import * as React from 'react';
 import { main, container, h1, text, code, link } from './styles';
 
 interface IFollowUpConfirmation {
-  to?: string;
+  to: string;
   id: string;
 }
 

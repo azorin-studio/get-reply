@@ -4,6 +4,7 @@ import sendMail from "~/lib/send-mail"
 import { inngest } from '~/inngest/inngest'
 import supabaseAdminClient from '~/supabase/supabase-admin-client'
 import getLogById from "~/supabase/get-log-by-id"
+import parsePromptNamesAndTags from "~/lib/parse-prompt-names-and-tags"
 
 export default inngest.createFunction(
   { name: "confirmation-email", retries: 0 },
@@ -16,7 +17,16 @@ export default inngest.createFunction(
       throw new Error(`[action: ${event.data.log_id}]: log not found.`)
     }
    
-    const to = log.to?.filter(t => !t.address.endsWith('@getreply.app')).map(t => t.address).join(', ')
+    const promptsAndTags = parsePromptNamesAndTags({
+      to: log.to,
+      cc: log.cc,
+      bcc: log.bcc,
+    })
+  
+    const to = promptsAndTags.map(({ promptName, tags }) => {
+      return `${promptName}${tags.map(t => `+${t}`).join('')}@getreply.app`
+    }).join(', ') 
+
     const html = render(
       <FollowUpConfirmation
         to={to}
