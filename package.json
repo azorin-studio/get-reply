@@ -51,7 +51,7 @@
     "eslint-config-next": "13.2.4",
     "googleapis": "^105.0.0",
     "husky": "^8.0.0",
-    "inngest": "1.9.1",
+    "inngest": "2.1.0",
     "inngest-cli": "0.14.4",
     "isomorphic-fetch": "^3.0.0",
     "jest": "^29.5.0",

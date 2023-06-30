@@ -82,10 +82,7 @@ export default function createTestEmail ({
         value: "text/plain; charset=\"UTF-8\""
       }
     ],
-    from: {
-      address: fromAddress,
-      name: ""
-    },
+    from: { address: fromAddress, name: "" },
     to: toAddresses.map(address => ({ address, name: "" })),
     cc: ccAddresses.map(address => ({ address, name: "" })),
     bcc: bccAddresses.map(address => ({ address, name: "" })),

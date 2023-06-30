@@ -1,5 +1,4 @@
 import appendToAction from "~/supabase/append-to-action"
-import { Action } from "~/supabase/types"
 import sendMail from "~/lib/send-mail"
 import { render } from "@react-email/render"
 import FollowUpReminder from "~/components/emails/followup-reminder"
@@ -7,11 +6,15 @@ import supabaseAdminClient from "~/supabase/supabase-admin-client"
 import getActionById from "~/supabase/get-action-by-id"
 import appendToLog from "~/supabase/append-to-log"
 
-export default async function reminder(action_id: string): Promise<Action>{
+export default async function reminder(action_id: string): Promise<void>{
   const action = await getActionById(supabaseAdminClient, action_id)
   if (!action) throw new Error(`Action ${action_id} not found`)
 
-  const to=  action.log.to?.filter(t => !t.address.endsWith('@getreply.app')).map(t => t.address).join(', ')
+  if (action.log.status === 'cancelled' || action.status === 'cancelled') {
+    return
+  }
+
+  const to =  action.log.to?.filter(t => !t.address.endsWith('@getreply.app')).map(t => t.address).join(', ')
   const cc = action.log.cc?.filter(t => !t.address.endsWith('@getreply.app')).map(t => t.address).join(', ')
   const body = action.generation as string
   const promptId = action.prompt.id as string
@@ -36,8 +39,8 @@ export default async function reminder(action_id: string): Promise<Action>{
     messageId: action.log.messageId
   })
 
-  await appendToAction(supabaseAdminClient, action, { status: 'sent' })
+  await appendToAction(supabaseAdminClient, action, { status: 'complete' })
   await appendToLog(supabaseAdminClient, action.log, {status: 'complete' })
 
-  return action    
+  return
 }

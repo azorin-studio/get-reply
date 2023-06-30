@@ -1,10 +1,8 @@
-import { IncomingEmail, Log, Profile } from "~/supabase/types"
+import { IncomingEmail, Log, Profile, Status } from "~/supabase/types"
 import { SupabaseClient } from "@supabase/supabase-js"
 import getProfileFromEmail from "./get-profile-from-email"
 
 export default async function createLog (client: SupabaseClient, incomingEmail: IncomingEmail) {
-  console.log(`Running create log`)
-
   if (!incomingEmail.messageId) {
     throw new Error('No messageId')
   }
@@ -27,7 +25,7 @@ export default async function createLog (client: SupabaseClient, incomingEmail: 
     .from('logs')
     .insert({
       ...incomingEmail,
-      status: 'pending',
+      status: 'process-incoming-email' as Status,
       errorMessage: null,
       profile_id: profile.id
     })

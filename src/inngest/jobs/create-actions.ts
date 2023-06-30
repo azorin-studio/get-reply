@@ -1,6 +1,6 @@
 import appendToLog from "~/supabase/append-to-log"
 import supabaseAdminClient from "~/supabase/supabase-admin-client"
-import { Action, Log } from "~/supabase/types"
+import { Action, Log, Status } from "~/supabase/types"
 import calculateRunDate from "~/lib/calculate-run-date"
 import parseDelayFromTags from "~/lib/parse-delay-from-tags"
 import parsePromptNamesAndTags from "~/lib/parse-prompt-names-and-tags"
@@ -18,14 +18,12 @@ export default async function createActions (log_id: string): Promise<Action[]> 
   }
     await appendToLog(supabaseAdminClient, log, {
     profile_id: log.profile.id,
-    status: 'verifying',
+    status: 'recieved' as Status,
     errorMessage: null,
     created_at: new Date().toISOString()
   })
 
   try {
-    // TODO: this only takes into account the first email
-    // Need to figure out how to handle multiple emails
     const promptsAndTags = parsePromptNamesAndTags({
       to: log.to,
       cc: log.cc,
@@ -43,16 +41,14 @@ export default async function createActions (log_id: string): Promise<Action[]> 
 
         if (!prompt) {
           await appendToLog(supabaseAdminClient, log, { status: 'error', errorMessage: `No prompt found with name ${promptName}` })
-          console.log(`[log_id: ${log.id}]: Sending to queue/prompt-not-found-email`)
-          
+
           await inngest.send({ 
             name: 'queue/prompt-not-found-email',
             id: `queue/prompt-not-found-email-${log.id}`,
             data: { log_id: log.id, promptName }
           })
-          
+
           throw new Error(`No prompt found with name ${promptName}`)
-          
         }
 
         const { delay, delayUnit } = parseDelayFromTags(tags)
@@ -73,22 +69,15 @@ export default async function createActions (log_id: string): Promise<Action[]> 
           .limit(1)
     
         if (error) throw error
-    
-        if (!actions || actions.length === 0) throw new Error('Could not create action')
-      
+        if (!actions || actions.length === 0) throw new Error('Could not create action')      
         const action = actions[0]
         return action
       })
     )
 
-    console.log(`[log_id: ${log.id}] appending new actions: [${actions.map((action) => action.id).join(', ')}]`)
-    await appendToLog(supabaseAdminClient, log, { 
-      status: 'verified' 
-    })
-
+    await appendToLog(supabaseAdminClient, log, { status: 'verified' })
     return actions
   } catch (error: any) {
-    console.log(error)
     await appendToLog(supabaseAdminClient, log, { status: 'error', errorMessage: error.message })
     throw error
   }

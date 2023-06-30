@@ -1,12 +1,8 @@
 
 export const statusColors: { [key: string]: string } = {
   error: 'red',
-  pending: 'yellow',
-  verified: 'yellow',
-  cancelled: 'yellow',
-  generated: 'yellow',
-  generating: 'yellow',
-  scheduling: 'yellow',
-  sent: 'green',
+  recieved: 'yellow',
+  generated: 'orange',
+  sleeping: 'blue',
   complete: 'green',
 }

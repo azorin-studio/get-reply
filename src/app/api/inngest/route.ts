@@ -1,6 +1,5 @@
 
 import { serve } from "inngest/next"
-import { inngest } from "~/inngest/inngest"
-import { ingestEvents } from "~/inngest/events"
+import { inngest, ingestEvents } from "~/inngest/inngest"
 
 export const { GET, POST, PUT } = serve(inngest, [...ingestEvents])

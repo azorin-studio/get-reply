@@ -2,14 +2,12 @@
 import { Database, Json as JsonType } from "~/supabase/database.types";
 
 export type Status = 
-  'pending' | 
-  'verifying' | 'waiting-to-generate' | 
-  'generating' | 'waiting-to-assign' | 
-  'assigning' | 'waiting-to-draft' | 'waiting-to-reply' |
-  'drafting' | 'drafted' |
-  'replying' | 'replied' |
-  'to-draft' | 'to-reply' | 
+  'recieved' | 
+  'generated' |
+  'sleeping' |
+  'complete' | 
   'error'
+
 
 export interface Contact {
   address: string;
@@ -40,6 +38,7 @@ export type LogRead = Omit<
   to: any[] | null;
   bcc: any[] | null;
   cc: any[] | null;
+  status: Status;
   profile: Profile;
 }
 

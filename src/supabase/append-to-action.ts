@@ -6,7 +6,7 @@ export default async function appendToAction (client: SupabaseClient, action: Ac
     .from('actions')
     .update({ ...newTerms })
     .eq('id', action.id)
-    .select()
+    .select('*, prompt:prompts(*), log:logs(*), profile:profile_id (*)')
 
   if (error) {
     throw error

@@ -1,5 +1,5 @@
 
-interface IParseSequenceName {
+interface IParsePromptName {
   to: { address: string }[] | null | undefined,
   cc: { address: string }[] | null | undefined,
   bcc: { address: string }[] | null | undefined,
@@ -9,7 +9,7 @@ export default function parsePromptNamesAndTags ({
   to = [], 
   cc = [], 
   bcc = [], 
-}: IParseSequenceName): { promptName: string, tags: string[] }[] {
+}: IParsePromptName): { promptName: string, tags: string[] }[] {
   let allToEmails: any[] = []
   if (to) {
     allToEmails = [...allToEmails, ...to.map((to) => to.address)]

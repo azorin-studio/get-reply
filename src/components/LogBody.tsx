@@ -1,15 +1,15 @@
 
 import { format } from 'date-fns'
-import { Action, Log } from '~/supabase/types'
+import { Action, LogRead } from '~/supabase/types'
 import { statusColors } from './status-colors'
 import EmailBody from './EmailBody'
 import StatusBadge from './StatusBadge'
 import ActionBody from './ActionBody'
 
-export default function LogBody(props: { log: Log, actions: Action[] }) {
+export default function LogBody(props: { log: LogRead, actions: Action[] }) {
   const { log, actions } = props
 
-  const statusColor = (log.status && statusColors[log.status]) || 'blue'
+  const statusColor = statusColors[log.status]
 
   return (
     <div className="w-full flex flex-col gap-4">

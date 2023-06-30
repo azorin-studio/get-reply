@@ -40,7 +40,9 @@ export const liveGmailTest = async ({
     refresh_token: profile.refresh_token!
   })
 
-  const { data } = await sendDraft(draft.id!, profile.refresh_token!)
+  if(!draft.id) throw new Error('Cant find draft id after creating draft.')
+
+  const { data } = await sendDraft(draft.id, profile.refresh_token!)
   if (!data.threadId) throw new Error('Cant find thread after sending draft.')
 
   const thread = await getThreadById(data.threadId, profile.refresh_token!)

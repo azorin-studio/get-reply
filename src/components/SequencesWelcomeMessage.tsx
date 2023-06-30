@@ -1,6 +1,6 @@
 import CopyToClipboardBadge from "./CopyToClipboardBadge";
 
-export default function SequencesWelcomeMessage () {
+export default function PromptsWelcomeMessage () {
   return (
     <div className="text-slate-500 flex flex-col gap-4">
       <h1 className="text-2xl font-bold text-slate-900">
