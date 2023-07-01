@@ -6,9 +6,10 @@ import sendConfirmationEmail from "./jobs/send-confirmation-email"
 import cancelLogAndActionByLogId from "~/supabase/cancel-log-and-action-by-log-id"
 import supabaseAdminClient from "~/supabase/supabase-admin-client"
 import createActions from "./jobs/create-actions"
-import { Action } from "~/supabase/types"
+import { Action, IncomingEmail } from "~/supabase/types"
 import reminder from "./jobs/reminder"
 import generate from "./jobs/generate"
+import receive from "./jobs/receive"
 
 const loggerMiddleware = new InngestMiddleware({
   name: "logger",
@@ -99,6 +100,21 @@ const generateFn = inngest.createFunction(
   }
 )
 
+const receiveFn = inngest.createFunction(
+  { name: "queue/receive", retries: 0 },
+  { event: "queue/receive" },
+  async ({ event }: { event: any, step: any }) => {
+    const log = await receive(event.data.incomingEmail as IncomingEmail)
+    await inngest.send({
+      name: 'queue/create-actions',
+      data: { log_id: log.id }
+    })
+      
+    return { event }
+  }
+)
+
+
 const failureFn = inngest.createFunction(
   { name: "inngest/function.failed" },
   { event: "inngest/function.failed" },
@@ -159,6 +175,7 @@ export const ingestEvents = [
   generateFn,
   sleepFn,
   failureFn,
+  receiveFn,
   confirmationEmailFn,
   promptNotFoundEmailFn,
   reminderFn,
