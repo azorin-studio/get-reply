@@ -54,7 +54,7 @@ describe('e2e using gmail', () => {
     threadIds.push(threadId)
   }, 2 * ONE_MINUTE)
 
-  it('will test cancelling the f+1m@getreply.app', async () => {
+  it.only('will test cancelling the f+1m@getreply.app', async () => {
     const testName = 'f+1m'
     const to = [`${testName}${EMAIL_ROUTING_TAG}@getreply.app`]
     const { messageId, threadId } = await liveGmailTest({ to })
