@@ -45,10 +45,7 @@ describe('e2e using gmail', () => {
       numberOfExpectedReplies: 2,
     })
     expect(replies).toHaveLength(2)
-
     const snippets = replies.map((r: any) => r.snippet).join('')
-
-
     expect(snippets).toContain('Confirmation from GetReply')
     expect(snippets).toContain(followupIntroText)
     threadIds.push(threadId)
