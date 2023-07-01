@@ -53,8 +53,10 @@ export default async function createActions (log_id: string): Promise<Action[]> 
           return null
         }
 
-        const { delay, delayUnit } = parseDelayFromTags(tags)
-        const run_date = calculateRunDate(delay || 0, delayUnit || 'seconds', log.date!)
+        const p = parseDelayFromTags(tags)
+        const delay = p.delay || 0
+        const delayUnit = p.delayUnit || 'seconds'
+        const run_date = calculateRunDate(delay, delayUnit, log.date!)
     
         const { error, data: actions } = await supabaseAdminClient
           .from('actions')
