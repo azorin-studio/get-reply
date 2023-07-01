@@ -25,12 +25,10 @@ export default function SupabaseProvider({
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event: any, session: any) => {
-      console.log('SupabaseProvider: auth state changed, refreshing router', event)
       router.refresh()
     })
 
     return () => {
-      console.log('SupabaseProvider: unsubscribing from auth state change')
       subscription.unsubscribe()
     }
   }, [router, supabase])

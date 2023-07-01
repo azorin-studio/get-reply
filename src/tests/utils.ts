@@ -29,7 +29,7 @@ export const liveGmailTest = async ({
   if (!profile) throw new Error('No profile found')
 
   const r = Math.random().toString(36).slice(2, 7)
-  console.log('email test id:', r)
+  console.log('Email test id:', r)
 
   const draft = await createGmailDraftInThread({
     to, 

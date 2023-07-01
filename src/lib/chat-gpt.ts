@@ -45,8 +45,6 @@ export async function callGPT35Api(prompt: string, retries = 0, retryDelay = 100
       return callGPT35Api(prompt, retries - 1, retryDelay)
     } else {
       // Handle the error (e.g., log it, return a default value, or throw a custom error)
-      console.error(`Error in callGPT35Api, 0 tries remaining. Terminating.`)
-      console.error(errMsg)
       throw new Error(errMsg)
     }
   }

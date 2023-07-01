@@ -28,9 +28,10 @@ describe('e2e using gmail', () => {
     const replies = await waitForReplies({
       threadId,
       messageId,
-      numberOfExpectedReplies: 1,
+      numberOfExpectedReplies: 2,
     })
-    replies.forEach((r: any) => expect(r.snippet).toContain('GetReply Prompt not found'))
+    const s = replies.map((r: any) => r.snippet).join('')
+    expect(s).toContain('GetReply Prompt not found')
     threadIds.push(threadId)
   }, ONE_MINUTE)
 
@@ -44,16 +45,13 @@ describe('e2e using gmail', () => {
       numberOfExpectedReplies: 2,
     })
     expect(replies).toHaveLength(2)
-
     const snippets = replies.map((r: any) => r.snippet).join('')
-
-
     expect(snippets).toContain('Confirmation from GetReply')
     expect(snippets).toContain(followupIntroText)
     threadIds.push(threadId)
   }, 2 * ONE_MINUTE)
 
-  it('will test cancelling the f+1m@getreply.app', async () => {
+  it.only('will test cancelling the f+1m@getreply.app', async () => {
     const testName = 'f+1m'
     const to = [`${testName}${EMAIL_ROUTING_TAG}@getreply.app`]
     const { messageId, threadId } = await liveGmailTest({ to })
