@@ -11,7 +11,7 @@ import reminder from "./jobs/reminder"
 import generate from "./jobs/generate"
 
 const myMiddleware = new InngestMiddleware({
-  name: "My Middleware",
+  name: "logger middleware",
   init() {
     return {
       onFunctionRun({ fn }) {
@@ -27,6 +27,15 @@ const myMiddleware = new InngestMiddleware({
 })
 
 export const inngest = new Inngest({ name: "get-reply", middleware: [myMiddleware], })
+
+const pingFn = inngest.createFunction(
+  { name: "ping", retries: 0 },
+  { event: "queue/ping" },
+  async ({ event }: { event: any, step: any }) => {
+    console.log("pong")
+    return { event }
+  }
+)
 
 const sleepFn = inngest.createFunction(
   { 
@@ -152,7 +161,8 @@ export const ingestEvents = [
   confirmationEmailFn,
   promptNotFoundEmailFn,
   reminderFn,
-  cancelFn
+  cancelFn,
+  pingFn
 ]
 
 

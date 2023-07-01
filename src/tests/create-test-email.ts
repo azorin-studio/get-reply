@@ -7,7 +7,8 @@ interface ICreateTestEmail {
   bccAddresses?: string[],
   subject?: string,
   date?: string,
-  text?: string  
+  text?: string 
+  messageId?: string 
 }
 
 export default function createTestEmail ({
@@ -17,7 +18,8 @@ export default function createTestEmail ({
   bccAddresses = [],
   subject = "Test: 4aw90",
   date = "Fri, 26 May 2023 03:36:23 -0700",
-  text = "This is a test email"
+  text = "This is a test email",
+  messageId = "<sdjfgslidjufhgsldfighnldkj>"
 }: ICreateTestEmail): IncomingEmail {
   const email = {
     headers: [
@@ -87,7 +89,7 @@ export default function createTestEmail ({
     cc: ccAddresses.map(address => ({ address, name: "" })),
     bcc: bccAddresses.map(address => ({ address, name: "" })),
     subject,
-    messageId: "<CAG9yPc1=DJN4Wu=ygVueikSWiXg+zmrLG7Q3O6fyB3jdjwgGZw@mail.gmail.com>",
+    messageId,
     date,
     text
   }
