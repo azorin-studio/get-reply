@@ -13,7 +13,7 @@ interface ICreateTestEmail {
 
 export default function createTestEmail ({
   fromAddress = "amonecho1@gmail.com",
-  toAddresses = ["reply@getreply.app"],
+  toAddresses = ["f@getreply.app"],
   ccAddresses = [],
   bccAddresses = [],
   subject = "Test: 4aw90",

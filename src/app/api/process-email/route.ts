@@ -1,7 +1,10 @@
 import { NextResponse } from 'next/server'
 import { IncomingEmail } from '~/supabase/types'
-import { processIncomingEmail } from '~/inngest/process-incoming-email'
+import { processIncomingEmail } from '~/bus/engine'
+
+// handy for debugging
 // import { writeFile } from 'fs/promises'
+// writeFile(`./src/tests/fixtures/${json.messageId}.json`, JSON.stringify(json, null, 2))
 
 export const revalidate = 0
 
@@ -17,7 +20,6 @@ export async function POST (request: Request) {
     delete json.attachments
   }
 
-  // writeFile(`./src/tests/fixtures/${json.messageId}.json`, JSON.stringify(json, null, 2))
   const logs = await processIncomingEmail(json as IncomingEmail)
   return NextResponse.json({ logs })
 }

@@ -6,7 +6,7 @@ import parseDelayFromTags from "~/lib/parse-delay-from-tags"
 import parsePromptNamesAndTags from "~/lib/parse-prompt-names-and-tags"
 import getPromptByName from "~/supabase/get-prompt-by-name"
 import getLogById from "~/supabase/get-log-by-id"
-import { inngest } from "../inngest"
+import { inngest } from "../event-list"
 
 export default async function createActions (log_id: string): Promise<Action[]> {
   const log = await getLogById(supabaseAdminClient, log_id)
