@@ -1,6 +1,6 @@
 import { processIncomingEmail } from "~/bus/engine"
 import createTestEmail from "./create-test-email"
-import { startEventEmitter } from "~/bus/engine"
+import { getEventEmitter } from "~/bus/engine"
 import { EventEmitter } from "stream"
 import { supabaseAdminClient, deleteLogById } from "~/supabase/supabase"
 
@@ -23,7 +23,7 @@ describe('bus', () => {
   let log_id: string
 
   beforeAll(async () => {
-    eventEmitter = await startEventEmitter()
+    eventEmitter = await getEventEmitter()
   })
 
   it('should test email', async () => {    
@@ -34,9 +34,27 @@ describe('bus', () => {
     log_id = data.log_id
     
     // @ts-ignore
+    expect(sendMail.mock.calls.length).toEqual(2)
+    // @ts-ignore
     sendMail.mock.calls.forEach((call: any) => {
       expect(call[0].subject).toEqual(`re: ${email.subject}`)
     })
+  }, 20000)
+
+  it('should test two same emails', async () => {    
+    const email = createTestEmail()
+    await processIncomingEmail(email)
+    await processIncomingEmail(email)
+
+    const data = await awaitDone(eventEmitter)
+    log_id = data.log_id
+    
+    // @ts-ignore
+    expect(sendMail.mock.calls.length).toEqual(4)
+    // sendMail.mock.calls.forEach((call: any) => {
+    //   console.log(call)
+    //   // expect(call[0].subject).toEqual(`re: ${email.subject}`)
+    // })
   }, 20000)
 
   afterAll(async () => {
