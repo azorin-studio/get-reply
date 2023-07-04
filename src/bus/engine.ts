@@ -11,6 +11,7 @@ console.log(`INNGEST_ON: ${INNGEST_ON}`)
 
 let eventEmitter: any
 
+
 export const getEventEmitter = (): EventEmitter => {
   if (eventEmitter) return eventEmitter
 
@@ -20,6 +21,10 @@ export const getEventEmitter = (): EventEmitter => {
     eventEmitter.on(event, async (data: any) => {
       console.log(`${event} has started`)
       try {
+        // const id = data.id || null
+        // if (id) {
+
+        // }
         await fns[2]({ event: { data } })
       } catch (error) {
         await send(null, {
