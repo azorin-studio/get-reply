@@ -26,6 +26,7 @@ export default function LogActionBar({ log }: { log: Log }) {
       {log.status === 'cancelled' && (
         <button 
           onClick={async () => {
+            // TODO
             await supabase
               .from('logs')
               .update({ status: 'scheduled' })

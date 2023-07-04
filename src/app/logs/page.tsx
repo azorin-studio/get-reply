@@ -14,6 +14,7 @@ export default async function Page() {
     return redirect('/') 
   }
 
+  // TODO
   const { data } = await supabase
     .from('logs')
     .select('*, profile:profile_id (*)')

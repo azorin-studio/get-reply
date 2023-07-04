@@ -46,6 +46,7 @@ export default function NewPromptClient(props: any) {
   useEffect(() => {
     const fetchPrompts = async () => {
       const supabase = createClientComponentClient()
+      // TODO
       const { data: prompts, error } = await supabase
         .from('prompts')
         .select('*')
@@ -88,6 +89,7 @@ export default function NewPromptClient(props: any) {
       return
     }
 
+    // TODO
     await supabase
       .from('prompts')
       .delete()

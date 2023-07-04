@@ -12,6 +12,7 @@ export default async function Page(props: any) {
   const { data: { session } } = await supabase.auth.getSession()
 
   if(session) {
+    // TODO
     const { error, data: profile } = await supabase
       .from('profiles')
       .upsert({ 
