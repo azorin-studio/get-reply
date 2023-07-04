@@ -1,13 +1,13 @@
 import fetch from 'isomorphic-fetch'
 
-export default async function sendMail (props: {
+export const sendMail = async (props: {
   from: string,
   to: string,
   subject: string,
   text?: string,
   html?: string,
   messageId?: string | null | undefined,
-  }) {
+  }) => {
 
   const { 
     from,

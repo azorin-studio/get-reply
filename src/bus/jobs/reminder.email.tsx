@@ -1,5 +1,5 @@
 import appendToAction from "~/supabase/append-to-action"
-import sendMail from "~/lib/send-mail"
+import { sendMail } from "~/lib/send-mail"
 import { render } from "@react-email/render"
 import FollowUpReminder from "~/components/emails/followup-reminder"
 import supabaseAdminClient from "~/supabase/supabase-admin-client"

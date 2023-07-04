@@ -11,16 +11,29 @@ interface ICreateTestEmail {
   messageId?: string 
 }
 
-export default function createTestEmail ({
-  fromAddress = "amonecho1@gmail.com",
-  toAddresses = ["f@getreply.app"],
-  ccAddresses = [],
-  bccAddresses = [],
-  subject = "Test: 4aw90",
-  date = "Fri, 26 May 2023 03:36:23 -0700",
-  text = "This is a test email",
-  messageId = "<sdjfgslidjufhgsldfighnldkj>"
-}: ICreateTestEmail): IncomingEmail {
+// make a function that takes a number and returns a random string of that length
+const random = (length: number) => {
+  let result = ''
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+  const charactersLength = characters.length
+  for ( let i = 0; i < length; i++ ) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength))
+  }
+  return result
+}
+
+export default function createTestEmail (props: ICreateTestEmail = {}): IncomingEmail {
+  const r = random(10)
+  const {
+    fromAddress = "amonecho1@gmail.com",
+    toAddresses = ["f@getreply.app"],
+    ccAddresses = [],
+    bccAddresses = [],
+    subject = r,
+    date = "Fri, 26 May 2023 03:36:23 -0700",
+    text = "This is a test email",
+    messageId = r
+  } = props
   const email = {
     headers: [
       {

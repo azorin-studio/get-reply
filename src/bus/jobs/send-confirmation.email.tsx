@@ -1,6 +1,6 @@
 import { render } from "@react-email/render"
 import FollowUpConfirmation from "~/components/emails/followup-confirmation"
-import sendMail from "~/lib/send-mail"
+import { sendMail } from "~/lib/send-mail"
 import supabaseAdminClient from '~/supabase/supabase-admin-client'
 import getLogById from "~/supabase/get-log-by-id"
 import parsePromptNamesAndTags from "~/lib/parse-prompt-names-and-tags"
