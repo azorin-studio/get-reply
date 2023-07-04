@@ -1,6 +1,6 @@
 import { processIncomingEmail } from "~/bus/engine"
 import createTestEmail from "./create-test-email"
-import { startEventEmitter } from "~/bus/engine"
+import { getEventEmitter } from "~/bus/engine"
 import { EventEmitter } from "stream"
 import { supabaseAdminClient, deleteLogById } from "~/supabase/supabase"
 
@@ -23,7 +23,7 @@ describe('bus', () => {
   let log_id: string
 
   beforeAll(async () => {
-    eventEmitter = await startEventEmitter()
+    eventEmitter = await getEventEmitter()
   })
 
   it('should test email', async () => {    

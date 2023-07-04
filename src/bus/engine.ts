@@ -5,13 +5,16 @@ import eventList from './event-list'
 import EventEmitter from "events"
 import { IncomingEmail } from "~/supabase/types"
 
-const INNGEST_ON = process.env.INNGEST_ON
+const INNGEST_ON = (process.env.INNGEST_EVENT_KEY && process.env.INNGEST_EVENT_KEY !== "local")
+
+console.log(`INNGEST_ON: ${INNGEST_ON}`)
 
 let eventEmitter: any
 
-export const startEventEmitter = async () => {
-  eventEmitter = new EventEmitter()
+export const getEventEmitter = (): EventEmitter => {
+  if (eventEmitter) return eventEmitter
 
+  eventEmitter = new EventEmitter()
   eventList.forEach((fns: any[]) => {
     const event = fns[1].event
     eventEmitter.on(event, async (data: any) => {
@@ -33,11 +36,9 @@ export const startEventEmitter = async () => {
         })
         console.error(error)
       }
-      
       console.log(`${event} has finished`)
     })
   })
-    
   return eventEmitter
 }
 
@@ -58,7 +59,8 @@ export const send = async (step: any, event: any) => {
     if (step) step.sendEvent(event)
     else await inngest.send(event)
   } else {
-    eventEmitter.emit(event.name, event.data)
+    const em = getEventEmitter()
+    em.emit(event.name, event.data)
   }
   return { event }
 }
