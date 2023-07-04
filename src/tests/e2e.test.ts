@@ -1,9 +1,9 @@
-import getProfileFromEmail from '~/supabase/get-profile-from-email'
 import { trashThreadById } from '~/lib/google'
 import { introText as followupIntroText } from '~/components/emails/followup-reminder'
 import { Profile } from '~/supabase/types'
 import { liveGmailTest, waitForReplies } from '~/tests/utils'
-import supabaseAdminClient from '~/supabase/supabase-admin-client'
+import { getProfileFromEmail, supabaseAdminClient } from "~/supabase/supabase"
+
 
 const EMAIL_ROUTING_TAG = process.env.EMAIL_ROUTING_TAG || ''
 const ONE_MINUTE = 1000 * 60 * 1

@@ -3,7 +3,7 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"
 import { Database } from "~/supabase/database.types"
 import { useRouter } from 'next/navigation'
 import { Log } from "~/supabase/types"
-import cancelLogAndActionByLogId from "~/supabase/cancel-log-and-action-by-log-id"
+import { cancelLogAndActionByLogId } from "~/supabase/supabase"
 
 export default function LogActionBar({ log }: { log: Log }) {
   const supabase = createClientComponentClient<Database>()

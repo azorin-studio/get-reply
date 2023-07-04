@@ -1,8 +1,4 @@
-import getLogById from "~/supabase/get-log-by-id"
-import supabaseAdminClient from "~/supabase/supabase-admin-client"
-import appendToLog from "~/supabase/append-to-log"
-import appendToAction from "~/supabase/append-to-action"
-import getActionById from "~/supabase/get-action-by-id"
+import { getActionById, appendToAction, appendToLog, supabaseAdminClient, getLogById } from "~/supabase/supabase"
 
 export default async function handleFailure (log_id: string, action_id: string, error: Error) {
   if (log_id) {

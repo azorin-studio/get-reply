@@ -11,9 +11,7 @@ import { DotsVerticalIcon } from '@radix-ui/react-icons'
 import classNames from 'classnames'
 import Link from 'next/link'
 import { statusColors } from './status-colors'
-import { Database } from '~/supabase/database.types'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
-import getActionById from '~/supabase/get-action-by-id'
+
 export const revalidate = 0
 
 const ActionBody = (props: { 

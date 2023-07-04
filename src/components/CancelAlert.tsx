@@ -2,7 +2,7 @@
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
-import cancelLogAndActionByLogId from "~/supabase/cancel-log-and-action-by-log-id"
+import { cancelLogAndActionByLogId } from "~/supabase/supabase"
 import { Database } from "~/supabase/database.types"
 
 export default function CancelAlert ({ id, cancel }: { id: string, cancel: boolean }) {

@@ -1,5 +1,4 @@
-
-import { Database, Json as JsonType } from "~/supabase/database.types";
+import { Database } from "~/supabase/database.types"
 
 export type Status = 
   'recieved' | 
@@ -9,56 +8,35 @@ export type Status =
   'error' |
   'cancelled' 
 
+export type Profile = Database['public']['Tables']['profiles']['Row']
 
-export interface Contact {
-  address: string;
-  name:    string;
+export type Prompt = Database['public']['Tables']['prompts']['Row'] & {
+  profile: Profile
 }
 
-export interface Header {
-  key:   string;
-  value: string;
+export type Log = Database['public']['Tables']['logs']['Row'] & {
+  profile: Profile
 }
 
-export type Log = Omit<
-    Database['public']['Tables']['logs']['Insert'], 
-    'from' | 'to' | 'bcc' | 'cc'
-  > & {
-  from: any;
-  to: any[] | null;
-  bcc: any[] | null;
-  cc: any[] | null;
-  profile: Profile;
-}
-
-export type LogRead = Omit<
-    Database['public']['Tables']['logs']['Row'], 
-    'from' | 'to' | 'bcc' | 'cc'
-  > & {
-  from: any;
-  to: any[] | null;
-  bcc: any[] | null;
-  cc: any[] | null;
-  status: Status;
-  profile: Profile;
-}
-
-
-export type IncomingEmail = Pick<Log, 'bcc' | 'cc' | 'date' | 'from' | 'headers' | 'html' | 'messageId' | 'subject' | 'text' | 'to' > & {
-  from: Contact;
-  to: Contact[];
-  bcc?: Contact[];
-  cc?: Contact[];
-  attachments?: any[];
-}
-
-export type Json = JsonType
-
-export type Action = Database['public']['Tables']['actions']['Insert'] & {
+export type Action = Database['public']['Tables']['actions']['Row'] & {
   prompt: Prompt,
   log: Log
 }
 
-export type Profile = Database['public']['Tables']['profiles']['Row']
+export interface Contact {
+  address: string
+  name:    string
+}
 
-export type Prompt = Database['public']['Tables']['prompts']['Insert']
+export type IncomingEmail = {
+  from: Contact
+  to: Contact[]
+  bcc?: Contact[]
+  cc?: Contact[]
+  attachments?: any[],
+  headers: any[],
+  subject: string,
+  messageId: string,
+  date: string,
+  text: string,
+}

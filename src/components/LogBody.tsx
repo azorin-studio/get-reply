@@ -1,12 +1,12 @@
 
 import { format } from 'date-fns'
-import { Action, LogRead } from '~/supabase/types'
+import { Action, Log } from '~/supabase/types'
 import { statusColors } from './status-colors'
 import EmailBody from './EmailBody'
 import StatusBadge from './StatusBadge'
 import ActionBody from './ActionBody'
 
-export default function LogBody(props: { log: LogRead, actions: Action[] }) {
+export default function LogBody(props: { log: Log, actions: Action[] }) {
   const { log, actions } = props
 
   const statusColor = statusColors[log.status]
@@ -21,12 +21,12 @@ export default function LogBody(props: { log: LogRead, actions: Action[] }) {
                 {log.subject}
               </div>
               <div className="text-gray-600">
-                to{' '}{log.to?.map((to) => to.address).join(', ')}
+                to{' '}{log.to?.map((to: any) => to.address).join(', ')}
                 {/* Dont tidy this, otherwise it causes a weird hydration bug  */}
                 {log.cc && ', '}
-                {log.cc && `, ${log.cc.map((cc) => cc.address).join(', ')}`}
+                {log.cc && `, ${log.cc.map((cc: any) => cc.address).join(', ')}`}
                 {log.bcc && ', '}
-                {log.bcc && log.bcc.map((bcc) => bcc.address).join(', ')}
+                {log.bcc && log.bcc.map((bcc: any) => bcc.address).join(', ')}
               </div>
             </div>
           </div>

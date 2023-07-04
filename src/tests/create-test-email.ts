@@ -107,5 +107,5 @@ export default function createTestEmail (props: ICreateTestEmail = {}): Incoming
     text
   }
 
-  return email
+  return email as IncomingEmail
 }

@@ -23,7 +23,7 @@ export default function LogBadge(props: { log: Log }) {
                 {log.subject}
               </div>
               <div className="text-gray-600">
-                to {' '}{log.to?.map((to) => to!.address).join(', ')}
+                to {' '}{log.to?.map((to: any) => to?.address).join(', ')}
               </div>
             </div>
           </div>

@@ -88,7 +88,7 @@ export interface Database {
           messageId: string | null
           profile_id: string | null
           references: string | null
-          status: string | null
+          status: string
           subject: string | null
           text: string | null
           to: Json[] | null
@@ -107,7 +107,7 @@ export interface Database {
           messageId?: string | null
           profile_id?: string | null
           references?: string | null
-          status?: string | null
+          status: string
           subject?: string | null
           text?: string | null
           to?: Json[] | null
@@ -126,7 +126,7 @@ export interface Database {
           messageId?: string | null
           profile_id?: string | null
           references?: string | null
-          status?: string | null
+          status?: string
           subject?: string | null
           text?: string | null
           to?: Json[] | null

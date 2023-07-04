@@ -3,7 +3,6 @@ import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import LogBadge from '~/components/LogBadge'
 import { Database } from '~/supabase/database.types'
-import { Log } from '~/supabase/types'
 
 export const revalidate = 0
 

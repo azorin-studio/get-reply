@@ -5,10 +5,10 @@ import { redirect } from 'next/navigation'
 import CancelAlert from '~/components/CancelAlert'
 import LogActionBar from '~/components/LogActionBar'
 import LogBody from '~/components/LogBody'
+
+import {getActionsByLogId, getLogById } from '~/supabase/supabase'
+import { Action, Log } from '~/supabase/types'
 import { Database } from '~/supabase/database.types'
-import getActionsByLogId from '~/supabase/get-actions-by-log-id'
-import getLogById from '~/supabase/get-log-by-id'
-import { Action, Log, LogRead } from '~/supabase/types'
 
 export default async function Page({ params, searchParams }: { 
   params: { id: string }, 
@@ -44,7 +44,7 @@ export default async function Page({ params, searchParams }: {
       </div>
       {log && 
         <LogBody
-          log={log as LogRead} 
+          log={log as Log} 
           actions={actions}
         />
       }

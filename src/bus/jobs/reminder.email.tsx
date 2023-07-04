@@ -1,10 +1,8 @@
-import appendToAction from "~/supabase/append-to-action"
 import { sendMail } from "~/lib/send-mail"
 import { render } from "@react-email/render"
 import FollowUpReminder from "~/components/emails/followup-reminder"
-import supabaseAdminClient from "~/supabase/supabase-admin-client"
-import getActionById from "~/supabase/get-action-by-id"
-import appendToLog from "~/supabase/append-to-log"
+
+import { getActionById, appendToAction, appendToLog, supabaseAdminClient } from "~/supabase/supabase"
 
 export default async function reminder(action_id: string): Promise<void>{
   const action = await getActionById(supabaseAdminClient, action_id)
@@ -14,8 +12,8 @@ export default async function reminder(action_id: string): Promise<void>{
     return
   }
 
-  const to =  action.log.to?.filter(t => !t.address.endsWith('@getreply.app')).map(t => t.address).join(', ')
-  const cc = action.log.cc?.filter(t => !t.address.endsWith('@getreply.app')).map(t => t.address).join(', ')
+  const to =  action.log.to?.filter((t: any) => t?.address.endsWith('@getreply.app')).map((t: any) => t.address).join(', ')
+  const cc = action.log.cc?.filter((t: any) => t?.address.endsWith('@getreply.app')).map((t: any) => t.address).join(', ')
   const body = action.generation as string
   const promptId = action.prompt.id as string
 

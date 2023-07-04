@@ -1,8 +1,8 @@
 
 interface IParsePromptName {
-  to: { address: string }[] | null | undefined,
-  cc: { address: string }[] | null | undefined,
-  bcc: { address: string }[] | null | undefined,
+  to: any[] | null | undefined,
+  cc: any[] | null | undefined,
+  bcc: any[] | null | undefined,
 }
 
 export default function parsePromptNamesAndTags ({ 

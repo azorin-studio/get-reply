@@ -1,8 +1,7 @@
 'use server'
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs"
 import { Database } from "~/supabase/database.types"
-import appendToLog from "~/supabase/append-to-log"
-import getLogById from "~/supabase/get-log-by-id"
+import { getLogById, appendToLog } from "~/supabase/supabase"
 import { cookies } from "next/headers"
 
 export async function cancelLog(log_id: string) {

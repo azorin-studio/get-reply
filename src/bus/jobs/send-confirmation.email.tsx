@@ -1,9 +1,11 @@
 import { render } from "@react-email/render"
+
 import FollowUpConfirmation from "~/components/emails/followup-confirmation"
-import { sendMail } from "~/lib/send-mail"
-import supabaseAdminClient from '~/supabase/supabase-admin-client'
-import getLogById from "~/supabase/get-log-by-id"
 import parsePromptNamesAndTags from "~/lib/parse-prompt-names-and-tags"
+import { sendMail } from "~/lib/send-mail"
+
+import { supabaseAdminClient, getLogById } from "~/supabase/supabase"
+
 
 export default async function sendConfirmationEmail (log_id: string) {
   const log = await getLogById(supabaseAdminClient, log_id)

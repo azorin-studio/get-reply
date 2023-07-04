@@ -1,8 +1,7 @@
 import { callGPT35Api } from "~/lib/chat-gpt"
-import appendToAction from "~/supabase/append-to-action"
 import emailToPrompt from "~/lib/email-to-prompt"
-import supabaseAdminClient from "~/supabase/supabase-admin-client"
-import getActionById from "~/supabase/get-action-by-id"
+
+import { getActionById, appendToAction, supabaseAdminClient } from "~/supabase/supabase"
 
 export default async function generate (action_id: string) {
   let action = await getActionById(supabaseAdminClient, action_id)

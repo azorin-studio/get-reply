@@ -1,5 +1,5 @@
-import cancelLogAndActionByLogId from "~/supabase/cancel-log-and-action-by-log-id"
-import supabaseAdminClient from "~/supabase/supabase-admin-client"
+import { cancelLogAndActionByLogId, supabaseAdminClient } from "~/supabase/supabase"
+
 import createActions from "./jobs/create-actions"
 import { Action, IncomingEmail } from "~/supabase/types"
 

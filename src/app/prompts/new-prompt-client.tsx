@@ -193,7 +193,7 @@ export default function NewPromptClient(props: any) {
       prompt: '',
       description: '',
       profile_id: user && user.id,
-    })
+    } as Prompt)
   }
 
   const handlePromptNameChange = (event: any) => {
@@ -201,7 +201,7 @@ export default function NewPromptClient(props: any) {
       ...activePrompt,
       name: event.target.value,
     }
-    setActivePrompt(newPrompt)
+    setActivePrompt(newPrompt as Prompt)
   }
 
   const handleCancelClick = () => {
@@ -215,7 +215,7 @@ export default function NewPromptClient(props: any) {
       prompt: event.target.value,
     }
 
-    setActivePrompt(newPrompt)
+    setActivePrompt(newPrompt as Prompt)
   }
 
   return (
