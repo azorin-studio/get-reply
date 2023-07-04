@@ -2,7 +2,7 @@ import { trashThreadById } from '~/lib/google'
 import { introText as followupIntroText } from '~/components/emails/followup-reminder'
 import { Profile } from '~/supabase/types'
 import { liveGmailTest, waitForReplies } from '~/tests/utils'
-import { getProfileFromEmail, supabaseAdminClient } from "~/supabase/supabase"
+import { getProfileByEmail, supabaseAdminClient } from "~/supabase/supabase"
 
 
 const EMAIL_ROUTING_TAG = process.env.EMAIL_ROUTING_TAG || ''
@@ -15,7 +15,7 @@ describe.skip('e2e', () => {
   beforeAll(async () => {
     const FROM = process.env.TEST_GMAIL_USER
     if (!FROM) throw new Error('No test gmail user found')
-    profile = await getProfileFromEmail(supabaseAdminClient, FROM)
+    profile = await getProfileByEmail(supabaseAdminClient, FROM)
     if (!profile) throw new Error('No profile found')
   })
 

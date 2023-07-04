@@ -41,9 +41,7 @@ export const eventList = [
     { name: "queue/create-actions", retries: 0 },
     { event: "queue/create-actions" },
     async ({ event, step }: { event: any, step: any }) => {
-
       const actions = await stepRun(step, 'Create actions', async () => createActions(event.data.log_id))
-      
       const events = actions.map((action: Action) => {
         return { 
           id: `queue/generate-${action.id}`,

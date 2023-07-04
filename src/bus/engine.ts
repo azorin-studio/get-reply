@@ -15,7 +15,26 @@ export const startEventEmitter = async () => {
   eventList.forEach((fns: any[]) => {
     const event = fns[1].event
     eventEmitter.on(event, async (data: any) => {
-      await fns[2]({ event: { data } })
+      console.log(`${event} has started`)
+      try {
+        await fns[2]({ event: { data } })
+      } catch (error) {
+        await send(null, {
+          name: 'inngest/function.failed',
+          id: `inngest/function.failed-${event}-${data.id}`,
+          data: { 
+            event, 
+            data: {
+              log_id: data.log_id,
+              action_id: data.action_id,
+            }, 
+            error 
+          }
+        })
+        console.error(error)
+      }
+      
+      console.log(`${event} has finished`)
     })
   })
     
@@ -36,21 +55,17 @@ export const { GET, POST, PUT } = serve(
 
 export const send = async (step: any, event: any) => {
   if (INNGEST_ON) {
-    console.log(`inngest: ${event.name}, ${event.data}`)
     if (step) step.sendEvent(event)
     else await inngest.send(event)
   } else {
-    console.log(`eventEmitter: ${event.name}, ${event.data}`)
     eventEmitter.emit(event.name, event.data)
   }
   return { event }
 }
 export const sends = async (step: any, events: any) => {
   if (INNGEST_ON) {
-    console.log(`inngest: ${events.map((event: any) => event.name)}`)
     await step.sendEvent(events)
   } else {
-    console.log(`eventEmitter: ${events.map((event: any) => event.name)}`)
     events.forEach((event: any) => {
       eventEmitter.emit(event.name, event.data)
     })
@@ -59,23 +74,13 @@ export const sends = async (step: any, events: any) => {
 }
 
 export const stepRun = async (step: any, name: string, fn: any) => {
-  if (INNGEST_ON) {
-    console.log(`inngest stepRun: ${name}`)
-    return step.run(name, fn)
-  } else {
-    console.log(`eventEmitter stepRun: ${name}`)
-    return fn()
-  }
+  if (INNGEST_ON) return step.run(name, fn)
+  return fn()
 }
 
 export const sleepUntil = async (step: any, runDate: Date) => {
-  if (INNGEST_ON) {
-    console.log(`inngest sleepUntil: ${runDate}`)
-    return step.sleepUntil(runDate)  
-  } else {
-    console.log(`eventEmitter sleepUntil: ${runDate}`)
-    return 
-  }
+  if (INNGEST_ON) return step.sleepUntil(runDate)  
+  return 
 }
 
 export const processIncomingEmail = async (incomingEmail: IncomingEmail) => {

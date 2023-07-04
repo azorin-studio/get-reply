@@ -1,6 +1,6 @@
 import { Profile } from '~/supabase/types';
 import { checkForReply, createGmailDraftInThread, getThreadById, sendDraft } from '~/lib/google'
-import {supabaseAdminClient, getProfileFromEmail } from '~/supabase/supabase';
+import {supabaseAdminClient, getProfileByEmail } from '~/supabase/supabase';
 
 export const wait = (ms: number) =>
   new Promise(resolve => setTimeout(resolve, ms))
@@ -24,7 +24,7 @@ export const liveGmailTest = async ({
   const FROM = process.env.TEST_GMAIL_USER
   if (!FROM) throw new Error('No test gmail user found')
   
-  const profile: Profile = await getProfileFromEmail(supabaseAdminClient, FROM)
+  const profile: Profile = await getProfileByEmail(supabaseAdminClient, FROM)
   if (!profile) throw new Error('No profile found')
 
   const r = Math.random().toString(36).slice(2, 7)
@@ -69,7 +69,7 @@ export const waitForReplies = async ({
   const FROM = process.env.TEST_GMAIL_USER
   if (!FROM) throw new Error('No test gmail user found')
   
-  const profile: Profile = await getProfileFromEmail(supabaseAdminClient, FROM)
+  const profile: Profile = await getProfileByEmail(supabaseAdminClient, FROM)
   if (!profile) throw new Error('No profile found')
 
   const replies = watch(async () => {

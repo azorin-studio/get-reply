@@ -12,6 +12,7 @@ export default async function createActions (log_id: string): Promise<Action[]> 
     await appendToLog(supabaseAdminClient, log, { status: 'error', errorMessage: 'No text found in incoming email' })
     throw new Error('No text found in incoming email')
   }
+
   
   await appendToLog(supabaseAdminClient, log, {
     profile_id: log.profile.id,
@@ -19,6 +20,7 @@ export default async function createActions (log_id: string): Promise<Action[]> 
     errorMessage: null,
     created_at: new Date().toISOString()
   })
+
 
   try {
     const promptsAndTags = parsePromptNamesAndTags({
@@ -71,7 +73,6 @@ export default async function createActions (log_id: string): Promise<Action[]> 
         return action
       })
     )
-
     await appendToLog(supabaseAdminClient, log, { status: 'verified' })
     return actions.filter(action => action !== null) as Action[]
   } catch (error: any) {
