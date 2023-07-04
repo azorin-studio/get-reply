@@ -6,7 +6,6 @@ import parseDelayFromTags from "~/lib/parse-delay-from-tags"
 import parsePromptNamesAndTags from "~/lib/parse-prompt-names-and-tags"
 import getPromptByName from "~/supabase/get-prompt-by-name"
 import getLogById from "~/supabase/get-log-by-id"
-import { inngest } from "../event-list"
 
 export default async function createActions (log_id: string): Promise<Action[]> {
   const log = await getLogById(supabaseAdminClient, log_id)
@@ -43,11 +42,11 @@ export default async function createActions (log_id: string): Promise<Action[]> 
         if (!prompt) {
           await appendToLog(supabaseAdminClient, log, { status: 'error', errorMessage: `No prompt found with name ${promptName}` })
 
-          await inngest.send({
-            name: 'queue/prompt-not-found-email',
-            id: `queue/prompt-not-found-email-${log.id}`,
-            data: { log_id: log.id, promptName }
-          })
+          // await inngest.send({
+          //   name: 'queue/prompt-not-found-email',
+          //   id: `queue/prompt-not-found-email-${log.id}`,
+          //   data: { log_id: log.id, promptName }
+          // })
           // TODO break out of this function and return early, don't throw error
           // throw new Error(`No prompt found with name ${promptName}`)
           return null

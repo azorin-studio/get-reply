@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { IncomingEmail } from '~/supabase/types'
-import { processIncomingEmail } from '~/bus/engine'
+import { processIncomingEmail } from '~/bus/event-list'
 
 // handy for debugging
 // import { writeFile } from 'fs/promises'
