@@ -31,10 +31,10 @@ export const eventList = [
       try {
         const log = await receive(event.data.incomingEmail as IncomingEmail)
         if (log) {
-          await send(step, {
-            name: 'queue/create-actions',
-            data: { log_id: log.id }
-          })
+          // await send(step, {
+          //   name: 'queue/create-actions',
+          //   data: { log_id: log.id }
+          // })
         }
       } catch (error) {
         console.error(error)
