@@ -31,10 +31,10 @@ export const eventList = [
       try {
         const log = await receive(event.data.incomingEmail as IncomingEmail)
         if (log) {
-          // await send(step, {
-          //   name: 'queue/create-actions',
-          //   data: { log_id: log.id }
-          // })
+          await send(step, {
+            name: 'queue/create-actions',
+            data: { log_id: log.id }
+          })
         } else {
           await send(step, { 
             id: `queue/done-${event.data.action_id}`,
@@ -54,6 +54,8 @@ export const eventList = [
     { event: "queue/create-actions" },
     async ({ event, step }: { event: any, step: any }) => {
       const actions = await stepRun(step, 'Create actions', async () => createActions(event.data.log_id))
+
+
       const events = actions.map((action: Action) => {
         return { 
           id: `queue/generate-${action.id}`,
@@ -61,13 +63,16 @@ export const eventList = [
           data: { action_id: action.id } 
         }
       })
-      await sends(step, events)
-      await send(step, { 
+
+      events.push({ 
+        
         name: 'queue/confirmation.email',
         id: `queue/confirmation.email-${event.data.log_id}`,
         data: { log_id: event.data.log_id }
       })
-      
+
+      console.log(`+ sending ${events.length} generate events`)
+      await sends(step, events)
       return { event }
     }
   ], 
@@ -111,7 +116,7 @@ export const eventList = [
     async ({ event, step }: { event: any, step: any }) => {   
       const runDate = await stepRun(step, 'Calculate sleep', async () => calculateSleep(event.data.action_id))
       await sleepUntil(step, runDate)
-      await send(step, { 
+      await send(step, {
         id: `queue/reminder.email-${event.data.action_id}`,
         name: 'queue/reminder.email', 
         data: { action_id: event.data.action_id, log_id: event.data.log_id }
@@ -136,9 +141,7 @@ export const eventList = [
     { name: "queue/cancel", retries: 0 },
     { event: "queue/cancel" },
     async ({ event, step }: { event: any, step: any }) => {
-      await stepRun(step, 'Cancel log and action', async () => {
-        await cancelLogAndActionByLogId(supabaseAdminClient, event.data.log_id)
-      })
+      await cancelLogAndActionByLogId(supabaseAdminClient, event.data.log_id)
       return { event }
     }
   ],

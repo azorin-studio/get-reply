@@ -56,7 +56,7 @@ const ids: string[] = []
 export const send = async (step: any, event: any) => {
   if (INNGEST_EVENT_KEY) {
     if (step) step.sendEvent(event)
-    else await inngest.send(event)
+    else inngest.send(event)
   } else {
     const em = getEventEmitter()
     const id = event.id || null
