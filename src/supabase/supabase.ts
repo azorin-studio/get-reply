@@ -2,14 +2,14 @@ import { SupabaseClient, createClient } from '@supabase/supabase-js'
 import { Database } from './database.types'
 import { Log, Action, IncomingEmail, Profile, Prompt, Status } from "~/supabase/types"
 
-export async function createLog (client: SupabaseClient, incomingEmail: IncomingEmail): Promise<Log> {
+export async function createLog (client: SupabaseClient, incomingEmail: IncomingEmail): Promise<Log | null> {
   if (!incomingEmail.messageId) throw new Error('No messageId')
   const { data: existingLogs, error: existingLogsError } = await client
     .from('logs')
     .select('*')
     .eq('messageId', incomingEmail.messageId)
-  if (existingLogsError) throw existingLogsError
-  if (existingLogs && existingLogs.length > 0) throw new Error('Log already exists')
+  if (existingLogsError) throw new Error('Existing log check failed with error')
+  if (existingLogs && existingLogs.length > 0) return null
 
   const profile: Profile = await getProfileByEmail(client, (incomingEmail.from as any).address)
 

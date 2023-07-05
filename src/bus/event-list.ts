@@ -30,10 +30,12 @@ export const eventList = [
     async ({ event, step }: { event: any, step: any }) => {
       try {
         const log = await receive(event.data.incomingEmail as IncomingEmail)
-        await send(step, {
-          name: 'queue/create-actions',
-          data: { log_id: log.id }
-        })
+        if (log) {
+          await send(step, {
+            name: 'queue/create-actions',
+            data: { log_id: log.id }
+          })
+        }
       } catch (error) {
         console.error(error)
       }
