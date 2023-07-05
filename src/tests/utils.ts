@@ -1,3 +1,4 @@
+import parse from 'node-html-parser'
 import { Profile } from '~/supabase/types';
 import { checkForReply, createGmailDraftInThread, getThreadById, sendDraft } from '~/lib/google'
 import { getProfileByEmail } from '~/supabase/supabase';
@@ -16,6 +17,16 @@ export const watch = async (predicate: Function, ms: number) => {
       return result;
     }
   }
+}
+
+export const getIdFromReply = (reply: any): string => {
+  const body = reply.payload.body
+  const decodedBody = Buffer.from(body.data, 'base64').toString()
+  const root = parse(decodedBody)
+  const logUrl = root.querySelector('a')?.getAttribute('href')
+  const logId = logUrl?.replace('https://getreply.app/logs/', '')  
+  if (!logId) throw new Error('Cant find log id in reply.')
+  return logId
 }
 
 export const liveGmailTest = async ({

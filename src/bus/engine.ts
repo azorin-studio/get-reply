@@ -5,9 +5,7 @@ import eventList from './event-list'
 import EventEmitter from "events"
 import { IncomingEmail } from "~/supabase/types"
 
-const INNGEST_ON = (process.env.INNGEST_EVENT_KEY && process.env.INNGEST_EVENT_KEY !== "local")
-
-console.log(`INNGEST_ON: ${INNGEST_ON}`)
+const INNGEST_EVENT_KEY = process.env.INNGEST_EVENT_KEY
 
 let eventEmitter: any
 
@@ -19,7 +17,7 @@ export const getEventEmitter = (): EventEmitter => {
     const event = fns[1].event
     eventEmitter.on(event, async (data: any) => {
       try {
-        console.log(`${event} has started`)
+        // console.log(`${event} has started`)
         await fns[2]({ event: { data } })
         // console.log(`${event} has finished`)
       } catch (error) {
@@ -56,7 +54,7 @@ export const { GET, POST, PUT } = serve(
 
 const ids: string[] = []
 export const send = async (step: any, event: any) => {
-  if (INNGEST_ON) {
+  if (INNGEST_EVENT_KEY) {
     if (step) step.sendEvent(event)
     else await inngest.send(event)
   } else {
@@ -73,7 +71,7 @@ export const send = async (step: any, event: any) => {
   return { event }
 }
 export const sends = async (step: any, events: any) => {
-  if (INNGEST_ON) {
+  if (INNGEST_EVENT_KEY) {
     await step.sendEvent(events)
   } else {
     events.forEach((event: any) => {
@@ -84,12 +82,12 @@ export const sends = async (step: any, events: any) => {
 }
 
 export const stepRun = async (step: any, name: string, fn: any) => {
-  if (INNGEST_ON) return step.run(name, fn)
+  if (INNGEST_EVENT_KEY) return step.run(name, fn)
   return fn()
 }
 
 export const sleepUntil = async (step: any, runDate: Date) => {
-  if (INNGEST_ON) return step.sleepUntil(runDate)  
+  if (INNGEST_EVENT_KEY) return step.sleepUntil(runDate)  
   return 
 }
 

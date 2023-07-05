@@ -1,11 +1,9 @@
 import { trashThreadById } from '~/lib/google'
 import { introText as followupIntroText } from '~/components/emails/followup-reminder'
 import { Profile } from '~/supabase/types'
-import { liveGmailTest, waitForReplies, watch } from '~/tests/utils'
-import { getLogById, getProfileByEmail } from "~/supabase/supabase"
+import { getIdFromReply, liveGmailTest, waitForReplies, watch } from '~/tests/utils'
+import { deleteLogById, getLogById, getProfileByEmail } from "~/supabase/supabase"
 import { supabaseAdminClient } from "~/supabase/server-client"
-
-import parse from 'node-html-parser'
 
 const EMAIL_ROUTING_TAG = process.env.EMAIL_ROUTING_TAG || ''
 const TIMEOUT = 1000 * 60
@@ -13,6 +11,7 @@ const TIMEOUT = 1000 * 60
 describe('e2e', () => {  
   let profile: Profile
   let threadIds: string[] = []
+  let logIds: string[] = []
 
   beforeAll(async () => {
     if (!process.env.E2E_TESTS) {
@@ -61,6 +60,10 @@ describe('e2e', () => {
       numberOfExpectedReplies: 2,
     })
     expect(replies).toHaveLength(2)
+
+    const logId = getIdFromReply(replies[0])
+    logIds.push(logId)
+
     const snippets = replies.map((r: any) => r.snippet).join('')
     expect(snippets).toContain('Confirmation from GetReply')
     expect(snippets).toContain(followupIntroText)
@@ -78,11 +81,9 @@ describe('e2e', () => {
     })
 
     expect(replies).toHaveLength(1)
-    const body = replies[0].payload.body
-    const decodedBody = Buffer.from(body.data, 'base64').toString()
-    const root = parse(decodedBody)
-    const logUrl = root.querySelector('a')?.getAttribute('href')
-    const logId = logUrl?.replace('https://getreply.app/logs/', '')
+    const logId = getIdFromReply(replies[0])
+    logIds.push(logId)
+
     await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/cancel?log_id=${logId}`)
     const log = await watch(async () => {
       const log = await getLogById(supabaseAdminClient, logId!)
@@ -106,6 +107,8 @@ describe('e2e', () => {
       numberOfExpectedReplies: 3,
     })
     expect(replies).toHaveLength(3)
+    const logId = getIdFromReply(replies[0])
+    logIds.push(logId)
     threadIds.push(threadId)
   }, 2 * TIMEOUT)
   
@@ -121,6 +124,8 @@ describe('e2e', () => {
     expect(replies).toHaveLength(2)
     expect(replies[0].snippet).toContain('Confirmation from GetReply')
     expect(replies[1].snippet).toContain(followupIntroText)
+    const logId = getIdFromReply(replies[0])
+    logIds.push(logId)
     threadIds.push(threadId)
   }, 6 * TIMEOUT)
 
@@ -128,6 +133,12 @@ describe('e2e', () => {
     await Promise.all(
       threadIds.map(async (threadId: string) => {
         await trashThreadById(threadId, profile.refresh_token!)
+      })
+    )
+
+    await Promise.all(
+      logIds.map(async (logId: string) => {
+        await deleteLogById(supabaseAdminClient, logId)
       })
     )
   })

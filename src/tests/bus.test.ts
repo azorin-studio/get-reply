@@ -10,6 +10,12 @@ import { sendMail } from "../lib/send-mail"
 jest.mock('../lib/send-mail', () => ({ sendMail: jest.fn() }))
 jest.mock('../lib/chat-gpt', () => ({ callGPT35Api: jest.fn(() => 'test') }))
 
+if (process.env.INNGEST_EVENT_KEY) {
+  console.log('INNGEST_EVENT_KEY is set. Running bus tests with inngest.')
+} else {
+  console.log('INNGEST_EVENT_KEY is NOT set. Running bus tests with EventEmitter.')
+}
+
 const awaitDone = async (eventEmitter: EventEmitter): Promise<any> => 
   new Promise((resolve) => {
     eventEmitter.on('queue/done', (data: any) => {
