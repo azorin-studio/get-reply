@@ -92,9 +92,9 @@ export const sleepUntil = async (step: any, runDate: Date) => {
 }
 
 export const processIncomingEmail = async (incomingEmail: IncomingEmail) => {
-  console.log(`+ recieved mail ${incomingEmail.messageId?.slice(1, 7)} from "${incomingEmail.from.address}" with subject "${incomingEmail.subject}"`)
+  console.log(`+ received mail ${incomingEmail.messageId} from "${incomingEmail.from.address}" with subject "${incomingEmail.subject}"`)
   if (!incomingEmail.messageId) throw new Error('No messageId')
-  console.log(`+ sending queue/receive ${incomingEmail.messageId?.slice(1, 7)}`)
+  console.log(`+ sending queue/receive ${incomingEmail.messageId}`)
   await send(null, {
     name: 'queue/receive',
     id: `queue/receive-${incomingEmail.messageId}`,

@@ -19,7 +19,7 @@ if (process.env.INNGEST_EVENT_KEY) {
 const awaitDone = async (eventEmitter: EventEmitter): Promise<any> => 
   new Promise((resolve) => {
     eventEmitter.on('queue/done', (data: any) => {
-      console.log(`+ recieved event queue/done ${data.log_id}`)
+      console.log(`+ received event queue/done ${data.log_id}`)
       resolve(data)
     })
   })

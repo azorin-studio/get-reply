@@ -14,14 +14,12 @@ export default async function createActions (log_id: string): Promise<Action[]> 
     throw new Error('No text found in incoming email')
   }
 
-  
   await appendToLog(supabaseAdminClient, log, {
     profile_id: log.profile.id,
-    status: 'recieved' as Status,
+    status: 'received' as Status,
     errorMessage: null,
     created_at: new Date().toISOString()
   })
-
 
   try {
     const promptsAndTags = parsePromptNamesAndTags({

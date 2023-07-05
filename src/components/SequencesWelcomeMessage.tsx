@@ -20,7 +20,7 @@ export default function PromptsWelcomeMessage () {
         instead. You can specify a time delay using &quot;seconds, minutes, hours, days&quot;.
       </div>
       <div>
-        <span className="text-slate-400">This message will disappear when GetReply recieves its first email from you!</span>
+        <span className="text-slate-400">This message will disappear when GetReply receives its first email from you!</span>
       </div>
 
     </div>

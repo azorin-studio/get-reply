@@ -35,6 +35,12 @@ export const eventList = [
           //   name: 'queue/create-actions',
           //   data: { log_id: log.id }
           // })
+        } else {
+          await send(step, { 
+            id: `queue/done-${event.data.action_id}`,
+            name: 'queue/done', 
+            data: { log_id: event.data.log_id }
+          })    
         }
       } catch (error) {
         console.error(error)
