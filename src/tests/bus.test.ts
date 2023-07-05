@@ -55,7 +55,7 @@ describe('bus', () => {
 
   afterAll(async () => {
     console.log('afterAll')
-    await eventEmitter.removeAllListeners()
+    eventEmitter.removeAllListeners()
     await Promise.resolve()
     if (log_id) {
       await deleteLogById(supabaseAdminClient, log_id)

@@ -8,11 +8,27 @@ import parse from 'node-html-parser'
 const EMAIL_ROUTING_TAG = process.env.EMAIL_ROUTING_TAG || ''
 const TIMEOUT = 1000 * 60
 
-describe.skip('e2e', () => {
+describe('e2e', () => {  
   let profile: Profile
   let threadIds: string[] = []
 
   beforeAll(async () => {
+    if (!process.env.E2E_TESTS) {
+      console.log('E2E_TESTS is not set. Skipping e2e tests')
+      throw new Error('E2E_TESTS is not set. Skipping e2e tests')
+    }
+    if (EMAIL_ROUTING_TAG === '') {
+      console.log('EMAIL_ROUTING_TAG is not set. Running e2e on production')
+    } else {
+      console.log(`EMAIL_ROUTING_TAG is set to ${EMAIL_ROUTING_TAG}. Running e2e on local`)
+      // check if local server is on
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/health`)
+      if (res.status !== 200) {
+        console.log('Local server is not running, quitting')
+        throw new Error('Local server is not running')
+      }
+    }
+
     const FROM = process.env.TEST_GMAIL_USER
     if (!FROM) throw new Error('No test gmail user found')
     profile = await getProfileByEmail(supabaseAdminClient, FROM)
@@ -33,7 +49,7 @@ describe.skip('e2e', () => {
   //   threadIds.push(threadId)
   // }, TIMEOUT)
 
-  it('will test the f+5s@getreply.app', async () => {
+  it.only('will test the f+5s@getreply.app', async () => {
     const testName = 'f+5s'
     const to = [`${testName}${EMAIL_ROUTING_TAG}@getreply.app`]
     const { messageId, threadId } = await liveGmailTest({ to })
