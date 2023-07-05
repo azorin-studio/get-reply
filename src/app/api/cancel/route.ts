@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { send } from "~/bus/process-incoming-email"
+import { send } from "~/bus/event-list"
 
 export const revalidate = 0
 
@@ -7,7 +7,7 @@ export async function GET (request: Request) {
   const log_id = new URL(request.url).searchParams.get('log_id') || null
   if (!log_id) throw new Error('No log_id provided')
 
-  await send(null, { 
+  await send({ 
     name: 'queue/cancel', 
     data: { log_id }
   })
