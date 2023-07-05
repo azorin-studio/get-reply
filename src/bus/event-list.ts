@@ -23,9 +23,10 @@ export const send = async (event: IEvent) => {
 }
 
 export const sendEvents = async (events: IEvent[]) => {
-  events.forEach((event: any) => {
-    send(event)
-  })
+  console.log(`+ ${events.map((e: any) => e.name).join(', ')} started`)
+  await Promise.all(
+    events.map((event: any) => send(event))
+  )
   return { events }
 }
 
@@ -43,7 +44,7 @@ export const eventBus: IEventBus = {
 
   receive: async (event: IEvent) => {
     const log: Log | null  = await createLog(supabaseAdminClient, event.data.incomingEmail as IncomingEmail)
-    if (!log) throw LogAlreadyExistsError
+    if (!log) return { log_id: null, error: 'Log already exists' }
     const actions = await createActions(log.id)
     const events: IEvent[] = actions.map((action: Action) => {
       return { 
@@ -57,7 +58,7 @@ export const eventBus: IEventBus = {
       id: `confirmationEmail-${log.id}`,
       data: { log_id: log.id }
     })
-    await sendEvents(events)
+    sendEvents(events)
     return { log_id: log.id }
   },
 

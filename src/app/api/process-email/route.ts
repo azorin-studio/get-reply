@@ -20,6 +20,5 @@ export async function POST (request: Request) {
     delete json.attachments
   }
 
-  const logs = await processIncomingEmail(json as IncomingEmail)
-  return NextResponse.json({ logs })
+  return NextResponse.json(await processIncomingEmail(json as IncomingEmail))
 }
