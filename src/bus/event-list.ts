@@ -16,7 +16,10 @@ interface IEvent {
 }
 
 export const send = async (event: IEvent) => {
-  return eventBus[event.name](event)
+  console.log(`+ ${event.name} started`)
+  const re = await eventBus[event.name](event)
+  console.log(`- ${event.name} completed`)
+  return re
 }
 
 export const sendEvents = async (events: IEvent[]) => {
@@ -41,15 +44,7 @@ export const eventBus: IEventBus = {
   receive: async (event: IEvent) => {
     const log: Log | null  = await createLog(supabaseAdminClient, event.data.incomingEmail as IncomingEmail)
     if (!log) throw LogAlreadyExistsError
-    await send({
-      name: 'createActions',
-      data: { log_id: log?.id }
-    })
-    return { log_id: log?.id }
-  },
-
-  createActions: async (event: IEvent) => {
-    const actions = await createActions(event.data.log_id)
+    const actions = await createActions(log.id)
     const events: IEvent[] = actions.map((action: Action) => {
       return { 
         id: `generate-${action.id}`,
@@ -59,11 +54,11 @@ export const eventBus: IEventBus = {
     })
     events.push({         
       name: 'confirmationEmail',
-      id: `confirmationEmail-${event.data.log_id}`,
-      data: { log_id: event.data.log_id }
+      id: `confirmationEmail-${log.id}`,
+      data: { log_id: log.id }
     })
     await sendEvents(events)
-    return { log_id: event.data.log_id }
+    return { log_id: log.id }
   },
 
   promptNotFoundEmail: async (event: IEvent) => {
