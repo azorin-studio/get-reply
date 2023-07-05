@@ -55,7 +55,6 @@ export const eventList = [
     async ({ event, step }: { event: any, step: any }) => {
       const actions = await stepRun(step, 'Create actions', async () => createActions(event.data.log_id))
 
-
       const events = actions.map((action: Action) => {
         return { 
           id: `queue/generate-${action.id}`,
@@ -64,14 +63,12 @@ export const eventList = [
         }
       })
 
-      events.push({ 
-        
+      events.push({         
         name: 'queue/confirmation.email',
         id: `queue/confirmation.email-${event.data.log_id}`,
         data: { log_id: event.data.log_id }
       })
 
-      console.log(`+ sending ${events.length} generate events`)
       await sends(step, events)
       return { event }
     }

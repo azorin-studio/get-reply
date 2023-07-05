@@ -7,8 +7,20 @@ import { IncomingEmail } from "~/supabase/types"
 
 const INNGEST_EVENT_KEY = process.env.INNGEST_EVENT_KEY
 
-let eventEmitter: any
+export const inngest = new Inngest({
+  name: "get-reply-dev",
+  middleware: [loggerMiddleware],
+  eventKey: INNGEST_EVENT_KEY || 'emptystring',
+})
 
+export const { GET, POST, PUT } = serve(
+  inngest, 
+  eventList.map((fns: any[]) => 
+    inngest.createFunction(fns[0], fns[1], fns[2])
+  )
+)
+
+let eventEmitter: any
 export const getEventEmitter = (): EventEmitter => {
   if (eventEmitter) return eventEmitter
 
@@ -17,9 +29,9 @@ export const getEventEmitter = (): EventEmitter => {
     const event = fns[1].event
     eventEmitter.on(event, async (data: any) => {
       try {
-        // console.log(`${event} has started`)
+        console.log(`${event} has started`)
         await fns[2]({ event: { data } })
-        // console.log(`${event} has finished`)
+        console.log(`${event} has finished`)
       } catch (error) {
         await send(null, {
           name: 'inngest/function.failed',
@@ -39,18 +51,6 @@ export const getEventEmitter = (): EventEmitter => {
   })
   return eventEmitter
 }
-
-export const inngest = new Inngest({
-  name: "get-reply-dev",
-  middleware: [loggerMiddleware],
-})
-
-export const { GET, POST, PUT } = serve(
-  inngest, 
-  eventList.map((fns: any[]) => 
-    inngest.createFunction(fns[0], fns[1], fns[2])
-  )
-)
 
 const ids: string[] = []
 export const send = async (step: any, event: any) => {
