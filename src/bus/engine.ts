@@ -10,7 +10,7 @@ const INNGEST_EVENT_KEY = process.env.INNGEST_EVENT_KEY
 export const inngest = new Inngest({
   name: "get-reply-dev",
   middleware: [loggerMiddleware],
-  eventKey: INNGEST_EVENT_KEY || 'emptystring',
+  eventKey: INNGEST_EVENT_KEY,
 })
 
 export const { GET, POST, PUT } = serve(
@@ -55,8 +55,13 @@ export const getEventEmitter = (): EventEmitter => {
 const ids: string[] = []
 export const send = async (step: any, event: any) => {
   if (INNGEST_EVENT_KEY) {
-    if (step) step.sendEvent(event)
-    else inngest.send(event)
+    if (step) {
+      console.log(`+ inngest step sending ${event.name} to inngest`)
+      step.sendEvent(event)
+    } else {
+      console.log(`+ inngest sending ${event.name} to inngest`)
+      inngest.send(event)
+    }
   } else {
     const em = getEventEmitter()
     const id = event.id || null
@@ -66,6 +71,7 @@ export const send = async (step: any, event: any) => {
     } else {
       ids.push(id)
     }
+    console.log(`+ sending ${event.name} to eventEmitter`)
     em.emit(event.name, event.data)
   }
   return { event }
@@ -92,9 +98,7 @@ export const sleepUntil = async (step: any, runDate: Date) => {
 }
 
 export const processIncomingEmail = async (incomingEmail: IncomingEmail) => {
-  console.log(`+ received mail ${incomingEmail.messageId} from "${incomingEmail.from.address}" with subject "${incomingEmail.subject}"`)
   if (!incomingEmail.messageId) throw new Error('No messageId')
-  console.log(`+ sending queue/receive ${incomingEmail.messageId}`)
   await send(null, {
     name: 'queue/receive',
     id: `queue/receive-${incomingEmail.messageId}`,
