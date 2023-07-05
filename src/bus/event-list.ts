@@ -1,4 +1,4 @@
-import { cancelLogAndActionByLogId, supabaseAdminClient } from "~/supabase/supabase"
+import { cancelLogAndActionByLogId } from "~/supabase/supabase"
 
 import createActions from "./jobs/create-actions"
 import { Action, IncomingEmail } from "~/supabase/types"
@@ -13,6 +13,7 @@ import generate from "./jobs/generate"
 import receive from "./jobs/receive"
 
 import { send, sends, stepRun, sleepUntil } from "./engine"
+import { supabaseAdminClient } from "~/supabase/server-client"
 
 export const eventList = [
   [

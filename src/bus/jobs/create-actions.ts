@@ -1,7 +1,8 @@
 import calculateRunDate from "~/lib/calculate-run-date"
 import parseDelayFromTags from "~/lib/parse-delay-from-tags"
 import parsePromptNamesAndTags from "~/lib/parse-prompt-names-and-tags"
-import { getPromptByName, getLogById, appendToLog, supabaseAdminClient } from "~/supabase/supabase"
+import { getPromptByName, getLogById, appendToLog } from "~/supabase/supabase"
+import { supabaseAdminClient } from "~/supabase/server-client"
 import { Action, Status } from "~/supabase/types"
 
 export default async function createActions (log_id: string): Promise<Action[]> {

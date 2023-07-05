@@ -2,17 +2,6 @@ import { SupabaseClient, createClient } from '@supabase/supabase-js'
 import { Database } from './database.types'
 import { Log, Action, IncomingEmail, Profile, Prompt, Status } from "~/supabase/types"
 
-export const supabaseAdminClient: SupabaseClient = createClient<Database>(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!, 
-  process.env.SUPABASE_SERVICE_KEY!, 
-  {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false
-    }
-  }
-)
-
 export async function createLog (client: SupabaseClient, incomingEmail: IncomingEmail): Promise<Log> {
   if (!incomingEmail.messageId) throw new Error('No messageId')
   const { data: existingLogs, error: existingLogsError } = await client

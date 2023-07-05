@@ -1,8 +1,8 @@
+import { supabaseAdminClient } from "~/supabase/server-client"
 import { sendMail } from "~/lib/send-mail"
 import { render } from "@react-email/render"
 import FollowUpReminder from "~/components/emails/followup-reminder"
-
-import { getActionById, appendToAction, appendToLog, supabaseAdminClient } from "~/supabase/supabase"
+import { getActionById, appendToAction, appendToLog } from "~/supabase/supabase"
 
 export default async function reminder(action_id: string): Promise<void>{
   const action = await getActionById(supabaseAdminClient, action_id)

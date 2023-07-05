@@ -2,7 +2,9 @@ import { trashThreadById } from '~/lib/google'
 import { introText as followupIntroText } from '~/components/emails/followup-reminder'
 import { Profile } from '~/supabase/types'
 import { liveGmailTest, waitForReplies, watch } from '~/tests/utils'
-import { getLogById, getProfileByEmail, supabaseAdminClient } from "~/supabase/supabase"
+import { getLogById, getProfileByEmail } from "~/supabase/supabase"
+import { supabaseAdminClient } from "~/supabase/server-client"
+
 import parse from 'node-html-parser'
 
 const EMAIL_ROUTING_TAG = process.env.EMAIL_ROUTING_TAG || ''

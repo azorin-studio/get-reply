@@ -1,4 +1,5 @@
-import { createLog, supabaseAdminClient } from "~/supabase/supabase"
+import { supabaseAdminClient } from "~/supabase/server-client"
+import { createLog } from "~/supabase/supabase"
 import { IncomingEmail, Log } from "~/supabase/types"
 
 export default async function receive (incomingEmail: IncomingEmail) {

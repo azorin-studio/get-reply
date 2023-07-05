@@ -2,7 +2,9 @@ import { processIncomingEmail } from "~/bus/engine"
 import createTestEmail from "./create-test-email"
 import { getEventEmitter } from "~/bus/engine"
 import { EventEmitter } from "stream"
-import { supabaseAdminClient, deleteLogById } from "~/supabase/supabase"
+import { deleteLogById } from "~/supabase/supabase"
+import { supabaseAdminClient } from "~/supabase/server-client"
+
 
 import { sendMail } from "../lib/send-mail"
 jest.mock('../lib/send-mail', () => ({ sendMail: jest.fn() }))

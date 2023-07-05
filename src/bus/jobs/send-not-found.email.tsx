@@ -2,8 +2,9 @@ import { render } from "@react-email/render"
 
 import PromptNotFound from "~/components/emails/prompt-not-found"
 import { sendMail } from "~/lib/send-mail"
+import { supabaseAdminClient } from "~/supabase/server-client"
 
-import { supabaseAdminClient, getLogById } from "~/supabase/supabase"
+import { getLogById } from "~/supabase/supabase"
 
 export default async function sendNotFoundEmail (log_id: string, promptName: string) {
   const log = await getLogById(supabaseAdminClient, log_id)

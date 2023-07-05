@@ -1,4 +1,5 @@
-import { supabaseAdminClient, getActionById, appendToAction, appendToLog } from "~/supabase/supabase"
+import { getActionById, appendToAction, appendToLog } from "~/supabase/supabase"
+import { supabaseAdminClient } from "~/supabase/server-client"
 
 export default async function calculateSleep (action_id: string) {
   const action = await getActionById(supabaseAdminClient, action_id)

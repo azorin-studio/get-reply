@@ -1,6 +1,8 @@
 import { Profile } from '~/supabase/types';
 import { checkForReply, createGmailDraftInThread, getThreadById, sendDraft } from '~/lib/google'
-import {supabaseAdminClient, getProfileByEmail } from '~/supabase/supabase';
+import { getProfileByEmail } from '~/supabase/supabase';
+import { supabaseAdminClient } from "~/supabase/server-client"
+
 
 export const wait = (ms: number) =>
   new Promise(resolve => setTimeout(resolve, ms))
