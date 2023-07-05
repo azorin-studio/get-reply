@@ -10,21 +10,16 @@ jest.mock('../lib/chat-gpt', () => ({ callGPT35Api: jest.fn(() => 'test') }))
 
 const awaitDone = async (eventEmitter: EventEmitter): Promise<any> => 
   new Promise((resolve) => {
-    console.log(`+ registering event queue/done`)
     eventEmitter.on('queue/done', (data: any) => {
       console.log(`+ recieved event queue/done ${data.log_id}`)
       resolve(data)
     })
   })
 
-
 describe('bus', () => {
-  let eventEmitter: EventEmitter
+  const eventEmitter: EventEmitter = getEventEmitter()
   let log_id: string
-
-  beforeAll(async () => {
-    eventEmitter = await getEventEmitter()
-  })
+  let mockLength = 0
 
   it('should test email', async () => {    
     const email = createTestEmail()
@@ -39,6 +34,9 @@ describe('bus', () => {
     sendMail.mock.calls.forEach((call: any) => {
       expect(call[0].subject).toEqual(`re: ${email.subject}`)
     })
+
+    // @ts-ignore
+    mockLength = sendMail.mock.calls.length
   }, 20000)
 
   it('should test two same emails', async () => {    
@@ -50,11 +48,9 @@ describe('bus', () => {
     log_id = data.log_id
     
     // @ts-ignore
-    expect(sendMail.mock.calls.length).toEqual(4)
-    // sendMail.mock.calls.forEach((call: any) => {
-    //   console.log(call)
-    //   // expect(call[0].subject).toEqual(`re: ${email.subject}`)
-    // })
+    expect(sendMail.mock.calls.length).toEqual(mockLength + 2)
+    // @ts-ignore
+    mockLength = sendMail.mock.calls.length
   }, 20000)
 
   afterAll(async () => {

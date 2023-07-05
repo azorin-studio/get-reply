@@ -11,7 +11,6 @@ console.log(`INNGEST_ON: ${INNGEST_ON}`)
 
 let eventEmitter: any
 
-
 export const getEventEmitter = (): EventEmitter => {
   if (eventEmitter) return eventEmitter
 
@@ -19,13 +18,10 @@ export const getEventEmitter = (): EventEmitter => {
   eventList.forEach((fns: any[]) => {
     const event = fns[1].event
     eventEmitter.on(event, async (data: any) => {
-      console.log(`${event} has started`)
       try {
-        // const id = data.id || null
-        // if (id) {
-
-        // }
+        console.log(`${event} has started`)
         await fns[2]({ event: { data } })
+        // console.log(`${event} has finished`)
       } catch (error) {
         await send(null, {
           name: 'inngest/function.failed',
@@ -41,7 +37,6 @@ export const getEventEmitter = (): EventEmitter => {
         })
         console.error(error)
       }
-      console.log(`${event} has finished`)
     })
   })
   return eventEmitter
@@ -59,12 +54,20 @@ export const { GET, POST, PUT } = serve(
   )
 )
 
+const ids: string[] = []
 export const send = async (step: any, event: any) => {
   if (INNGEST_ON) {
     if (step) step.sendEvent(event)
     else await inngest.send(event)
   } else {
     const em = getEventEmitter()
+    const id = event.id || null
+    if (id && ids.includes(id))  {
+      console.log(`+ skipping ${event} ${id}`)
+      return
+    } else {
+      ids.push(id)
+    }
     em.emit(event.name, event.data)
   }
   return { event }
