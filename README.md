@@ -36,15 +36,6 @@ Needed for login, and increased scopes needed for testing
 - GOOGLE_CLIENT_ID
 ```
 
-### Inngest
-
-These are not referenced in GetReply code, but are used by the Inngest client library
-
-```
-- INNGEST_EVENT_KEY
-- INNGEST_SIGNING_KEY
-```
-
 ### Email routing bot
 
 Needed to securely connect with the email router, needs to be a random string

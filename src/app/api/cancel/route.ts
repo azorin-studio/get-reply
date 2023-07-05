@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { send } from "~/bus/engine"
+import { send } from "~/bus/process-incoming-email"
 
 export const revalidate = 0
 

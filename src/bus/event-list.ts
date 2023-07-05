@@ -1,164 +1,114 @@
-import { cancelLogAndActionByLogId } from "~/supabase/supabase"
-
+import { cancelLogAndActionByLogId, createLog } from "~/supabase/supabase"
 import createActions from "./jobs/create-actions"
-import { Action, IncomingEmail } from "~/supabase/types"
-
+import { Action, IncomingEmail, Log } from "~/supabase/types"
 import reminder from "./jobs/reminder.email"
 import sendConfirmationEmail from "./jobs/send-confirmation.email"
 import sendNotFoundEmail from "./jobs/send-not-found.email"
-
 import calculateSleep from "./jobs/calculate-sleep"
 import handleFailure from "./jobs/handle-failure"
 import generate from "./jobs/generate"
-import receive from "./jobs/receive"
-
-import { send, sends, stepRun, sleepUntil } from "./engine"
 import { supabaseAdminClient } from "~/supabase/server-client"
 
-export const eventList = [
-  [
-    { name: "ping", retries: 0 },
-    { event: "queue/ping" },
-    async ({ event, step }: { event: any, step: any }) => {
-      console.log(`pong: ${event.data.message}`)
-      return { event }
-    }
-  ],
-  [
-    { name: "queue/receive", retries: 0 },
-    { event: "queue/receive" },
-    async ({ event, step }: { event: any, step: any }) => {
-      try {
-        const log = await receive(event.data.incomingEmail as IncomingEmail)
-        if (log) {
-          await send(step, {
-            name: 'queue/create-actions',
-            data: { log_id: log.id }
-          })
-        } else {
-          await send(step, { 
-            id: `queue/done-${event.data.action_id}`,
-            name: 'queue/done', 
-            data: { log_id: event.data.log_id }
-          })    
-        }
-      } catch (error) {
-        console.error(error)
+interface IEvent {
+  id?: string
+  name: string
+  data: any
+}
+
+export const send = async (event: IEvent) => {
+  return eventBus[event.name](event)
+}
+
+export const sendEvents = async (events: IEvent[]) => {
+  events.forEach((event: any) => {
+    send(event)
+  })
+  return { events }
+}
+
+interface IEventBus {
+  [key: string]: (event: IEvent) => Promise<any>
+}
+
+export const LogAlreadyExistsError = new Error('Log already exists')
+
+export const eventBus: IEventBus = {
+  ping: async (event: IEvent) => {
+    console.log('ping')
+    return { event }
+  },
+
+  receive: async (event: IEvent) => {
+    const log: Log | null  = await createLog(supabaseAdminClient, event.data.incomingEmail as IncomingEmail)
+    if (!log) throw LogAlreadyExistsError
+    await send({
+      name: 'createActions',
+      data: { log_id: log?.id }
+    })
+    return { log_id: log?.id }
+  },
+
+  createActions: async (event: IEvent) => {
+    const actions = await createActions(event.data.log_id)
+    const events: IEvent[] = actions.map((action: Action) => {
+      return { 
+        id: `generate-${action.id}`,
+        name: 'generate', 
+        data: { action_id: action.id }
       }
-      
-      return { event }
-    }
-  ], 
-  [
-    { name: "queue/create-actions", retries: 0 },
-    { event: "queue/create-actions" },
-    async ({ event, step }: { event: any, step: any }) => {
-      const actions = await stepRun(step, 'Create actions', async () => createActions(event.data.log_id))
+    })
+    events.push({         
+      name: 'confirmationEmail',
+      id: `confirmationEmail-${event.data.log_id}`,
+      data: { log_id: event.data.log_id }
+    })
+    await sendEvents(events)
+    return { log_id: event.data.log_id }
+  },
 
-      const events = actions.map((action: Action) => {
-        return { 
-          id: `queue/generate-${action.id}`,
-          name: 'queue/generate', 
-          data: { action_id: action.id } 
-        }
-      })
+  promptNotFoundEmail: async (event: IEvent) => {
+    await sendNotFoundEmail(event.data.log_id, event.data.promptName)
+    return { log_id: event.data.log_id }
+  },
 
-      events.push({         
-        name: 'queue/confirmation.email',
-        id: `queue/confirmation.email-${event.data.log_id}`,
-        data: { log_id: event.data.log_id }
-      })
+  confirmationEmail: async (event: IEvent) => {
+    await sendConfirmationEmail(event.data.log_id)
+    return { log_id: event.data.log_id }
+  },
 
-      await sends(step, events)
-      return { event }
-    }
-  ], 
-  [
-    { name: "queue/prompt-not-found.email", retries: 0 },
-    { event: "queue/prompt-not-found.email" },
-    async ({ event }: { event: any, step: any }) => {
-      await sendNotFoundEmail(event.data.log_id, event.data.promptName)
-      return { event }
-    }
-  ], 
-  [
-    { name: "queue/confirmation.email", retries: 0 },
-    { event: "queue/confirmation.email" },
-    async ({ event, step }: { event: any, step: any }) => {
-      await sendConfirmationEmail(event.data.log_id)
-      return { event }
-    }
-  ], 
-  [
-    { name: "queue/generate", retries: 0 },
-    { event: "queue/generate" },
-    async ({ event, step }: { event: any, step: any }) => {
-      const action = await stepRun(step, 'Generate', async () => generate(event.data.action_id)) 
-      await send(step, { 
-        id: `queue/sleep-${event.data.action_id}`,
-        name: 'queue/sleep', 
-        data: { action_id: event.data.action_id, log_id: action.log.id }
-      })
-      return { event }
-    }
-  ],[{ 
-      name: "queue/sleep", 
-      retries: 0,   
-      cancelOn: [
-        { event: "queue/cancel", match: "data.log_id" }
-      ],
-    }, { 
-      event: "queue/sleep" 
-    },
-    async ({ event, step }: { event: any, step: any }) => {   
-      const runDate = await stepRun(step, 'Calculate sleep', async () => calculateSleep(event.data.action_id))
-      await sleepUntil(step, runDate)
-      await send(step, {
-        id: `queue/reminder.email-${event.data.action_id}`,
-        name: 'queue/reminder.email', 
-        data: { action_id: event.data.action_id, log_id: event.data.log_id }
-      })
-      return { event }
+  generate: async (event: IEvent) => {
+    const action = await generate(event.data.action_id)
+    await send({ 
+      id: `sleep-${event.data.action_id}`,
+      name: 'sleep', 
+      data: { action_id: event.data.action_id, log_id: action.log.id }
+    })
+    return { action_id: event.data.action_id, log_id: action.log.id }
+  },
+
+  sleep: async (event: IEvent) => {   
+    const runDate = await calculateSleep(event.data.action_id)
+    await send({
+      id: `reminder-${event.data.action_id}`,
+      name: 'reminder', 
+      data: { action_id: event.data.action_id, log_id: event.data.log_id }
+    })
+    return { action_id: event.data.action_id, log_id: event.data.log_id }
+  },
+
+  reminder: async (event: IEvent) => {
+    await reminder(event.data.action_id)
+    return { action_id: event.data.action_id, log_id: event.data.log_id }
+  },
+
+  cancel: async (event: IEvent) => {
+    await cancelLogAndActionByLogId(supabaseAdminClient, event.data.log_id)
+    return { action_id: event.data.action_id, log_id: event.data.log_id }
+  },
+
+  failure: async (event: IEvent) => {
+    const { log_id, action_id } = event.data
+    await handleFailure(log_id, action_id, new Error(event.data.error.message))
+    return { event }
   }
-  ], 
-  [
-    { name: "queue/reminder.email", retries: 0 },
-    { event: "queue/reminder.email" },
-    async ({ event, step }: { event: any, step: any }) => {
-      await reminder(event.data.action_id)
-      await send(step, { 
-        id: `queue/done-${event.data.action_id}`,
-        name: 'queue/done', 
-        data: { action_id: event.data.action_id, log_id: event.data.log_id }
-      })
-      return { event }
-    }
-  ], 
-  [
-    { name: "queue/cancel", retries: 0 },
-    { event: "queue/cancel" },
-    async ({ event, step }: { event: any, step: any }) => {
-      await cancelLogAndActionByLogId(supabaseAdminClient, event.data.log_id)
-      return { event }
-    }
-  ],
-  [
-    { name: "queue/done", retries: 0 },
-    { event: "queue/done" },
-    async ({ event, step }: { event: any, step: any }) => {
-      return { event }
-    }
-  ],
-  
-  [
-    { name: "inngest/function.failed" },
-    { event: "inngest/function.failed" },
-    async ({ event, step }: { event: any, step: any }) => {
-      const { log_id, action_id } = event.data
-      await handleFailure(log_id, action_id, new Error(event.data.error.message))
-      return { event }
-    }
-  ]
-]
-
-export default eventList
+}

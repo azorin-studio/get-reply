@@ -1,40 +1,27 @@
-import { processIncomingEmail } from "~/bus/engine"
+import processIncomingEmail from "~/bus/process-incoming-email"
 import createTestEmail from "./create-test-email"
-import { getEventEmitter } from "~/bus/engine"
-import { EventEmitter } from "stream"
-import { deleteLogById } from "~/supabase/supabase"
+import { deleteLogById, getLogById } from "~/supabase/supabase"
 import { supabaseAdminClient } from "~/supabase/server-client"
 
-
 import { sendMail } from "../lib/send-mail"
+import { watch } from "./utils"
+import { LogAlreadyExistsError } from "~/bus/event-list"
 jest.mock('../lib/send-mail', () => ({ sendMail: jest.fn() }))
 jest.mock('../lib/chat-gpt', () => ({ callGPT35Api: jest.fn(() => 'test') }))
 
-if (process.env.INNGEST_EVENT_KEY) {
-  console.log('INNGEST_EVENT_KEY is set. Running bus tests with inngest.')
-} else {
-  console.log('INNGEST_EVENT_KEY is NOT set. Running bus tests with EventEmitter.')
-}
-
-const awaitDone = async (eventEmitter: EventEmitter): Promise<any> => 
-  new Promise((resolve) => {
-    eventEmitter.on('queue/done', (data: any) => {
-      console.log(`+ received event queue/done ${data.log_id}`)
-      resolve(data)
-    })
-  })
-
 describe('bus', () => {
-  const eventEmitter: EventEmitter = getEventEmitter()
-  let log_id: string
+  const log_ids: string[] = []
   let mockLength = 0
 
   it('should test email', async () => {    
     const email = createTestEmail()
-    await processIncomingEmail(email)
-
-    const data = await awaitDone(eventEmitter)
-    log_id = data.log_id
+    const { log_id } = await processIncomingEmail(email)
+    log_ids.push(log_id)
+    await watch(async () => {
+      const log = await getLogById(supabaseAdminClient, log_id)
+      console.log(log?.status)
+      return log?.status === 'complete'
+    }, 100)
     
     // @ts-ignore
     expect(sendMail.mock.calls.length).toEqual(2)
@@ -49,11 +36,19 @@ describe('bus', () => {
 
   it('should test two same emails', async () => {    
     const email = createTestEmail()
-    await processIncomingEmail(email)
-    await processIncomingEmail(email)
-
-    const data = await awaitDone(eventEmitter)
-    log_id = data.log_id
+    const { log_id } = await processIncomingEmail(email)
+    log_ids.push(log_id)
+    try {
+      await processIncomingEmail(email)
+    } catch (error: any) {
+      expect(error.message).toEqual(LogAlreadyExistsError.message)
+    }
+    
+    await watch(async () => {
+      const log = await getLogById(supabaseAdminClient, log_id)
+      console.log(log?.status)
+      return log?.status === 'complete'
+    }, 100)
     
     // @ts-ignore
     expect(sendMail.mock.calls.length).toEqual(mockLength + 2)
@@ -62,11 +57,10 @@ describe('bus', () => {
   }, 20000)
 
   afterAll(async () => {
-    console.log('afterAll')
-    eventEmitter.removeAllListeners()
-    await Promise.resolve()
-    if (log_id) {
-      await deleteLogById(supabaseAdminClient, log_id)
+    if (log_ids) {
+      await Promise.all(log_ids.map(async (log_id) => {
+        await deleteLogById(supabaseAdminClient, log_id)
+      }))
     }
   })
 })
