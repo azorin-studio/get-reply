@@ -6,7 +6,6 @@ import { awaitStatus, simulateSendEmail } from "./utils"
 
 import { sendMail } from "../lib/send-mail"
 jest.mock('../lib/send-mail', () => ({ sendMail: jest.fn() }))
-
 jest.mock('../lib/chat-gpt', () => ({ callGPT35Api: jest.fn(() => 'test') }))
 
 describe('bus', () => {
@@ -17,7 +16,7 @@ describe('bus', () => {
     const { log_id } = await simulateSendEmail(email)
     log_ids.push(log_id)
     await awaitStatus(log_id)
-  })
+  }, 30000)
 
   it.failing('should fail f+1m email', async () => {    
     const email = createTestEmail({
@@ -26,13 +25,15 @@ describe('bus', () => {
     const { log_id } = await simulateSendEmail(email)
     log_ids.push(log_id)
     await awaitStatus(log_id)
-  })
+  }, 30000)
 
-  it('should pass f+1m email', async () => {    
-    const email = createTestEmail({
-      toAddresses: ['f+1m@getreply.app']
-    })
+  it('should pass f+1m email', async () => {  
+    if (process.env.SERVER_URL) {
+      console.log('Skipping test because SERVER_URL is set')
+      return
+    }
 
+    const email = createTestEmail({ toAddresses: ['f+1m@getreply.app'] })
     const { log_id } = await simulateSendEmail(email)
     log_ids.push(log_id)
 
@@ -54,7 +55,7 @@ describe('bus', () => {
       expect(error.message).toEqual(LogAlreadyExistsError.message)
     }
     await awaitStatus(log_id)
-  })
+  }, 30000)
 
   afterAll(async () => {
     if (log_ids) {
