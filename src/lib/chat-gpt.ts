@@ -26,10 +26,10 @@ export async function callGPT35Api(prompt: string, retries = 0, retryDelay = 100
     })
     
     if (completion.data.choices && completion.data.choices.length > 0) {
-      if (completion.data.choices[0].message && completion.data.choices[0].message.content) {
-        const response = completion.data.choices[0].message?.content.trim()
+      if (completion.data.choices[0].message && completion.data.choices[0].message?.content) {
+        const response = completion.data.choices[0].message?.content?.trim()
         if (response) {
-          return response
+          return response!
         }
       }
     }
