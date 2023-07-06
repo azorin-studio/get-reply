@@ -5,7 +5,6 @@ export async function sleep(ms: number): Promise<void> {
 }
 
 export async function callGPT35Api(prompt: string, retries = 0, retryDelay = 1000): Promise<string> {
-  throw new Error('callGPT35Api is deprecated, use callGPT4Api instead')
   const configuration = new Configuration({
     apiKey: process.env.OPENAI_API_KEY,
   })
