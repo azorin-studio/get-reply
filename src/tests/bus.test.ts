@@ -1,8 +1,9 @@
 import processIncomingEmail from "~/bus/process-incoming-email"
 import createTestEmail from "./create-test-email"
-import { deleteLogById } from "~/supabase/supabase"
+import { deleteLogById, getLogById } from "~/supabase/supabase"
 import { supabaseAdminClient } from "~/supabase/server-client"
 import { sendMail } from "../lib/send-mail"
+import { LogAlreadyExistsError } from "~/bus/event-list"
 
 jest.mock('../lib/send-mail', () => ({ sendMail: jest.fn() }))
 jest.mock('../lib/chat-gpt', () => ({ callGPT35Api: jest.fn(() => 'test') }))
@@ -37,40 +38,48 @@ const simulateSendEmail = async (email: any) => {
 
 describe('bus', () => {
   const log_ids: string[] = []
-  let mockLength = 0
 
-  it.only('should test email', async () => {    
+  it('should test email', async () => {    
     const email = createTestEmail()
     const { log_id } = await simulateSendEmail(email)
     log_ids.push(log_id)
     
-    // const log = await getLogById(supabaseAdminClient, log_id)
-    // if (log?.status === 'complete') {
-    //   return true
-    // }
-
-    if (!SERVER_URL) {
-      // @ts-ignore
-      expect(sendMail.mock.calls.length).toEqual(2)
-      // @ts-ignore
-      sendMail.mock.calls.forEach((call: any) => {
-        expect(call[0].subject).toEqual(`re: ${email.subject}`)
-      })
-      // @ts-ignore
-      mockLength = sendMail.mock.calls.length
-    }
+    console.log('starting to poll for log status')
+    await new Promise((resolve) => {
+      const interval = setInterval(async () => {
+        const log = await getLogById(supabaseAdminClient, log_id)
+        console.log(`polling [log_id: ${log?.id.slice(0,7)}] status: ${log?.status}`)
+        if (log?.status === 'complete') {
+          clearInterval(interval)
+          resolve(true)
+        }
+      }, 100)
+    })
   }, 30000)
 
-  // it('should test two same emails', async () => {    
-  //   const email = createTestEmail()
-  //   const { log_id } = await simulateSendEmail(email)
-  //   log_ids.push(log_id)
-  //   try {
-  //     await simulateSendEmail(email)
-  //   } catch (error: any) {
-  //     expect(error.message).toEqual(LogAlreadyExistsError.message)
-  //   }
-  // }, 20000)
+  it('should test two same emails', async () => {    
+    const email = createTestEmail()
+    const { log_id } = await simulateSendEmail(email)
+    log_ids.push(log_id)
+    try {
+      await simulateSendEmail(email)
+    } catch (error: any) {
+      expect(error.message).toEqual(LogAlreadyExistsError.message)
+    }
+
+    console.log('starting to poll for log status')
+    await new Promise((resolve) => {
+      const interval = setInterval(async () => {
+        const log = await getLogById(supabaseAdminClient, log_id)
+        console.log(`polling [log_id: ${log?.id.slice(0,7)}] status: ${log?.status}`)
+        if (log?.status === 'complete') {
+          clearInterval(interval)
+          resolve(true)
+        }
+      }, 100)
+    })
+
+  }, 20000)
 
   afterAll(async () => {
     if (log_ids) {
