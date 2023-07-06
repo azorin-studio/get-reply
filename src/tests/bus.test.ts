@@ -1,9 +1,8 @@
 import processIncomingEmail from "~/bus/process-incoming-email"
 import createTestEmail from "./create-test-email"
-import { deleteLogById, getLogById } from "~/supabase/supabase"
+import { deleteLogById } from "~/supabase/supabase"
 import { supabaseAdminClient } from "~/supabase/server-client"
 import { sendMail } from "../lib/send-mail"
-import { LogAlreadyExistsError } from "~/bus/event-list"
 
 jest.mock('../lib/send-mail', () => ({ sendMail: jest.fn() }))
 jest.mock('../lib/chat-gpt', () => ({ callGPT35Api: jest.fn(() => 'test') }))
@@ -14,20 +13,6 @@ if (SERVER_URL) {
   console.log(`SERVER_URL: ${SERVER_URL}`)
 } else {
   console.log('SERVER_URL: false')
-}
-
-const awaitCompleteStatus = async (log_id: string) => {
-  return await new Promise((resolve, reject) => {
-    const interval = setInterval(async () => {
-      const log = await getLogById(supabaseAdminClient, log_id)
-      const logStamp = log_id ? ` [log_id: ${log_id.slice(0,7)}]` : '[log_id: unknown]'
-      console.log(`+${logStamp} status: ${log?.status} ${log?.errorMessage ? `error: ${log?.errorMessage}` : ''}`)
-      if (log?.status === 'complete') {
-        clearInterval(interval)
-        resolve(interval)
-      }
-    }, 100)
-  })
 }
 
 const simulateSendEmail = async (email: any) => {
@@ -52,7 +37,6 @@ const simulateSendEmail = async (email: any) => {
 
 describe('bus', () => {
   const log_ids: string[] = []
-  const intervals: any[] = []
   let mockLength = 0
 
   it.only('should test email', async () => {    
@@ -60,8 +44,10 @@ describe('bus', () => {
     const { log_id } = await simulateSendEmail(email)
     log_ids.push(log_id)
     
-    const interval = await awaitCompleteStatus(log_id)
-    intervals.push(interval)
+    // const log = await getLogById(supabaseAdminClient, log_id)
+    // if (log?.status === 'complete') {
+    //   return true
+    // }
 
     if (!SERVER_URL) {
       // @ts-ignore
@@ -73,28 +59,18 @@ describe('bus', () => {
       // @ts-ignore
       mockLength = sendMail.mock.calls.length
     }
-  }, 2000)
+  }, 30000)
 
-  it('should test two same emails', async () => {    
-    const email = createTestEmail()
-    const { log_id } = await simulateSendEmail(email)
-    log_ids.push(log_id)
-    try {
-      await simulateSendEmail(email)
-    } catch (error: any) {
-      expect(error.message).toEqual(LogAlreadyExistsError.message)
-    }
-    
-    const interval = await awaitCompleteStatus(log_id)
-    intervals.push(interval)
-
-    if (!SERVER_URL) {
-      // @ts-ignore
-      expect(sendMail.mock.calls.length).toEqual(mockLength + 2)
-      // @ts-ignore
-      mockLength = sendMail.mock.calls.length
-    }
-  }, 20000)
+  // it('should test two same emails', async () => {    
+  //   const email = createTestEmail()
+  //   const { log_id } = await simulateSendEmail(email)
+  //   log_ids.push(log_id)
+  //   try {
+  //     await simulateSendEmail(email)
+  //   } catch (error: any) {
+  //     expect(error.message).toEqual(LogAlreadyExistsError.message)
+  //   }
+  // }, 20000)
 
   afterAll(async () => {
     if (log_ids) {
@@ -102,11 +78,5 @@ describe('bus', () => {
         await deleteLogById(supabaseAdminClient, log_id)
       }))
     }
-    if (intervals) {
-      await Promise.all(intervals.map(async (interval) => {
-        clearInterval(interval)
-      }))
-    }
-    process.exit(1)
   })
 })

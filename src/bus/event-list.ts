@@ -31,7 +31,6 @@ export const send = async (event: IEvent) => {
     handleFailure(log_id, action_id, error.message)
     return { error }
   }
-  
 }
 
 export const sendEvents = async (events: IEvent[]) => {

@@ -74,6 +74,7 @@
     "wrangler": "3.0.1"
   },
   "dependencies": {
+    "@testing-library/react": "^14.0.0",
     "node-html-parser": "^6.1.5"
   }
 }
