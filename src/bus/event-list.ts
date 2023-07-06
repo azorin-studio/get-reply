@@ -69,7 +69,7 @@ export const eventBus: IEventBus = {
       id: `confirmationEmail-${log.id}`,
       data: { log_id: log.id }
     })
-    sendEvents(events)
+    await sendEvents(events)
     return { log_id: log.id }
   },
 
@@ -84,7 +84,9 @@ export const eventBus: IEventBus = {
   },
 
   generate: async (event: IEvent) => {
+    console.log('g1')
     const action = await generate(event.data.action_id)
+    console.log('g2')
     // send({ 
     //   id: `sleep-${event.data.action_id}`,
     //   name: 'sleep', 
