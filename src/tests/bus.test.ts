@@ -9,11 +9,17 @@ import { LogAlreadyExistsError } from "~/bus/event-list"
 jest.mock('../lib/send-mail', () => ({ sendMail: jest.fn() }))
 jest.mock('../lib/chat-gpt', () => ({ callGPT35Api: jest.fn(() => 'test') }))
 
-const HIT_SERVER = false
+const SERVER_URL = process.env.SERVER_URL
+
+if (SERVER_URL) {
+  console.log(`SERVER_URL: ${SERVER_URL}`)
+} else {
+  console.log('SERVER_URL: false')
+}
 
 const simulateSendEmail = async (email: any) => {
-  if (!HIT_SERVER) return await processIncomingEmail(email)
-  const re = await fetch(process.env.NEXT_PUBLIC_SITE_URL + '/api/process-email', {
+  if (!SERVER_URL) return await processIncomingEmail(email)
+  const re = await fetch(SERVER_URL + '/api/process-email', {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${process.env.GETREPLY_BOT_AUTH_TOKEN}`,
@@ -22,7 +28,7 @@ const simulateSendEmail = async (email: any) => {
     body: JSON.stringify(email)
   })
   if (!re.ok) {
-    throw new Error('Failed to send email')
+    throw new Error(`Failed to send email: ${re.status} ${re.statusText}`)
   }
   const json = await re.json()
   if (json.error) {
@@ -42,11 +48,12 @@ describe('bus', () => {
     log_ids.push(log_id)
     await watch(async () => {
       const log = await getLogById(supabaseAdminClient, log_id)
-      console.log(log?.status)
+      const logStamp = log_id ? ` [log_id: ${log_id.slice(0,7)}]` : '[log_id: unknown]'
+      console.log(`+${logStamp} status: ${log?.status}`)
       return log?.status === 'complete'
     }, 100)
     
-    if (!HIT_SERVER) {
+    if (!SERVER_URL) {
       // @ts-ignore
       expect(sendMail.mock.calls.length).toEqual(2)
       // @ts-ignore
@@ -70,11 +77,12 @@ describe('bus', () => {
     
     await watch(async () => {
       const log = await getLogById(supabaseAdminClient, log_id)
-      console.log(log?.status)
+      const logStamp = log_id ? ` [log_id: ${log_id.slice(0,7)}]` : '[log_id: unknown]'
+      console.log(`+${logStamp} status: ${log?.status}`)
       return log?.status === 'complete'
     }, 100)
     
-    if (!HIT_SERVER) {
+    if (!SERVER_URL) {
       // @ts-ignore
       expect(sendMail.mock.calls.length).toEqual(mockLength + 2)
       // @ts-ignore
