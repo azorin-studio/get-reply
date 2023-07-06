@@ -6,7 +6,7 @@ import { sendMail } from "../lib/send-mail"
 import { LogAlreadyExistsError } from "~/bus/event-list"
 
 jest.mock('../lib/send-mail', () => ({ sendMail: jest.fn() }))
-jest.mock('../lib/chat-gpt', () => ({ callGPT35Api: jest.fn(() => 'test') }))
+// jest.mock('../lib/chat-gpt', () => ({ callGPT35Api: jest.fn(() => 'test') }))
 
 const SERVER_URL = process.env.SERVER_URL
 
@@ -45,17 +45,21 @@ describe('bus', () => {
     log_ids.push(log_id)
     
     console.log('starting to poll for log status')
-    await new Promise((resolve) => {
+    await new Promise((resolve, reject) => {
       const interval = setInterval(async () => {
         const log = await getLogById(supabaseAdminClient, log_id)
         console.log(`polling [log_id: ${log?.id.slice(0,7)}] status: ${log?.status}`)
         if (log?.status === 'complete') {
           clearInterval(interval)
           resolve(true)
+        } else if (log?.status === 'error') {
+          clearInterval(interval)
+          reject(new Error(log.errorMessage))
+          console.log(log.errorMessage)
         }
       }, 100)
     })
-  }, 30000)
+  }, 60000)
 
   it('should test two same emails', async () => {    
     const email = createTestEmail()
@@ -79,7 +83,7 @@ describe('bus', () => {
       }, 100)
     })
 
-  }, 20000)
+  }, 60000)
 
   afterAll(async () => {
     if (log_ids) {

@@ -12,6 +12,7 @@ export default async function generate (action_id: string) {
     prompt: action.prompt.prompt!
   })
   
+  
   const generation: string = await callGPT35Api(fullPrompt, 3)
   await appendToAction(supabaseAdminClient, action, { status: 'generated', fullPrompt, generation })
   return action
