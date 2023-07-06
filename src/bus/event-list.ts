@@ -27,7 +27,7 @@ export const send = async (event: IEvent) => {
     console.log(`+${logStamp}${actionStamp} ${event.name} completed`)
     return re
   } catch (error: any) {
-    console.error(`+${logStamp}${actionStamp} ${event.name} failed with message ${error.message}`)
+    console.error(error)
     handleFailure(log_id, action_id, error.message)
     return { error }
   }

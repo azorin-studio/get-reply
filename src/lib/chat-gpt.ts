@@ -16,10 +16,6 @@ export async function callGPT35Api(prompt: string, retries = 0, retryDelay = 100
   }
 
   try {
-    const completionOptions = {
-      model: "gpt-4",
-      messages: [{ role:"user", content: prompt }],
-    }
     const completion = await openai.createChatCompletion({
       model: "gpt-4",
       temperature: 0.5,
