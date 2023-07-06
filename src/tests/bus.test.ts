@@ -7,7 +7,7 @@ import { watch } from "./utils"
 import { LogAlreadyExistsError } from "~/bus/event-list"
 
 jest.mock('../lib/send-mail', () => ({ sendMail: jest.fn() }))
-jest.mock('../lib/chat-gpt', () => ({ callGPT35Api: jest.fn(() => 'test') }))
+// jest.mock('../lib/chat-gpt', () => ({ callGPT35Api: jest.fn(() => 'test') }))
 
 const SERVER_URL = process.env.SERVER_URL
 
@@ -49,7 +49,7 @@ describe('bus', () => {
     await watch(async () => {
       const log = await getLogById(supabaseAdminClient, log_id)
       const logStamp = log_id ? ` [log_id: ${log_id.slice(0,7)}]` : '[log_id: unknown]'
-      console.log(`+${logStamp} status: ${log?.status}`)
+      console.log(`+${logStamp} status: ${log?.status} ${log?.errorMessage ? `error: ${log?.errorMessage}` : ''}`)
       return log?.status === 'complete'
     }, 100)
     

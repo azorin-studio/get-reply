@@ -71,16 +71,12 @@ export async function getActionsByKey (client: SupabaseClient, key: string, valu
 }
 
 export async function getActionByKey (client: SupabaseClient, key: string, value: string): Promise<Action | null> {
-  console.log('gak1')
   const { error, data: actions } = await client
     .from('actions')
     .select('*, prompt:prompts(*), log:logs(*), profile:profile_id (*)')
     .eq(key, value)
-  console.log('gak2')
   if (error) throw error
-  console.log('gak3')
   if (!actions || actions.length === 0) return null
-  console.log('gak4')
   return actions[0] as Action
 }
 

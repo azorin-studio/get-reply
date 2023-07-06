@@ -18,14 +18,20 @@ interface IEvent {
 export const send = async (event: IEvent) => {
   const log_id: string | undefined = event.data.log_id
   const action_id: string | undefined = event.data.action_id
-
   const logStamp = log_id ? ` [log_id: ${log_id.slice(0,7)}]` : '[log_id: unknown]'
   const actionStamp = action_id ? ` [action_id: ${action_id.slice(0,7)}]` : '[action_id: unknown]'
-
   console.log(`+${logStamp}${actionStamp} ${event.name} started`)
-  const re = await eventBus[event.name](event)
-  console.log(`+${logStamp}${actionStamp} ${event.name} completed`)
-  return re
+
+  try {
+    const re = await eventBus[event.name](event)
+    console.log(`+${logStamp}${actionStamp} ${event.name} completed`)
+    return re
+  } catch (error: any) {
+    console.error(`+${logStamp}${actionStamp} ${event.name} failed with message ${error.message}`)
+    handleFailure(log_id, action_id, error.message)
+    return { error }
+  }
+  
 }
 
 export const sendEvents = async (events: IEvent[]) => {
@@ -74,35 +80,27 @@ export const eventBus: IEventBus = {
   },
 
   confirmationEmail: async (event: IEvent) => {
-    console.log('c1')
     await sendConfirmationEmail(event.data.log_id)
-    console.log('c2')
     return { log_id: event.data.log_id }
   },
 
   generate: async (event: IEvent) => {
-    console.log('g1')
     const action = await generate(event.data.action_id)
-    console.log('g2')
     send({ 
       id: `sleep-${event.data.action_id}`,
       name: 'sleep', 
       data: { action_id: event.data.action_id, log_id: action.log.id }
     })
-    console.log('g3')
     return { action_id: event.data.action_id, log_id: action.log.id }
   },
 
   sleep: async (event: IEvent) => {   
-    console.log('s1')
     const runDate = await calculateSleep(event.data.action_id)
-    console.log('s2')
     await send({
       id: `reminder-${event.data.action_id}`,
       name: 'reminder', 
       data: { action_id: event.data.action_id, log_id: event.data.log_id }
     })
-    console.log('s3')
     return { action_id: event.data.action_id, log_id: event.data.log_id }
   },
 
@@ -118,7 +116,7 @@ export const eventBus: IEventBus = {
 
   failure: async (event: IEvent) => {
     const { log_id, action_id } = event.data
-    await handleFailure(log_id, action_id, new Error(event.data.error.message))
+    await handleFailure(log_id, action_id, event.data.error.message)
     return { event }
   }
 }
