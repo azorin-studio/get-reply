@@ -1,16 +1,8 @@
 {
   "crons": [
     {
-      "path": "/api/cron/create-draft-and-notify",
-      "schedule": "*/1 * * * *"
-    },
-    {
-      "path": "/api/cron/verify",
-      "schedule": "*/1 * * * *"
-    },
-    {
-      "path": "/api/cron/generate",
-      "schedule": "*/1 * * * *"
+      "path": "/api/all-reminders",
+      "schedule": "* * * * *"
     }
   ]
 }

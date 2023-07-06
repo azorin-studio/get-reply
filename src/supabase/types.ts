@@ -2,7 +2,6 @@ import { Database } from "~/supabase/database.types"
 
 export type Status = 
   'received' | 
-  'generated' |
   'sleeping' |
   'complete' | 
   'error' |

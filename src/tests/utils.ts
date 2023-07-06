@@ -3,7 +3,16 @@ import { Profile } from '~/supabase/types';
 import { checkForReply, createGmailDraftInThread, getThreadById, sendDraft } from '~/lib/google'
 import { getProfileByEmail } from '~/supabase/supabase';
 import { supabaseAdminClient } from "~/supabase/server-client"
+import processIncomingEmail from "~/bus/process-incoming-email"
+import { getLogById } from "~/supabase/supabase"
 
+const SERVER_URL = process.env.SERVER_URL
+
+if (SERVER_URL) {
+  console.log(`SERVER_URL: ${SERVER_URL}`)
+} else {
+  console.log('SERVER_URL: false')
+}
 
 export const wait = (ms: number) =>
   new Promise(resolve => setTimeout(resolve, ms))
@@ -18,6 +27,48 @@ export const watch = async (predicate: Function, ms: number) => {
     }
   }
 }
+
+export const simulateSendEmail = async (email: any) => {
+  /**
+   * If SERVER_URL is not set, we testing in one process.
+   * If SERVER_URL is set, we send the email to the server.
+   */
+  if (!SERVER_URL) return await processIncomingEmail(email)
+  const re = await fetch(SERVER_URL + '/api/process-email', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${process.env.GETREPLY_BOT_AUTH_TOKEN}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(email)
+  })
+  if (!re.ok) {
+    throw new Error(`Failed to send email: ${re.status} ${re.statusText}`)
+  }
+  const json = await re.json()
+  if (json.error) {
+    throw new Error(json.error)
+  }
+  return json
+}
+
+
+
+export const awaitStatus = (log_id: string) => 
+  new Promise((resolve, reject) => {
+    const interval = setTimeout(async () => {
+      const log = await getLogById(supabaseAdminClient, log_id)
+      console.log(`polling [log_id: ${log?.id.slice(0,7)}] status: ${log?.status}`)
+      if (log?.status === 'complete') {
+        clearTimeout(interval)
+        resolve(true)
+      } else if (log?.status === 'error') {
+        clearTimeout(interval)
+        reject(new Error(log.errorMessage || 'Unknown error'))
+        console.log(log.errorMessage)
+      }
+    }, 100)
+  })
 
 export const getIdFromReply = (reply: any): string => {
   const body = reply.payload.body

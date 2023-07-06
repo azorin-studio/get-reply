@@ -55,6 +55,7 @@ export default async function createActions (log_id: string): Promise<Action[]> 
         const { error, data: actions } = await supabaseAdminClient
           .from('actions')
           .insert({
+            status: 'sleeping',
             profile_id: log.profile.id,
             log_id: log.id,
             prompt_id: prompt.id,

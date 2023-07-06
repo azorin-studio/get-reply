@@ -13,6 +13,6 @@ export default async function generate (action_id: string) {
   })
 
   const generation: string = await callGPT35Api(fullPrompt, 3)
-  await appendToAction(supabaseAdminClient, action, { status: 'generated', fullPrompt, generation })
+  await appendToAction(supabaseAdminClient, action, { status: 'sleeping', fullPrompt, generation })
   return action
 }

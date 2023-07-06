@@ -1,10 +1,9 @@
-import { cancelLogAndActionByLogId, createLog } from "~/supabase/supabase"
+import { cancelLogAndActionByLogId, createLog, getActionsByKey } from "~/supabase/supabase"
 import createActions from "./jobs/create-actions"
 import { Action, IncomingEmail, Log } from "~/supabase/types"
 import reminder from "./jobs/reminder.email"
 import sendConfirmationEmail from "./jobs/send-confirmation.email"
 import sendNotFoundEmail from "./jobs/send-not-found.email"
-import calculateSleep from "./jobs/calculate-sleep"
 import handleFailure from "./jobs/handle-failure"
 import generate from "./jobs/generate"
 import { supabaseAdminClient } from "~/supabase/server-client"
@@ -20,11 +19,11 @@ export const send = async (event: IEvent) => {
   const action_id: string | undefined = event.data.action_id
   const logStamp = log_id ? ` [log_id: ${log_id.slice(0,7)}]` : '[log_id: unknown]'
   const actionStamp = action_id ? ` [action_id: ${action_id.slice(0,7)}]` : '[action_id: unknown]'
-  console.log(`+${logStamp}${actionStamp} ${event.name} started`)
+  // console.log(`+${logStamp}${actionStamp} ${event.name} started`)
 
   try {
-    const re = await eventBus[event.name](event)
-    console.log(`+${logStamp}${actionStamp} ${event.name} completed`)
+    const re = await (eventBus as any)[event.name](event)
+    // console.log(`+${logStamp}${actionStamp} ${event.name} completed`)
     return re
   } catch (error: any) {
     console.error(error)
@@ -34,20 +33,15 @@ export const send = async (event: IEvent) => {
 }
 
 export const sendEvents = async (events: IEvent[]) => {
-  console.log(`+ ${events.map((e: any) => e.name).join(', ')} started`)
   await Promise.all(
     events.map((event: any) => send(event))
   )
   return { events }
 }
 
-interface IEventBus {
-  [key: string]: (event: IEvent) => Promise<any>
-}
-
 export const LogAlreadyExistsError = new Error('Log already exists')
 
-export const eventBus: IEventBus = {
+export const eventBus = {
   ping: async (event: IEvent) => {
     console.log('ping')
     return { event }
@@ -86,26 +80,29 @@ export const eventBus: IEventBus = {
   generate: async (event: IEvent) => {
     const action = await generate(event.data.action_id)
     await send({ 
-      id: `sleep-${event.data.action_id}`,
-      name: 'sleep', 
+      id: `allReminders-${event.data.action_id}`,
+      name: 'allReminders', 
       data: { action_id: event.data.action_id, log_id: action.log.id }
     })
     return { action_id: event.data.action_id, log_id: action.log.id }
   },
 
-  sleep: async (event: IEvent) => {   
-    const runDate = await calculateSleep(event.data.action_id)
-    await send({
-      id: `reminder-${event.data.action_id}`,
-      name: 'reminder', 
-      data: { action_id: event.data.action_id, log_id: event.data.log_id }
-    })
-    return { action_id: event.data.action_id, log_id: event.data.log_id }
-  },
-
   reminder: async (event: IEvent) => {
     await reminder(event.data.action_id)
     return { action_id: event.data.action_id, log_id: event.data.log_id }
+  },
+
+  allReminders: async () => {
+    const actions = await getActionsByKey(supabaseAdminClient, 'status', 'sleeping')
+    const events: IEvent[] = actions.map((action: Action) => {
+      return { 
+        id: `reminder-${action.id}`,
+        name: 'reminder', 
+        data: { log_id: action.log.id, action_id: action.id }
+      }
+    })
+    await sendEvents(events)
+    return { action_ids: actions.map((action: Action) => action.id) }
   },
 
   cancel: async (event: IEvent) => {

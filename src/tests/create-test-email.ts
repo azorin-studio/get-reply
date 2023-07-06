@@ -30,7 +30,7 @@ export default function createTestEmail (props: ICreateTestEmail = {}): Incoming
     ccAddresses = [],
     bccAddresses = [],
     subject = r,
-    date = "Fri, 26 May 2023 03:36:23 -0700",
+    date = new Date().toISOString(),
     text = "This is a test email",
     messageId = r
   } = props
@@ -78,7 +78,7 @@ export default function createTestEmail (props: ICreateTestEmail = {}): Incoming
       },
       {
         key: "date",
-        value: "Fri, 26 May 2023 03:36:23 -0700"
+        value: date
       },
       {
         key: "message-id",
