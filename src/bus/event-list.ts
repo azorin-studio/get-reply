@@ -85,11 +85,11 @@ export const eventBus: IEventBus = {
 
   generate: async (event: IEvent) => {
     const action = await generate(event.data.action_id)
-    send({ 
-      id: `sleep-${event.data.action_id}`,
-      name: 'sleep', 
-      data: { action_id: event.data.action_id, log_id: action.log.id }
-    })
+    // send({ 
+    //   id: `sleep-${event.data.action_id}`,
+    //   name: 'sleep', 
+    //   data: { action_id: event.data.action_id, log_id: action.log.id }
+    // })
     return { action_id: event.data.action_id, log_id: action.log.id }
   },
 
