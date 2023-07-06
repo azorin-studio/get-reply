@@ -56,7 +56,7 @@ export const eventBus: IEventBus = {
       return { 
         id: `generate-${action.id}`,
         name: 'generate', 
-        data: { action_id: action.id }
+        data: { log_id: log.id, action_id: action.id }
       }
     })
     events.push({         
@@ -74,27 +74,35 @@ export const eventBus: IEventBus = {
   },
 
   confirmationEmail: async (event: IEvent) => {
+    console.log('c1')
     await sendConfirmationEmail(event.data.log_id)
+    console.log('c2')
     return { log_id: event.data.log_id }
   },
 
   generate: async (event: IEvent) => {
+    console.log('g1')
     const action = await generate(event.data.action_id)
+    console.log('g2')
     send({ 
       id: `sleep-${event.data.action_id}`,
       name: 'sleep', 
       data: { action_id: event.data.action_id, log_id: action.log.id }
     })
+    console.log('g3')
     return { action_id: event.data.action_id, log_id: action.log.id }
   },
 
   sleep: async (event: IEvent) => {   
+    console.log('s1')
     const runDate = await calculateSleep(event.data.action_id)
+    console.log('s2')
     await send({
       id: `reminder-${event.data.action_id}`,
       name: 'reminder', 
       data: { action_id: event.data.action_id, log_id: event.data.log_id }
     })
+    console.log('s3')
     return { action_id: event.data.action_id, log_id: event.data.log_id }
   },
 
