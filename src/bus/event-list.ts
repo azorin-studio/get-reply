@@ -1,15 +1,14 @@
-import { cancelLogAndActionByLogId, createLog, getActionsByKey } from "~/supabase/supabase"
-import createActions from "./jobs/create-actions"
-import { Action, IncomingEmail, Log } from "~/supabase/types"
-import reminder from "./jobs/reminder.email"
+import handleFailure from "./jobs/handle-failure"
+import allReminders from "./jobs/all-reminders"
+import generate from "./jobs/generate"
+import receive from "./jobs/receive"
+import cancel from "./jobs/cancel"
+
 import sendConfirmationEmail from "./jobs/send-confirmation.email"
 import sendNotFoundEmail from "./jobs/send-not-found.email"
-import handleFailure from "./jobs/handle-failure"
-import generate from "./jobs/generate"
-import { supabaseAdminClient } from "~/supabase/server-client"
+import reminder from "./jobs/reminder.email"
 
 interface IEvent {
-  id?: string
   name: string
   data: any
 }
@@ -48,19 +47,20 @@ export const eventBus = {
   },
 
   receive: async (event: IEvent) => {
-    const log: Log | null  = await createLog(supabaseAdminClient, event.data.incomingEmail as IncomingEmail)
-    if (!log) return { log_id: null, error: 'Log already exists' }
-    const actions = await createActions(log.id)
-    const events: IEvent[] = actions.map((action: Action) => {
-      return { 
-        id: `generate-${action.id}`,
-        name: 'generate', 
-        data: { log_id: log.id, action_id: action.id }
-      }
-    })
+    const { actions, log } = await receive(event.data.incomingEmail)
+
+    if (!log) {
+      console.log(`+ Log already exists, skipping.`)
+      return { log_id: null }
+    }
+
+    const events: IEvent[] = actions.map((action) => ({ 
+      name: 'generate', 
+      data: { log_id: action.log.id, action_id: action.id }
+    }))
+    
     events.push({         
       name: 'confirmationEmail',
-      id: `confirmationEmail-${log.id}`,
       data: { log_id: log.id }
     })
     await sendEvents(events)
@@ -80,7 +80,6 @@ export const eventBus = {
   generate: async (event: IEvent) => {
     const action = await generate(event.data.action_id)
     await send({ 
-      id: `allReminders-${event.data.action_id}`,
       name: 'allReminders', 
       data: { action_id: event.data.action_id, log_id: action.log.id }
     })
@@ -93,20 +92,12 @@ export const eventBus = {
   },
 
   allReminders: async () => {
-    const actions = await getActionsByKey(supabaseAdminClient, 'status', 'sleeping')
-    const events: IEvent[] = actions.map((action: Action) => {
-      return { 
-        id: `reminder-${action.id}`,
-        name: 'reminder', 
-        data: { log_id: action.log.id, action_id: action.id }
-      }
-    })
-    await sendEvents(events)
-    return { action_ids: actions.map((action: Action) => action.id) }
+    const actions = await allReminders()
+    return { action_ids: actions.map((action) => action.id) }
   },
 
   cancel: async (event: IEvent) => {
-    await cancelLogAndActionByLogId(supabaseAdminClient, event.data.log_id)
+    cancel(event.data.log_id)
     return { action_id: event.data.action_id, log_id: event.data.log_id }
   },
 

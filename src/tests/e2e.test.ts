@@ -2,7 +2,7 @@ import { trashThreadById } from '~/lib/google'
 import { introText as followupIntroText } from '~/components/emails/followup-reminder'
 import { Profile } from '~/supabase/types'
 import { getIdFromReply, liveGmailTest, waitForReplies, watch } from '~/tests/utils'
-import { deleteLogById, getLogById, getProfileByEmail } from "~/supabase/supabase"
+import { deleteLogById, getLogByKey, getProfileByKey } from "~/supabase/supabase"
 import { supabaseAdminClient } from "~/supabase/server-client"
 
 const EMAIL_ROUTING_TAG = process.env.EMAIL_ROUTING_TAG || ''
@@ -32,7 +32,7 @@ describe('e2e', () => {
 
     const FROM = process.env.TEST_GMAIL_USER
     if (!FROM) throw new Error('No test gmail user found')
-    profile = await getProfileByEmail(supabaseAdminClient, FROM)
+    profile = await getProfileByKey(supabaseAdminClient, 'email', FROM)
     if (!profile) throw new Error('No profile found')
   })
 
@@ -86,7 +86,7 @@ describe('e2e', () => {
 
     await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/cancel?log_id=${logId}`)
     const log = await watch(async () => {
-      const log = await getLogById(supabaseAdminClient, logId!)
+      const log = await getLogByKey(supabaseAdminClient, 'id', logId!)
       if (log?.status === 'cancelled') return log
       return null
     }, 1000)

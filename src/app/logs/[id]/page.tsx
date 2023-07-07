@@ -6,7 +6,7 @@ import CancelAlert from '~/components/CancelAlert'
 import LogActionBar from '~/components/LogActionBar'
 import LogBody from '~/components/LogBody'
 
-import {getActionsByLogId, getLogById } from '~/supabase/supabase'
+import { getActionsByKey, getLogByKey } from '~/supabase/supabase'
 import { Action, Log } from '~/supabase/types'
 import { Database } from '~/supabase/database.types'
 
@@ -20,8 +20,8 @@ export default async function Page({ params, searchParams }: {
   const { data: { session } } = await supabase.auth.getSession()
   if (!session) redirect('/')
 
-  const log: Log | null | undefined = await getLogById(supabase, id)
-  const actions: Action[] = await getActionsByLogId(supabase, id)
+  const log: Log | null | undefined = await getLogByKey(supabase, 'id', id)
+  const actions: Action[] = await getActionsByKey(supabase, 'log_id', id)
   if (!log) return (
     <div>Log not found</div>
   )

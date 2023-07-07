@@ -1,10 +1,10 @@
 import parse from 'node-html-parser'
 import { Profile } from '~/supabase/types';
 import { checkForReply, createGmailDraftInThread, getThreadById, sendDraft } from '~/lib/google'
-import { getProfileByEmail } from '~/supabase/supabase';
+import { getProfileByKey } from '~/supabase/supabase';
 import { supabaseAdminClient } from "~/supabase/server-client"
 import processIncomingEmail from "~/bus/process-incoming-email"
-import { getLogById } from "~/supabase/supabase"
+import { getLogByKey } from "~/supabase/supabase"
 
 const SERVER_URL = process.env.SERVER_URL
 
@@ -54,12 +54,12 @@ export const simulateSendEmail = async (email: any) => {
 
 
 
-export const awaitStatus = (log_id: string) => 
+export const awaitStatus = (log_id: string, status: string = 'complete') => 
   new Promise((resolve, reject) => {
     const interval = setTimeout(async () => {
-      const log = await getLogById(supabaseAdminClient, log_id)
+      const log = await getLogByKey(supabaseAdminClient, 'id', log_id)
       console.log(`polling [log_id: ${log?.id.slice(0,7)}] status: ${log?.status}`)
-      if (log?.status === 'complete') {
+      if (log?.status === status) {
         clearTimeout(interval)
         resolve(true)
       } else if (log?.status === 'error') {
@@ -88,7 +88,7 @@ export const liveGmailTest = async ({
   const FROM = process.env.TEST_GMAIL_USER
   if (!FROM) throw new Error('No test gmail user found')
   
-  const profile: Profile = await getProfileByEmail(supabaseAdminClient, FROM)
+  const profile: Profile = await getProfileByKey(supabaseAdminClient, 'email', FROM)
   if (!profile) throw new Error('No profile found')
 
   const r = Math.random().toString(36).slice(2, 7)
@@ -133,7 +133,7 @@ export const waitForReplies = async ({
   const FROM = process.env.TEST_GMAIL_USER
   if (!FROM) throw new Error('No test gmail user found')
   
-  const profile: Profile = await getProfileByEmail(supabaseAdminClient, FROM)
+  const profile: Profile = await getProfileByKey(supabaseAdminClient, 'email', FROM)
   if (!profile) throw new Error('No profile found')
 
   const replies = watch(async () => {

@@ -86,7 +86,7 @@ export interface Database {
           id: string
           inReplyTo: string | null
           messageId: string | null
-          profile_id: string | null
+          profile_id: string
           references: string | null
           status: string
           subject: string | null
@@ -105,7 +105,7 @@ export interface Database {
           id?: string
           inReplyTo?: string | null
           messageId?: string | null
-          profile_id?: string | null
+          profile_id: string
           references?: string | null
           status: string
           subject?: string | null
@@ -124,7 +124,7 @@ export interface Database {
           id?: string
           inReplyTo?: string | null
           messageId?: string | null
-          profile_id?: string | null
+          profile_id?: string
           references?: string | null
           status?: string
           subject?: string | null

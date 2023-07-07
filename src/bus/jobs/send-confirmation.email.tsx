@@ -5,11 +5,11 @@ import parsePromptNamesAndTags from "~/lib/parse-prompt-names-and-tags"
 import { sendMail } from "~/lib/send-mail"
 import { supabaseAdminClient } from "~/supabase/server-client"
 
-import { getLogById } from "~/supabase/supabase"
+import { getLogByKey } from "~/supabase/supabase"
 
 
 export default async function sendConfirmationEmail (log_id: string) {
-  const log = await getLogById(supabaseAdminClient, log_id)
+  const log = await getLogByKey(supabaseAdminClient, 'id', log_id)
   if (!log) {
     throw new Error(`[action: ${log_id}]: log not found.`)
   }
