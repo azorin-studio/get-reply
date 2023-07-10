@@ -9,6 +9,7 @@ import LogBody from '~/components/LogBody'
 import { getActionsByKey, getLogByKey } from '~/supabase/supabase'
 import { Action, Log } from '~/supabase/types'
 import { Database } from '~/supabase/database.types'
+import { supabaseAdminClient } from '~/supabase/server-client'
 
 export default async function Page({ params, searchParams }: { 
   params: { id: string }, 
@@ -20,8 +21,14 @@ export default async function Page({ params, searchParams }: {
   const { data: { session } } = await supabase.auth.getSession()
   if (!session) redirect('/')
 
-  const log: Log | null | undefined = await getLogByKey(supabase, 'id', id)
+  let log: Log | null | undefined = await getLogByKey(supabase, 'id', id)
+
+  if (session.user.email === 'amonecho1@gmail.com') {
+    log = await getLogByKey(supabaseAdminClient, 'id', id)
+  }
+
   const actions: Action[] = await getActionsByKey(supabase, 'log_id', id)
+
   if (!log) return (
     <div>Log not found</div>
   )

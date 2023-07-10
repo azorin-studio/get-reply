@@ -26,11 +26,7 @@ const FollowUpConfirmation = ({
     <Head />
     <Preview>{introText}</Preview>
     <Body style={main}>
-      <Text
-        style={{
-          ...text,
-        }}
-      > 
+      <Text style={text}> 
       New Sequence 
         (<Link
           href={`https://getreply.app/logs/${id}`}

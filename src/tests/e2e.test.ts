@@ -5,7 +5,15 @@ import { getIdFromReply, liveGmailTest, waitForReplies, watch } from '~/tests/ut
 import { deleteLogById, getLogByKey, getProfileByKey } from "~/supabase/supabase"
 import { supabaseAdminClient } from "~/supabase/server-client"
 
-const EMAIL_ROUTING_TAG = process.env.EMAIL_ROUTING_TAG || ''
+let EMAIL_ROUTING_TAG = ''
+if (process.env.SERVER_URL) {
+  if (process.env.SERVER_URL.includes('laptop')) {
+    EMAIL_ROUTING_TAG = '+laptop'
+  }
+  if (process.env.SERVER_URL.includes('pc')) {
+    EMAIL_ROUTING_TAG = '+pc'
+  }
+}
 const TIMEOUT = 1000 * 60
 
 describe('e2e', () => {  
@@ -14,10 +22,6 @@ describe('e2e', () => {
   let logIds: string[] = []
 
   beforeAll(async () => {
-    if (!process.env.E2E_TESTS) {
-      console.log('E2E_TESTS is not set. Skipping e2e tests')
-      throw new Error('E2E_TESTS is not set. Skipping e2e tests')
-    }
     if (EMAIL_ROUTING_TAG === '') {
       console.log('EMAIL_ROUTING_TAG is not set. Running e2e on production')
     } else {

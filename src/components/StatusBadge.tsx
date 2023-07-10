@@ -5,7 +5,8 @@ import { statusColors } from "./status-colors"
 
 export default function StatusBadge(props: { status: string }) {
   const { status } = props
-  const statusColor = statusColors[status]
+  // const statusColor = statusColors[status]
+  const statusColor = 'slate'
 
   return (
     <div 

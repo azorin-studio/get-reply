@@ -106,7 +106,7 @@ describe('bus', () => {
     expect(action!.status).toBe('cancelled')
   }, 10000)
 
-  it('should test two same emails', async () => {    
+  it('should test two of same emails and throw error for the second one', async () => {    
     const email = createTestEmail()
     const { log_id } = await simulateSendEmail(email)
     log_ids.push(log_id)

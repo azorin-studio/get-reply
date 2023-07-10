@@ -60,8 +60,8 @@ const ActionBody = (props: {
       <div className="w-full p-2 flex flex-row items-center justify-between bg-slate-50">
         <div className="flex flex-col">
           <div className="text-sm">
-            Will{' '} 
-            send a reminder containing a draft follow up on {' '}
+            {action.status === 'complete' && 'Sent a reminder on '}
+            {action.status === 'sleeping' && 'Scheduled a reminder to be sent on '}
             { action.created_at && 
               <span>
                 {format(new Date(action.created_at as string), 'LLLL dd, yyyy, HH:mm')}  {' '}
