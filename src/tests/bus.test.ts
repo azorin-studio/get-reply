@@ -107,6 +107,7 @@ describe('bus', () => {
       toAddresses: [
         'f+30m@getreply.app',
         'f+2h@getreply.app',
+        'other@example.com'
       ] 
     })
     const { log_id } = await simulateSendEmail(email)
