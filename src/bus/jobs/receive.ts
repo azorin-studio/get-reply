@@ -24,12 +24,11 @@ export default async function receive (incomingEmail: IncomingEmail):
 
   const notFoundEmails: string[] = []
 
-  const actions = await Promise.all(
+  const actionsCreateRequests = await Promise.all(
     promptsAndTags.map(async ({ promptName, tags }: { promptName: string, tags: string[] }) => {
       const prompt = await getPromptByKey(supabaseAdminClient, 'name', promptName)
 
       if (!prompt) {
-        await appendToLog(supabaseAdminClient, log.id, { status: 'error', errorMessage: `No prompt found with name ${promptName}` })
         notFoundEmails.push(promptName)
         return null
       }
@@ -39,19 +38,36 @@ export default async function receive (incomingEmail: IncomingEmail):
       const delayUnit = p.delayUnit || 'seconds'
       const run_date = calculateRunDate(delay, delayUnit, log.date!)
   
-      return createAction(supabaseAdminClient, {
+      return {
         profile_id: log.profile_id,
         log_id: log.id,
         prompt_id: prompt.id,
         run_date,
         delay,
         delay_unit: delayUnit,
-      })
+      }
     })
   )
+
+  if(notFoundEmails.length > 0) {
+    await appendToLog(supabaseAdminClient, log.id, { status: 'error', errorMessage: `No prompt found with name ${notFoundEmails.join(', ')}` })
+    return {
+      actions: [],
+      log,
+      notFoundEmails
+    }
+  }
+
+  const actions = await Promise.all(
+    actionsCreateRequests.map(async (actionCreateRequest) => {
+      if (!actionCreateRequest) return null
+      return createAction(supabaseAdminClient, actionCreateRequest)
+    })
+  )
+
   return {
     actions: actions.filter(action => action !== null) as Action[],
     log,
-    notFoundEmails
+    notFoundEmails: []
   }
 }

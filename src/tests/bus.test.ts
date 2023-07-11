@@ -1,5 +1,5 @@
 import createTestEmail from "./create-test-email"
-import { cancelLogAndActionByLogId, deleteLogById, getActionByKey, getLogByKey } from "~/supabase/supabase"
+import { cancelLogAndActionByLogId, deleteLogById, getActionByKey, getActionsByKey, getLogByKey } from "~/supabase/supabase"
 import { supabaseAdminClient } from "~/supabase/server-client"
 import { LogAlreadyExistsError, eventBus } from "~/bus/event-list"
 import { awaitStatus, simulateSendEmail } from "./utils"
@@ -40,21 +40,23 @@ describe('bus', () => {
 
   it.only('should test not found email', async () => {    
     const email = createTestEmail({ 
-      toAddresses: ['mistake@getreply.app']
+      toAddresses: ['f@getreply.app', 'mistake@getreply.app']
     })
     const { log_id } = await simulateSendEmail(email)
     log_ids.push(log_id)
-    await awaitStatus(log_id)
+    await awaitStatus(log_id, 'error')
 
     if (!SERVER_URL) {
       // @ts-ignore
       expect(sendMail.mock.calls).toHaveLength(2)
-      console.log(sendMail.mock.calls)
       // @ts-ignore
       sendMail.mock.calls.forEach((call: any) => {
         expect(call[0].subject).toEqual(`re: ${email.subject}`)
       })
     }
+
+    const actions = await getActionsByKey(supabaseAdminClient, 'log_id', log_id)
+    expect(actions).toHaveLength(0)
   }, 30000)
 
   it('should pass f+1m email', async () => {

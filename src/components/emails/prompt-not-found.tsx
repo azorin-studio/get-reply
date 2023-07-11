@@ -22,7 +22,7 @@ export const PromptNotFound = ({
     <Body style={main}>
       <Text style={{ ...text }}>
         Error from GetReply. You tried to email theGetReply {notFoundEmails.join(', ')}, but it (they) doesn&apos;t exist.
-        The rest of the sequences have been scheduled however.
+        The entire sequence has been cancelled, please try again.
       </Text>
       <Text
           style={{

@@ -1,8 +1,8 @@
-import handleFailure from "./jobs/handle-failure"
-import allReminders from "./jobs/all-reminders"
-import generate from "./jobs/generate"
-import receive from "./jobs/receive"
-import cancel from "./jobs/cancel"
+import handleFailure from "~/bus/jobs/handle-failure"
+import allReminders from "~/bus/jobs/all-reminders"
+import generate from "~/bus/jobs/generate"
+import receive from "~/bus/jobs/receive"
+import cancel from "~/bus/jobs/cancel"
 
 import sendConfirmationEmail from "./jobs/send-confirmation.email"
 import sendNotFoundEmail from "./jobs/send-not-found.email"
