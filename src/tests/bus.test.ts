@@ -20,6 +20,7 @@ describe('bus', () => {
 
   afterEach(async () => {
     jest.useRealTimers()
+    jest.clearAllMocks()
   })
 
   it('should test instant email', async () => {    
@@ -38,7 +39,7 @@ describe('bus', () => {
     }
   }, 30000)
 
-  it.only('should test not found email', async () => {    
+  it('should test not found email', async () => {    
     const email = createTestEmail({ 
       toAddresses: ['f@getreply.app', 'mistake@getreply.app']
     })
@@ -92,6 +93,71 @@ describe('bus', () => {
         expect(call[0].subject).toEqual(`re: ${email.subject}`)
       })
     }
+    jest.useRealTimers()
+    await awaitStatus(log_id)
+  })
+
+  it('should pass f+30m and f+2h email', async () => {
+    if (process.env.SERVER_URL) {
+      console.log('Skipping test because SERVER_URL is set')
+      return
+    }
+
+    const email = createTestEmail({ 
+      toAddresses: [
+        'f+30m@getreply.app',
+        'f+2h@getreply.app',
+      ] 
+    })
+    const { log_id } = await simulateSendEmail(email)
+    log_ids.push(log_id)
+
+    if (!SERVER_URL) {
+      // it should have only sent the confirmation email
+      // @ts-ignore
+      expect(sendMail.mock.calls).toHaveLength(1)
+      // @ts-ignore
+      sendMail.mock.calls.forEach((call: any) => {
+        expect(call[0].subject).toEqual(`re: ${email.subject}`)
+      })
+    }
+
+    
+    const now = new Date()
+    now.setHours(now.getHours() + 1)
+
+    jest
+      .useFakeTimers()
+      .setSystemTime(now)
+
+    await eventBus.allReminders()
+
+    if (!SERVER_URL) {
+      // it should have only sent the confirmation email
+      // @ts-ignore
+      expect(sendMail.mock.calls).toHaveLength(2)
+      // @ts-ignore
+      sendMail.mock.calls.forEach((call: any) => {
+        expect(call[0].subject).toEqual(`re: ${email.subject}`)
+      })
+    }
+
+    jest
+      .setSystemTime(new Date('2040-01-01'))
+
+      await eventBus.allReminders()
+
+      if (!SERVER_URL) {
+        // it should have only sent the confirmation email
+        // @ts-ignore
+        expect(sendMail.mock.calls).toHaveLength(3)
+        // @ts-ignore
+        sendMail.mock.calls.forEach((call: any) => {
+          expect(call[0].subject).toEqual(`re: ${email.subject}`)
+        })
+      }
+  
+
     jest.useRealTimers()
     await awaitStatus(log_id)
   })
