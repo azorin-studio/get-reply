@@ -64,12 +64,13 @@ export const eventBus = {
         name: 'promptNotFoundEmail',
         data: { notFoundEmails, log_id: log.id }
       })
+    } else {
+      events.push({         
+        name: 'confirmationEmail',
+        data: { log_id: log.id }
+      })
     }
     
-    events.push({         
-      name: 'confirmationEmail',
-      data: { log_id: log.id }
-    })
     await sendEvents(events)
     return { log_id: log.id }
   },

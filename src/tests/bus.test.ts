@@ -49,7 +49,7 @@ describe('bus', () => {
 
     if (!SERVER_URL) {
       // @ts-ignore
-      expect(sendMail.mock.calls).toHaveLength(2)
+      expect(sendMail.mock.calls).toHaveLength(1)
       // @ts-ignore
       sendMail.mock.calls.forEach((call: any) => {
         expect(call[0].subject).toEqual(`re: ${email.subject}`)
