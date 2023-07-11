@@ -5,9 +5,11 @@ import parsePromptNamesAndTags from "~/lib/parse-prompt-names-and-tags"
 import calculateRunDate from "~/lib/calculate-run-date"
 import parseDelayFromTags from "~/lib/parse-delay-from-tags"
 
-export default async function receive (incomingEmail: IncomingEmail): Promise<{ actions: Action[], log: Log | null }> {
+export default async function receive (incomingEmail: IncomingEmail): 
+  Promise<{ actions: Action[], log: Log | null, notFoundEmails: string[] }> 
+{
   const log: Log | null  = await createLog(supabaseAdminClient, incomingEmail)
-  if (!log) return { log: null, actions: [] }
+  if (!log) return { log: null, actions: [], notFoundEmails: [] }
 
   const promptsAndTags = parsePromptNamesAndTags({
     to: log.to,
@@ -20,12 +22,15 @@ export default async function receive (incomingEmail: IncomingEmail): Promise<{ 
     throw new Error('No getreply email found in incoming email')
   }
 
+  const notFoundEmails: string[] = []
+
   const actions = await Promise.all(
     promptsAndTags.map(async ({ promptName, tags }: { promptName: string, tags: string[] }) => {
       const prompt = await getPromptByKey(supabaseAdminClient, 'name', promptName)
 
       if (!prompt) {
         await appendToLog(supabaseAdminClient, log.id, { status: 'error', errorMessage: `No prompt found with name ${promptName}` })
+        notFoundEmails.push(promptName)
         return null
       }
 
@@ -46,6 +51,7 @@ export default async function receive (incomingEmail: IncomingEmail): Promise<{ 
   )
   return {
     actions: actions.filter(action => action !== null) as Action[],
-    log
+    log,
+    notFoundEmails
   }
 }

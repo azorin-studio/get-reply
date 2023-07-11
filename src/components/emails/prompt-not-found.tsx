@@ -10,18 +10,19 @@ import * as React from 'react';
 import { main, container, h1, text, code, link } from './styles';
 
 interface PromptNotFoundProps {
-  promptName: string | null;
+  notFoundEmails: string[];
 }
 
 export const PromptNotFound = ({
-  promptName = 'placeholder-for-testing@getreply.app',
+  notFoundEmails = ['placeholder-for-testing@getreply.app'],
 }: PromptNotFoundProps) => (
   <Html>
     <Head />
     <Preview>GetReply Prompt not found</Preview>
     <Body style={main}>
       <Text style={{ ...text }}>
-        Error from GetReply. You tried to email theGetReply prompt {promptName}@getreply.app, but it doesn&apos;t exist.
+        Error from GetReply. You tried to email theGetReply {notFoundEmails.join(', ')}, but it (they) doesn&apos;t exist.
+        The rest of the sequences have been scheduled however.
       </Text>
       <Text
           style={{

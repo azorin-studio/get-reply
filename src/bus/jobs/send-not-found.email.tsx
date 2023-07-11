@@ -6,13 +6,13 @@ import { supabaseAdminClient } from "~/supabase/server-client"
 
 import { getLogByKey } from "~/supabase/supabase"
 
-export default async function sendNotFoundEmail (log_id: string, promptName: string) {
+export default async function sendNotFoundEmail (log_id: string, notFoundEmails: string[]) {
   const log = await getLogByKey(supabaseAdminClient, 'id', log_id)
   if (!log) throw new Error(`[action: ${log_id}]: log not found.`)
 
   const html = render(
     <PromptNotFound
-      promptName={promptName}
+      notFoundEmails={notFoundEmails}
     />
     , { pretty: true })
 

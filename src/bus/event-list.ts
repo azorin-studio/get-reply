@@ -18,11 +18,11 @@ export const send = async (event: IEvent) => {
   const action_id: string | undefined = event.data.action_id
   const logStamp = log_id ? ` [log_id: ${log_id.slice(0,7)}]` : '[log_id: unknown]'
   const actionStamp = action_id ? ` [action_id: ${action_id.slice(0,7)}]` : '[action_id: unknown]'
-  // console.log(`+${logStamp}${actionStamp} ${event.name} started`)
+  console.log(`+${logStamp}${actionStamp} ${event.name} started`)
 
   try {
     const re = await (eventBus as any)[event.name](event)
-    // console.log(`+${logStamp}${actionStamp} ${event.name} completed`)
+    console.log(`+${logStamp}${actionStamp} ${event.name} completed`)
     return re
   } catch (error: any) {
     console.error(error)
@@ -47,7 +47,7 @@ export const eventBus = {
   },
 
   receive: async (event: IEvent) => {
-    const { actions, log } = await receive(event.data.incomingEmail)
+    const { actions, log, notFoundEmails } = await receive(event.data.incomingEmail)
 
     if (!log) {
       console.log(`+ Log already exists, skipping.`)
@@ -58,6 +58,13 @@ export const eventBus = {
       name: 'generate', 
       data: { log_id: action.log.id, action_id: action.id }
     }))
+
+    if (notFoundEmails.length > 0) {
+      events.push({
+        name: 'promptNotFoundEmail',
+        data: { notFoundEmails, log_id: log.id }
+      })
+    }
     
     events.push({         
       name: 'confirmationEmail',
@@ -68,7 +75,7 @@ export const eventBus = {
   },
 
   promptNotFoundEmail: async (event: IEvent) => {
-    await sendNotFoundEmail(event.data.log_id, event.data.promptName)
+    await sendNotFoundEmail(event.data.log_id, event.data.notFoundEmails)
     return { log_id: event.data.log_id }
   },
 
