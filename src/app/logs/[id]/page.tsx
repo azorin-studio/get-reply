@@ -27,7 +27,11 @@ export default async function Page({ params, searchParams }: {
     log = await getLogByKey(supabaseAdminClient, 'id', id)
   }
 
-  const actions: Action[] = await getActionsByKey(supabase, 'log_id', id)
+  let actions: Action[] = await getActionsByKey(supabase, 'log_id', id)
+
+  if (session.user.email === 'amonecho1@gmail.com') {
+    actions = await getActionsByKey(supabaseAdminClient, 'log_id', id)
+  }
 
   if (!log) return (
     <div>Log not found</div>

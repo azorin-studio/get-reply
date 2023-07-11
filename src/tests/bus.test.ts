@@ -123,7 +123,6 @@ describe('bus', () => {
       })
     }
 
-    
     const now = new Date()
     now.setHours(now.getHours() + 1)
 
